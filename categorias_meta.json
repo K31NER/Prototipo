@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "categoria": "Computación"
+    },
+    {
+        "id": 2,
+        "categoria": "Otras"
+    },
+    {
+        "id": 3,
+        "categoria": "Electrónica, Audio y Video"
+    },
+    {
+        "id": 4,
+        "categoria": "Electrodomésticos"
+    },
+    {
+        "id": 5,
+        "categoria": "Ropa y Accesorios"
+    },
+    {
+        "id": 6,
+        "categoria": "Celulares y Teléfonos"
+    },
+    {
+        "id": 7,
+        "categoria": "Juegos y Juguetes"
+    },
+    {
+        "id": 8,
+        "categoria": "Hogar y Muebles"
+    },
+    {
+        "id": 9,
+        "categoria": "Arte, Papelería y Mercería"
+    },
+    {
+        "id": 10,
+        "categoria": "Deportes y Fitness"
+    },
+    {
+        "id": 11,
+        "categoria": "Herramientas"
+    },
+    {
+        "id": 12,
+        "categoria": "Belleza y Cuidado Personal"
+    },
+    {
+        "id": 13,
+        "categoria": "Relojes y Joyas"
+    },
+    {
+        "id": 14,
+        "categoria": "Carros, Motos y Otros"
+    }
+]

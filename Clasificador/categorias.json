@@ -1,0 +1,351 @@
+{
+    "teclado": [
+        "Computación",
+        "Periféricos de PC",
+        "Mouses y Teclados"
+    ],
+    "camara": [
+        "Otras"
+    ],
+    "esp32": [
+        "Electrónica, Audio y Video",
+        "Componentes Electrónicos",
+        "Placas de Microcontroladores"
+    ],
+    "nevera": [
+        "Electrodomésticos",
+        "Refrigeración",
+        "Neveras y Nevecones"
+    ],
+    "camiseta": [
+        "Ropa y Accesorios",
+        "Camisetas"
+    ],
+    "zapatos": [
+        "Ropa y Accesorios",
+        "Calzado"
+    ],
+    "gorras": [
+        "Ropa y Accesorios",
+        "Accesorios de Moda",
+        "Gorros, Sombreros y Boinas"
+    ],
+    "medias": [
+        "Ropa y Accesorios",
+        "Ropa Interior y de Dormir",
+        "Ropa Interior",
+        "Medias y Pantimedias"
+    ],
+    "vestido": [
+        "Ropa y Accesorios",
+        "Vestidos"
+    ],
+    "powerbank": [
+        "Celulares y Teléfonos",
+        "Accesorios para Celulares",
+        "Cargadores y Accesorios",
+        "Cargadores"
+    ],
+    "rompecabezas": [
+        "Juegos y Juguetes",
+        "Juegos de Mesa y Cartas",
+        "Puzzles y Rompecabezas"
+    ],
+    "funda laptop": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Accesorios para Portátiles",
+        "Fundas"
+    ],
+    "mousepad": [
+        "Computación",
+        "Periféricos de PC",
+        "Mouses y Teclados",
+        "Pad Mouses"
+    ],
+    "procesador": [
+        "Otras"
+    ],
+    "procesador amd": [
+        "Computación",
+        "Componentes de PC"
+    ],
+    "procesador intel": [
+        "Computación",
+        "Componentes de PC"
+    ],
+    "rtx": [
+        "Computación"
+    ],
+    "rx": [
+        "Otras"
+    ],
+    "tarjeta grafica": [
+        "Computación",
+        "Componentes de PC",
+        "Tarjetas",
+        "Tarjetas de Video"
+    ],
+    "cortinas": [
+        "Hogar y Muebles",
+        "Adornos y Decoración del Hogar",
+        "Cortinas y Accesorios",
+        "Cortinas y Persianas",
+        "Manuales"
+    ],
+    "platos": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Vajilla y Artículos de Servir"
+    ],
+    "cuchillos": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Vajilla y Artículos de Servir",
+        "Cubiertos"
+    ],
+    "mouse": [
+        "Computación",
+        "Periféricos de PC",
+        "Mouses y Teclados",
+        "Mouses"
+    ],
+    "laptop": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "pc": [
+        "Computación"
+    ],
+    "cuadernos": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Escolar"
+    ],
+    "bolso": [
+        "Ropa y Accesorios",
+        "Equipaje, Bolsos y Carteras"
+    ],
+    "macbook": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "mancuernas": [
+        "Deportes y Fitness",
+        "Fitness y Musculación",
+        "Pesas, Discos y Barras"
+    ],
+    "gafas": [
+        "Otras"
+    ],
+    "celular samsung": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "iphone": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "xiaomi": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "termo": [
+        "Deportes y Fitness",
+        "Camping, Caza y Pesca",
+        "Accesorios de Camping",
+        "Recipientes Térmicos",
+        "Termos"
+    ],
+    "tv": [
+        "Electrónica, Audio y Video",
+        "Televisores"
+    ],
+    "smart tv": [
+        "Electrónica, Audio y Video"
+    ],
+    "televisor": [
+        "Electrónica, Audio y Video",
+        "Televisores"
+    ],
+    "apple": [
+        "Celulares y Teléfonos"
+    ],
+    "sabanas": [
+        "Hogar y Muebles",
+        "Textiles de Hogar y Decoración",
+        "Ropa de Cama",
+        "Sábanas"
+    ],
+    "tapete": [
+        "Otras"
+    ],
+    "sofa": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar",
+        "Sillas, Sofás y Butacos",
+        "Sofás"
+    ],
+    "memoria usb": [
+        "Computación",
+        "Almacenamiento",
+        "Memorias Portátiles USB"
+    ],
+    "tablet": [
+        "Computación",
+        "Tablets y Accesorios",
+        "Tablets"
+    ],
+    "ipad": [
+        "Computación",
+        "Tablets y Accesorios",
+        "Tablets"
+    ],
+    "toallas": [
+        "Hogar y Muebles",
+        "Baños",
+        "Toallas y Batas"
+    ],
+    "toalla": [
+        "Otras"
+    ],
+    "cable hdmi": [
+        "Electrónica, Audio y Video",
+        "Cables",
+        "Cables de Audio y Video"
+    ],
+    "parlante": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Parlantes"
+    ],
+    "cobija": [
+        "Hogar y Muebles",
+        "Textiles de Hogar y Decoración",
+        "Ropa de Cama",
+        "Cobijas"
+    ],
+    "espejo": [
+        "Hogar y Muebles"
+    ],
+    "macetas": [
+        "Hogar y Muebles",
+        "Jardin y Aire Libre",
+        "Decoración de Exterior",
+        "Macetas y Materas"
+    ],
+    "bombillo led": [
+        "Otras"
+    ],
+    "taladro": [
+        "Herramientas",
+        "Herramientas Eléctricas",
+        "Perforación",
+        "Taladros",
+        "De Mano"
+    ],
+    "destornillador electrico": [
+        "Herramientas",
+        "Herramientas Eléctricas"
+    ],
+    "cuaderno": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Escolar",
+        "Cuadernos"
+    ],
+    "desodorante": [
+        "Belleza y Cuidado Personal",
+        "Higiene Personal",
+        "Desodorantes"
+    ],
+    "escritorio": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar",
+        "Escritorios"
+    ],
+    "lampara de mesa": [
+        "Hogar y Muebles",
+        "Iluminación para el Hogar",
+        "Lámparas",
+        "Lámparas de Mesa de Noche"
+    ],
+    "impresora": [
+        "Computación",
+        "Impresión",
+        "Impresoras"
+    ],
+    "airpods": [
+        "Celulares y Teléfonos",
+        "Accesorios para Celulares",
+        "Auriculares y Manos Libres"
+    ],
+    "audifonos": [
+        "Otras"
+    ],
+    "cepillo para peinar": [
+        "Belleza y Cuidado Personal",
+        "Artículos de Peluquería",
+        "Accesorios de Peluquería",
+        "Cepillos"
+    ],
+    "lavadora": [
+        "Electrodomésticos",
+        "Lavado",
+        "Lavadoras y Lavasecadoras"
+    ],
+    "estufa": [
+        "Electrodomésticos",
+        "Cocción",
+        "Estufas"
+    ],
+    "microondas": [
+        "Electrodomésticos",
+        "Cocción"
+    ],
+    "morral": [
+        "Ropa y Accesorios",
+        "Equipaje, Bolsos y Carteras",
+        "Morrales"
+    ],
+    "reloj": [
+        "Relojes y Joyas",
+        "Relojes"
+    ],
+    "smartwatch": [
+        "Celulares y Teléfonos",
+        "Smartwatches y Accesorios",
+        "Smartwatches"
+    ],
+    "aire acondicionado": [
+        "Electrodomésticos",
+        "Climatización",
+        "Aires Acondicionados"
+    ],
+    "audífonos inalámbricos sony": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Audífonos"
+    ],
+    "cámara canon reflex": [
+        "Otras"
+    ],
+    "carro": [
+        "Carros, Motos y Otros",
+        "Carros y Camionetas"
+    ],
+    "hp victus 15": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles",
+        "Hp Victus"
+    ],
+    "labial rojo": [
+        "Belleza y Cuidado Personal",
+        "Maquillaje",
+        "Labios",
+        "Labiales"
+    ]
+}
