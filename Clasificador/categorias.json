@@ -347,5 +347,10 @@
         "Maquillaje",
         "Labios",
         "Labiales"
+    ],
+    "portatil": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
     ]
 }

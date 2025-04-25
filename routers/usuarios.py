@@ -71,8 +71,9 @@ async def login(user:Login,session:sesion):
     return {"mensaje": f"Bienvenido {user.nombre}"}
 
 
+
 @router.post("/buscar")
-async def buscar(producto: str, id: str, session: sesion):
+async def buscar(producto: str, id: str, session:sesion):
     # 1. Realizamos el scrapeo
     datos = scrapear_todas_las_tiendas(producto)
     if not datos:
@@ -84,41 +85,23 @@ async def buscar(producto: str, id: str, session: sesion):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
     # 3. Actualizamos el historial de búsqueda
-    if user.productos_buscados is None:
-        user.productos_buscados = []
     user.productos_buscados.append(producto)
 
     # 4. Actualizamos conteo de categorías
     if user.categorias_visitadas_raw is None:
         user.categorias_visitadas_raw = {}
-    
-    # Obtener la categoría del producto
+
     categoria = obtener_categoria_meta(producto)
+    user.categorias_visitadas_raw[categoria] = user.categorias_visitadas_raw.get(categoria, 0) + 1
 
-    # Verificar que la categoría se acumule correctamente
-    if categoria in user.categorias_visitadas_raw:
-        user.categorias_visitadas_raw[categoria] += 1
-    else:
-        user.categorias_visitadas_raw[categoria] = 1
-
-    # Imprimir las categorías visitadas antes de guardar
-    print(f"Categorías visitadas antes de commit: {user.categorias_visitadas_raw}")
-
-    # 5. Recalculamos el embedding (este paso solo actualiza el embedding)
-    embedding = generar_embedding(list(user.categorias_visitadas_raw.keys()))
+    # 5. Recalculamos el embedding (basado en las claves, no los valores)
+    embedding = generar_embedding(user.categorias_visitadas_raw)
     user.categorias_embedding = embedding
-
-    # Imprimir el embedding antes de guardar
-    print(f"Embedding calculado antes de commit: {user.categorias_embedding}")
 
     # 6. Guardamos cambios en la base de datos
     session.add(user)
     session.commit()
     session.refresh(user)
-
-    # Verificar las categorías y el embedding después de guardar
-    print(f"Categorías después de commit: {user.categorias_visitadas_raw}")
-    print(f"Embedding después de commit: {user.categorias_embedding}")
 
     # 7. Procesamos los datos scrapeados
     productos_filtrados = preparar_datos(datos)
@@ -129,3 +112,4 @@ async def buscar(producto: str, id: str, session: sesion):
         "categorias_embedding": user.categorias_embedding,
         "top_productos": productos_filtrados.to_dict(orient="records")
     }
+

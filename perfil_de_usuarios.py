@@ -37,25 +37,26 @@ def obtener_categoria_meta(producto:str) -> str:
     categoria_meta  = list(categoria.values())[1][0] # 
     return categoria_meta
 
-# Funcion para generar embedding
-def generar_embedding(lista_categorias:list) -> dict:
-    """
-    Genera un embedding de usuario en base a las categorías que ha buscado.
-    Cada categoría recibe un peso proporcional a la frecuencia con la que aparece.
-    """
-    total_busquedas = len(lista_categorias)
-    conteo = defaultdict(int)
+# _________________________ Función para generar embeddings de categorías _____________________________________
 
-    for categoria in lista_categorias:
-        conteo[categoria] += 1
+def generar_embedding(conteo_categorias: Dict[str, int]) -> dict:
+    """
+    Genera un embedding personalizado en base a la frecuencia con la que el usuario ha visitado cada categoría.
 
-    # Calculamos proporciones
-    embedding = {
-        categoria: round(conteo[categoria] / total_busquedas, 3)
-        for categoria in conteo
+    A partir de un diccionario donde las claves son categorías y los valores son la cantidad de veces que se
+    ha buscado dicha categoría, se calculan proporciones normalizadas para representar el perfil de intereses del usuario.
+    """
+    total = sum(conteo_categorias.values())  # Suma total de visitas a todas las categorías
+
+    if total == 0:
+        return {}  # Si no hay datos, retornamos un embedding vacío
+
+    # Se calcula la proporción por categoría
+    return {
+        categoria: round(freq / total, 3)
+        for categoria, freq in conteo_categorias.items()
     }
 
-    return embedding
 
 # ___________________________ Funciones Json para simular base de datos _____________________________________-
 

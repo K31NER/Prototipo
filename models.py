@@ -3,7 +3,7 @@ from typing import  List, Dict
 from pydantic import BaseModel
 from sqlalchemy import Column
 from sqlalchemy.dialects.mysql import JSON
-
+from sqlalchemy.ext.mutable import MutableDict, MutableList
 
 # Clases de usuario
 class UserBase(SQLModel):
@@ -24,18 +24,19 @@ class User(UserBase, table=True):
     
     productos_buscados: List[str] = Field(
         default_factory=list,
-        sa_column=Column(JSON)
+        sa_column=Column(MutableList.as_mutable(JSON))
     )
 
     categorias_visitadas_raw: Dict[str, int] = Field(  
         default_factory=dict,
-        sa_column=Column(JSON)
+        sa_column=Column(MutableDict.as_mutable(JSON))
     )
 
-    categorias_embedding: List[float] = Field(  
-        default_factory=list,
-        sa_column=Column(JSON)
+    categorias_embedding: Dict[str, float] = Field(
+        default_factory=dict,
+        sa_column=Column(MutableDict.as_mutable(JSON))
     )
+
     class Config:
         orm_mode = True
 
