@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
-    <link rel="icon" href="static/img/LOGO.png">
+    <link rel="icon" href="static/img/LOGO.png"> <!-- Asegúrate que la ruta sea correcta -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -109,6 +109,8 @@
         .form-group input {
             width: 100%;
             padding: 14px 16px;
+             /* --- CAMBIO: Añadir padding derecho para acomodar iconos --- */
+            padding-right: 75px; /* Espacio para icono candado + icono ojo + separación */
             border: 1px solid var(--input-border);
             border-radius: 8px;
             background-color: var(--input-bg);
@@ -116,6 +118,11 @@
             font-size: 15px;
             transition: all 0.2s ease;
         }
+         /* Ajustar padding si solo está el icono de usuario */
+        .form-group input[type="text"]#username {
+             padding-right: 45px; /* Espacio solo para icono usuario */
+        }
+
 
         .form-group input:focus {
             outline: none;
@@ -125,11 +132,38 @@
 
         .form-group .icon {
             position: absolute;
-            right: 16px;
+            right: 16px; /* Icono original (usuario/candado) */
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
+            pointer-events: none; /* Para que no interfiera con el click del ojo */
         }
+
+        /* --- NUEVO: Estilos para el icono de mostrar/ocultar contraseña --- */
+        .toggle-password {
+            position: absolute;
+            /* Posicionar a la izquierda del icono original */
+            right: 45px; /* Ajusta este valor si es necesario (16px + ancho icono + espacio) */
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            display: none; /* Oculto por defecto */
+            padding: 5px; /* Área de click un poco más grande */
+        }
+
+        /* Mostrar el icono cuando la clase 'visible' está presente */
+        .toggle-password.visible {
+            display: block;
+        }
+
+        .toggle-password svg {
+            width: 18px;
+            height: 18px;
+            display: block; /* Importante para correcto manejo de display none/block */
+        }
+        /* --- FIN NUEVO --- */
+
 
         .btn {
             background-color: #333;
@@ -181,84 +215,42 @@
             text-decoration: underline;
         }
 
-        .form-group.error input {
-            border-color: var(--error-color);
-        }
+        /* Validaciones y Animaciones (sin cambios) */
+        .form-group.error input { border-color: var(--error-color); }
+        .form-group.error .error-message { color: var(--error-color); font-size: 12px; margin-top: 6px; }
+        .form-group.success input { border-color: var(--success-color); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .login-container { animation: fadeIn 0.5s ease-out forwards; }
 
-        .form-group.error .error-message {
-            color: var(--error-color);
-            font-size: 12px;
-            margin-top: 6px;
-        }
-
-        .form-group.success input {
-            border-color: var(--success-color);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-container {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-
+        /* Responsive (sin cambios relevantes aquí, pero el padding del input ya se ajusta) */
         @media (max-width: 480px) {
-            .login-container {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 24px;
-                margin-bottom: 10px;
-            }
-
-            .login-container img {
-                 width: 120px;
-                 height: 120px;
-                 margin-bottom: 20px;
-            }
-
-            .form-group input {
-                padding: 12px 14px;
-            }
-
-            .btn {
-                padding: 12px;
-            }
-
-            .form-footer {
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .forgot-password {
-                align-self: flex-end;
-            }
-
-            .create-account {
-                align-self: flex-start;
-            }
+            .login-container { padding: 30px 20px; }
+            h1 { font-size: 24px; margin-bottom: 10px; }
+            .login-container img { width: 120px; height: 120px; margin-bottom: 20px; }
+            .form-group input { padding: 12px 14px; padding-right: 70px; /* Ajustar padding derecho responsivo */ }
+             .form-group input[type="text"]#username { padding-right: 40px; }
+            .btn { padding: 12px; }
+            .form-footer { flex-direction: column; gap: 12px; }
+            .forgot-password { align-self: flex-end; }
+            .create-account { align-self: flex-start; }
+            /* Ajustar posición icono ojo responsivo */
+            .toggle-password { right: 40px; }
         }
 
-        .icon-user, .icon-lock {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
-        }
+        /* Iconos SVG (usuario/candado - sin cambios) */
+        .icon-user, .icon-lock { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
+
     </style>
 </head>
 <body>
-        <div class="login-container">
-          <h1>Inicio de sesión</h1>
-          <img src="/static/img/LOGO.png" alt="Logo de la Empresa" width="180px" height="180px">
-        <form id="loginForm" action="/users/login" method="post">
+    <div class="login-container">
+        <h1>Inicio de sesión</h1>
+        <img src="/static/img/LOGO.png" alt="Logo de la Empresa" width="180px" height="180px"> <!-- Asegúrate que la ruta sea correcta -->
+        <form id="loginForm" action="/users/login" method="post"> <!-- Revisa action y method -->
             <div class="form-group">
                 <label for="username">Usuario</label>
                 <div class="input-wrapper">
+                    <!-- Cambiado a type="text" para usuario normal, ajusta si es email -->
                     <input name="nombre" type="text" id="username" placeholder="jhon Doe" required>
                     <div class="icon">
                         <svg class="icon-user" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -272,18 +264,33 @@
                 <label for="password">Contraseña</label>
                 <div class="input-wrapper">
                     <input name="contraseña" type="password" id="password" placeholder="••••••••••••" required>
+                    <!-- Icono original de candado -->
                     <div class="icon">
                         <svg class="icon-lock" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                         </svg>
                     </div>
+                    <!-- NUEVO: Icono para mostrar/ocultar contraseña -->
+                    <span class="toggle-password" id="togglePassword">
+                        <!-- Ojo cerrado (inicial) -->
+                        <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                         <!-- Ojo abierto (oculto inicialmente) -->
+                        <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                    <!-- FIN NUEVO -->
                 </div>
             </div>
             <button type="submit" class="btn">Ingresar</button>
             <div class="form-footer">
                 <div class="create-account">
-                    <a href="/registro">Crear cuenta</a>
+                    <a href="/registro">Crear cuenta</a> <!-- Revisa la ruta -->
                 </div>
                 <div class="forgot-password">
                     <a href="#">¿Olvidaste tu contraseña?</a>
@@ -291,5 +298,53 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const togglePasswordButton = document.getElementById('togglePassword');
+            const eyeOpenIcon = togglePasswordButton ? togglePasswordButton.querySelector('.eye-open') : null;
+            const eyeClosedIcon = togglePasswordButton ? togglePasswordButton.querySelector('.eye-closed') : null;
+
+            if (passwordInput && togglePasswordButton && eyeOpenIcon && eyeClosedIcon) {
+                // Mostrar/ocultar el botón de ojo según si hay texto
+                passwordInput.addEventListener('input', function() {
+                    if (passwordInput.value.length > 0) {
+                        togglePasswordButton.classList.add('visible');
+                    } else {
+                        togglePasswordButton.classList.remove('visible');
+                        // Asegurarse de que si se borra todo, se oculte la contraseña y se muestre ojo cerrado
+                        passwordInput.setAttribute('type', 'password');
+                        eyeClosedIcon.style.display = 'block';
+                        eyeOpenIcon.style.display = 'none';
+                    }
+                });
+
+                // Funcionalidad de click en el botón de ojo
+                togglePasswordButton.addEventListener('click', function() {
+                    // Cambiar el tipo de input
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    // Cambiar el icono
+                    if (type === 'password') {
+                        eyeClosedIcon.style.display = 'block';
+                        eyeOpenIcon.style.display = 'none';
+                        this.setAttribute('aria-label', 'Mostrar contraseña');
+                    } else {
+                        eyeClosedIcon.style.display = 'none';
+                        eyeOpenIcon.style.display = 'block';
+                        this.setAttribute('aria-label', 'Ocultar contraseña');
+                    }
+                });
+
+                 // Añadir aria-label inicial para accesibilidad
+                togglePasswordButton.setAttribute('aria-label', 'Mostrar contraseña');
+
+            } else {
+                console.error("No se encontraron los elementos necesarios para el toggle de contraseña.");
+            }
+        });
+    </script>
 </body>
 </html>

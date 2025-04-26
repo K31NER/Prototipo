@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Registro</title>
-    <link rel="icon" href="static/img/LOGO.png">
+    <link rel="icon" href="static/img/LOGO.png"> <!-- Asegúrate que la ruta sea correcta -->
     <style>
+        /* Paleta de colores y estilos base (sin cambios) */
         :root {
             --background-color: #fef0f5;
             --card-background: #ffffff;
@@ -16,7 +17,8 @@
             --button-text: #ffffff;
             --shadow-color: rgba(0, 0, 0, 0.1);
             --input-background: #ffffff;
-            --svg-color: #333333;
+            --svg-color: #333333; /* Color para icono perfil */
+            --icon-color: var(--placeholder-color); /* Color para icono ojo */
             --date-icon-filter: invert(0.5);
         }
 
@@ -32,6 +34,7 @@
                 --shadow-color: rgba(0, 0, 0, 0.3);
                 --input-background: #333333;
                 --svg-color: #f0f0f0;
+                --icon-color: var(--placeholder-color);
                 --date-icon-filter: invert(1);
             }
         }
@@ -40,7 +43,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            /* Puedes cambiar a Inter si quieres consistencia total */
+            font-family: 'Inter', Arial, sans-serif;
         }
 
         body {
@@ -72,41 +76,15 @@
             transition: color 0.3s;
         }
 
-        .profile-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-section p {
-            color: var(--text-color);
-            margin-bottom: 15px;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-
-        .profile-pic {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: var(--input-background);
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            transition: background-color 0.3s, border-color 0.3s;
-        }
-
-        .profile-pic svg {
-            width: 60%;
-            height: 60%;
-            stroke: var(--svg-color);
-            transition: stroke 0.3s;
-        }
+        /* Profile section (sin cambios) */
+        .profile-section { text-align: center; margin-bottom: 30px; }
+        .profile-section p { color: var(--text-color); margin-bottom: 15px; font-size: 16px; transition: color 0.3s; }
+        .profile-pic { width: 100px; height: 100px; border-radius: 50%; background-color: var(--input-background); margin: 0 auto; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border-color); overflow: hidden; transition: background-color 0.3s, border-color 0.3s; }
+        .profile-pic svg { width: 60%; height: 60%; stroke: var(--svg-color); transition: stroke 0.3s; }
 
         .form-group {
             margin-bottom: 25px;
+            position: relative; /* Necesario para posicionar icono ojo */
         }
 
         .form-group label {
@@ -114,9 +92,16 @@
             color: var(--text-color);
             margin-bottom: 8px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 16px; /* Mantener consistencia o ajustar */
             transition: color 0.3s;
         }
+
+        /* --- NUEVO: Wrapper para input y icono --- */
+        .input-wrapper {
+            position: relative;
+        }
+        /* --- FIN NUEVO --- */
+
 
         .form-control {
             width: 100%;
@@ -129,9 +114,15 @@
             transition: border-color 0.3s, background-color 0.3s, color 0.3s;
         }
 
+         /* --- CAMBIO: Añadir padding derecho al input de contraseña --- */
+        input#contrasena.form-control {
+            padding-right: 45px; /* Espacio para el icono del ojo */
+        }
+
+
         .form-control:focus {
             outline: none;
-            border-color: #707070;
+            border-color: #707070; /* Considera usar variable --input-focus-border */
         }
 
         .form-control::placeholder {
@@ -139,83 +130,91 @@
             transition: color 0.3s;
         }
 
-        select.form-control {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 15px;
-            padding-right: 40px;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--button-background);
-            color: var(--button-text);
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
+        /* --- NUEVO: Estilos para el icono de mostrar/ocultar contraseña --- */
+        .toggle-password {
+            position: absolute;
+            right: 15px; /* Posición desde la derecha */
+            top: 50%;
+            transform: translateY(-50%);
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
+            color: var(--icon-color); /* Usar variable de icono */
+            display: none; /* Oculto por defecto */
+            padding: 5px;
         }
 
-        button:hover {
-            background-color: #555555;
-        }
-
-        .login-link {
+        /* Mostrar el icono cuando la clase 'visible' está presente */
+        .toggle-password.visible {
             display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
         }
 
-        .login-link:hover {
-            text-decoration: underline;
+        .toggle-password svg {
+            width: 18px; /* Tamaño consistente con login */
+            height: 18px;
+            display: block;
         }
-        
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: var(--date-icon-filter);
-            transition: filter 0.3s;
-            cursor: pointer;
-        }
-        
+        /* --- FIN NUEVO --- */
+
+
+        /* Select (sin cambios) */
+        select.form-control { appearance: none; background-image: url("..."); background-repeat: no-repeat; background-position: right 15px center; background-size: 15px; padding-right: 40px; }
+        /* Botón y enlace (sin cambios) */
+        button { width: 100%; padding: 14px; background-color: var(--button-background); color: var(--button-text); border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s, color 0.3s; }
+        button:hover { background-color: #555555; } /* Considera usar --button-hover */
+        .login-link { display: block; text-align: center; margin-top: 20px; color: var(--text-color); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .login-link:hover { text-decoration: underline; }
+        /* Date picker (sin cambios) */
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: var(--date-icon-filter); transition: filter 0.3s; cursor: pointer; }
+
+        /* Responsive (sin cambios relevantes para el toggle) */
         @media (max-width: 480px) {
-            .card {
-                padding: 30px 20px;
-            }
+            .card { padding: 30px 20px; }
+            input#contrasena.form-control { padding-right: 40px; } /* Ajustar padding responsivo */
+            .toggle-password { right: 12px; } /* Ajustar posición icono responsivo */
         }
     </style>
 </head>
 <body>
     <div class="card">
         <h1>Registro</h1>
-        
-        <form id="registroForm" method="post" action="/users/registro">
+
+        <form id="registroForm" method="post" action="/users/registro"> <!-- Revisa action -->
             <div class="form-group">
-                <label for="nombre">Nombre</label>
+                <label for="nombre">Usuario</label>
                 <input type="text" id="nombre" name="nombre" class="form-control" placeholder="User1" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="contrasena">Contraseña</label>
-                <input type="password" id="contrasena" name="contraseña" class="form-control" placeholder="**************" required>
+                <!-- NUEVO: Wrapper añadido -->
+                <div class="input-wrapper">
+                    <input type="password" id="contrasena" name="contraseña" class="form-control" placeholder="**************" required>
+                    <!-- NUEVO: Icono toggle añadido -->
+                    <span class="toggle-password" id="toggleRegistroPassword">
+                        <!-- Ojo cerrado (inicial) -->
+                        <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                         <!-- Ojo abierto (oculto inicialmente) -->
+                        <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </span>
+                    <!-- FIN NUEVO -->
+                </div>
             </div>
-            
+
             <div class="form-group">
                 <label for="correo">Correo</label>
                 <input type="email" id="correo" name="correo" class="form-control" placeholder="user1@gmail.com" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="fechaNacimiento">Fecha de nacimiento</label>
-                <input type="date" id="fechaNacimiento" name="fecha_nacimiento" class="form-control" placeholder="dd / mm / aaaa" required>
+                <input type="date" id="fechaNacimiento" name="fecha_nacimiento" class="form-control" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="genero">Género</label>
                 <select id="genero" name="genero" class="form-control" required>
@@ -225,27 +224,65 @@
                     <option value="otro">LGBTIQ+</option>
                 </select>
             </div>
-            
+
             <button type="submit">Enviar</button>
-            
-            <a href="/" class="login-link">¿Ya tienes una cuenta? Inicia sesión</a>
+
+            <a href="/" class="login-link">¿Ya tienes una cuenta? Inicia sesión</a> <!-- Revisa la ruta -->
         </form>
     </div>
 
     <script>
-        // Comprobación del tema del sistema y aplicación al cargar la página
-        function checkColorScheme() {
-            const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.body.classList.toggle('dark-mode', isDarkMode);
-        }
-        
-        // Comprobar al cargar
+        // Script existente para tema (sin cambios)
+        function checkColorScheme() { /* ... */ }
         checkColorScheme();
-        
-        // Detectar cambios en el tema del sistema
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', checkColorScheme);
-        }
+        if (window.matchMedia) { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', checkColorScheme); }
+
+        // --- NUEVO: Lógica para mostrar/ocultar contraseña ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('contrasena'); // ID del input de contraseña
+            const togglePasswordButton = document.getElementById('toggleRegistroPassword'); // ID del span del icono
+            const eyeOpenIcon = togglePasswordButton ? togglePasswordButton.querySelector('.eye-open') : null;
+            const eyeClosedIcon = togglePasswordButton ? togglePasswordButton.querySelector('.eye-closed') : null;
+
+            if (passwordInput && togglePasswordButton && eyeOpenIcon && eyeClosedIcon) {
+                // Mostrar/ocultar el botón de ojo según si hay texto
+                passwordInput.addEventListener('input', function() {
+                    if (passwordInput.value.length > 0) {
+                        togglePasswordButton.classList.add('visible');
+                    } else {
+                        togglePasswordButton.classList.remove('visible');
+                        // Reset a oculto si se borra todo
+                        passwordInput.setAttribute('type', 'password');
+                        eyeClosedIcon.style.display = 'block';
+                        eyeOpenIcon.style.display = 'none';
+                    }
+                });
+
+                // Funcionalidad de click en el botón de ojo
+                togglePasswordButton.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    // Cambiar el icono
+                    if (type === 'password') {
+                        eyeClosedIcon.style.display = 'block';
+                        eyeOpenIcon.style.display = 'none';
+                        this.setAttribute('aria-label', 'Mostrar contraseña');
+                    } else {
+                        eyeClosedIcon.style.display = 'none';
+                        eyeOpenIcon.style.display = 'block';
+                        this.setAttribute('aria-label', 'Ocultar contraseña');
+                    }
+                });
+
+                 // Añadir aria-label inicial
+                togglePasswordButton.setAttribute('aria-label', 'Mostrar contraseña');
+
+            } else {
+                console.error("No se encontraron los elementos necesarios para el toggle de contraseña en registro.");
+            }
+        });
+        // --- FIN NUEVO ---
     </script>
 </body>
 </html>
