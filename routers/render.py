@@ -27,7 +27,7 @@ async def inicio(request: Request):
     if not user_name:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)  
     
-    return templates.TemplateResponse("inicio.html", {"request": request, "name": user_name , "user_id":user_id})
+    return templates.TemplateResponse("inicio.html", {"request": request, "name": user_name.capitalize() , "user_id":user_id})
 
 @router.get("/dashboard",response_class=HTMLResponse)
 async def dashboard (request:Request):
