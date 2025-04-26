@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="static/img/LOGO.png">
+    <title>ScrapyMarket</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --text-color: #333;
+            --text-muted: #666;
+            --input-bg: #fff;
+            --input-border: #e0e0e0;
+            --input-focus-border: #333;
+            --button-bg: #333;
+            --button-hover: #4a4a4a;
+            --button-text: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --link-color: #333;
+            --error-color: #d32f2f;
+            --success-color: #388e3c;
+            --accent-light: rgba(51, 51, 51, 0.05);
+            --active-bg: rgba(51, 51, 51, 0.1);
+            --sidebar-bg: var(--card-bg);
+            --hover-bg: var(--accent-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #f5f5f5;
+                --text-muted: #aaa;
+                --input-bg: #262626;
+                --input-border: #444;
+                --input-focus-border: #666;
+                --button-bg: #333;
+                --button-hover: #4a4a4a;
+                --button-text: #fff;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                --link-color: #bbb;
+                --error-color: #f44336;
+                --success-color: #4caf50;
+                --accent-light: rgba(245, 245, 245, 0.08);
+                --active-bg: rgba(245, 245, 245, 0.15);
+                --sidebar-bg: var(--card-bg);
+                --hover-bg: var(--accent-light);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            padding: 20px 0 24px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: fixed;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            z-index: 1001;
+            border-right: 1px solid var(--input-border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            padding: 0 24px 10px 24px;
+            font-weight: 600;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+            color: var(--text-color);
+            min-height: 50px;
+        }
+
+        .brand img {
+            height: 30px;
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            margin-bottom: 15px;
+            border-top: 1px solid var(--input-border);
+            border-bottom: 1px solid var(--input-border);
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .nav-menu {
+            list-style-type: none;
+            padding: 0 8px;
+        }
+
+        .nav-item {
+            margin: 2px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--text-color);
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover { background-color: var(--hover-bg); }
+        .nav-link.active { background-color: var(--active-bg); color: var(--text-color); font-weight: 600; }
+        .nav-icon { margin-right: 12px; width: 18px; height: 18px; display: inline-block; text-align: center; line-height: 18px; }
+
+        main {
+            flex: 1;
+            margin-left: 240px;
+            padding: 40px 48px;
+            transition: margin-left 0.3s ease;
+            width: calc(100% - 240px);
+        }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .dashboard-title { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; color: var(--text-color); }
+        .section { margin-bottom: 40px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .section-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; color: var(--text-color); }
+
+        /* Table styling */
+        .table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 16px var(--shadow-color); background-color: var(--card-bg); -webkit-overflow-scrolling: touch; border: 1px solid var(--input-border); }
+        .table-container { min-width: 100%; overflow: hidden; }
+        .table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        .table th, .table td { padding: 16px 24px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--input-border); }
+        .table th { font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; position: sticky; top: 0; background-color: var(--card-bg); z-index: 10; }
+        .table tr:last-child td { border-bottom: none; }
+        .table tbody tr { transition: background-color 0.2s; }
+        .table tbody tr:hover { background-color: var(--hover-bg); }
+        .price { font-weight: 600; color: var(--success-color); }
+        .rating { display: flex; align-items: center; }
+        .stars { color: #ff9f00; font-size: 14px; margin-right: 8px; }
+        .rating span { color: var(--text-muted); font-size: 12px; }
+        .link-button { display: inline-flex; align-items: center; justify-content: center; background-color: var(--button-bg); color: var(--button-text); border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; text-decoration: none; }
+        .link-button:hover { background-color: var(--button-hover); }
+        .show-more { display: block; text-align: center; padding: 16px; color: var(--link-color); text-decoration: none; font-weight: 500; border-top: 1px solid var(--input-border); transition: background-color 0.2s; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
+        .show-more:hover { background-color: var(--hover-bg); text-decoration: underline; }
+        .empty-table-message { text-align: center; padding: 40px; color: var(--text-muted); }
+        .loading-row td { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
+
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; opacity: 0; transition: opacity 0.3s ease; }
+        .sidebar-overlay.active { display: block; opacity: 1; }
+
+        .menu-toggle { display: none; cursor: pointer; padding: 10px; position: fixed; top: 15px; left: 15px; z-index: 1002; background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); border: 1px solid var(--input-border); transition: background-color 0.3s, opacity 0.3s ease; opacity: 1; pointer-events: auto; }
+        .menu-toggle svg { width: 24px; height: 24px; fill: var(--text-color); display: block; }
+        .sidebar-overlay.active + .menu-toggle { opacity: 0; pointer-events: none; }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 220px; }
+            main { margin-left: 220px; width: calc(100% - 220px); padding: 32px; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); box-shadow: 5px 0 15px var(--shadow-color); border-right: none; }
+            .sidebar.active { transform: translateX(0); }
+            main { margin-left: 0; width: 100%; padding: 24px; padding-top: 85px; transition: none; }
+            .menu-toggle { display: block; }
+            .table th, .table td { padding: 12px 16px; }
+            .dashboard-title { font-size: 24px; }
+        }
+        @media (max-width: 480px) {
+            main { padding: 16px; padding-top: 85px; }
+            .table th, .table td { padding: 10px 12px; font-size: 13px; }
+            .dashboard-title { font-size: 22px; }
+            .link-button { padding: 6px 12px; font-size: 12px; }
+            .sidebar .brand { padding-left: 16px; padding-right: 16px; font-size: 20px; }
+            .sidebar .brand img { height: 25px; margin-right: 8px; }
+            .sidebar .user-info { padding-left: 16px; padding-right: 16px; }
+            .sidebar .nav-menu { padding-left: 4px; padding-right: 4px; }
+            .sidebar .nav-link { padding-left: 12px; padding-right: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <link rel="icon" href="static/img/LOGO.png">
+                <span>ScrapyMarket</span>
+            </div>
+            <div class="user-info">
+                <span class="user-name">Hola, {{ name }}</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <span class="nav-icon">📊</span>
+                        Inicio
+                    </a>
+                </li>
+                <li class="nav-item" style="margin-top: auto; padding-top: 20px;">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">↪️</span>
+                        LogOut
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </div>
+
+        <main>
+            <div class="header">
+                <h1 class="dashboard-title">Dashboard</h1>
+            </div>
+
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Productos Recientes</h2>
+                </div>
+                <div class="table-wrapper">
+                    <div class="table-container">
+                        <table class="table" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Puntuación</th>
+                                    <th>Fecha</th>
+                                    <th>Ir al Comercio</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <tr class="loading-row">
+                                    <td colspan="5">Cargando productos...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="#" class="show-more" id="loadMoreButton" style="display: none;">Mostrar más</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const productsTableBody = document.getElementById('productsTableBody');
+            const loadMoreButton = document.getElementById('loadMoreButton');
+
+            function toggleSidebar() {
+                 if (sidebar && sidebarOverlay) {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                 }
+            }
+            if (menuToggle) { menuToggle.addEventListener('click', toggleSidebar); }
+            if (sidebarOverlay) { sidebarOverlay.addEventListener('click', toggleSidebar); }
+            if (sidebar) {
+                const navLinks = sidebar.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+                            toggleSidebar();
+                        }
+                    });
+                });
+            }
+
+            async function loadProductsFromBackend(page = 1) {
+                if (page === 1 && productsTableBody && !productsTableBody.querySelector('tr:not(.loading-row)')) {
+                   if (!productsTableBody.querySelector('.loading-row')) {
+                       productsTableBody.innerHTML = '<tr class="loading-row"><td colspan="5">Cargando productos...</td></tr>';
+                   }
+                }
+                if (loadMoreButton) loadMoreButton.style.display = 'none';
+
+                try {
+                    // -------------------------------------------------------------
+                    // --- INICIO: ÁREA PARA TU CÓDIGO DE BACKEND ---
+                    // -------------------------------------------------------------
+
+                    // 1. Define la URL de tu API (ajusta la ruta y parámetros)
+                    const apiUrl = `/api/v1/products?page=${page}&limit=10`; // Ejemplo
+
+                    // 2. Realiza la llamada fetch
+                    const response = await fetch(apiUrl, {
+                        method: 'GET', // O 'POST', etc.
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Añade cabeceras de autenticación si son necesarias (ej. token JWT)
+                            // 'Authorization': `Bearer ${tuToken}`
+                        }
+                    });
+
+                    // 3. Verifica si la respuesta fue exitosa
+                    if (!response.ok) {
+                        // Intenta obtener más detalles del error si el backend los envía
+                        let errorMsg = `Error HTTP: ${response.status}`;
+                        try {
+                            const errorData = await response.json();
+                            errorMsg += ` - ${errorData.message || JSON.stringify(errorData)}`;
+                        } catch (e) {
+                            // No se pudo parsear el cuerpo del error o no había
+                        }
+                        throw new Error(errorMsg);
+                    }
+
+                    // 4. Parsea la respuesta JSON
+                    //    ASEGÚRATE que tu backend devuelva un objeto con esta estructura:
+                    //    {
+                    //      products: [ { name: '...', price: ..., ... }, ... ], // Array de productos
+                    //      hasMore: true / false // Booleano indicando si hay más páginas
+                    //    }
+                    const data = await response.json();
+
+                    // -------------------------------------------------------------
+                    // --- FIN: ÁREA PARA TU CÓDIGO DE BACKEND ---
+                    // -------------------------------------------------------------
+
+
+                    // --- Process and Render Data ---
+                    if (productsTableBody) {
+                         if(page === 1) {
+                             renderProducts(data.products); // Replace content on first page
+                         } else {
+                             appendProducts(data.products); // Add content on subsequent pages
+                         }
+
+                        // Control visibility of "Load More" button
+                        if (loadMoreButton) {
+                            loadMoreButton.style.display = data.hasMore ? 'block' : 'none';
+                            if (data.hasMore) {
+                                loadMoreButton.dataset.nextPage = page + 1;
+                                loadMoreButton.textContent = "Mostrar más"; // Reset text after loading
+                            }
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error al cargar productos desde el backend:', error);
+                     if (productsTableBody) {
+                        // Display error message in the table
+                        productsTableBody.innerHTML = `<tr><td colspan="5" class="empty-table-message">Error al cargar datos: ${error.message}. Inténtalo de nuevo.</td></tr>`;
+                     }
+                     if (loadMoreButton) {
+                        loadMoreButton.style.display = 'none'; // Hide button on error
+                     }
+                }
+            }
+
+            // --- Render Functions ---
+            function renderProducts(products) {
+                 if (!productsTableBody) return;
+                 if (!products || products.length === 0) {
+                     productsTableBody.innerHTML = '<tr><td colspan="5" class="empty-table-message">No se encontraron productos.</td></tr>';
+                     return;
+                 }
+                 const html = products.map(product => `
+                     <tr>
+                         <td>${product.name || 'N/A'}</td>
+                         <td class="price">$${(product.price || 0).toFixed(2)}</td>
+                         <td>
+                             <div class="rating">
+                                 <div class="stars">${generateStars(product.rating)}</div>
+                                 <span>(${product.ratingCount || 0})</span>
+                             </div>
+                         </td>
+                         <td>${product.date ? new Date(product.date).toLocaleDateString() : '-'}</td>
+                         <td>
+                             <a href="${product.storeUrl || '#'}" target="_blank" class="link-button">
+                                 Ver Tienda
+                             </a>
+                         </td>
+                     </tr>
+                 `).join('');
+                 productsTableBody.innerHTML = html;
+            }
+
+            function appendProducts(products) {
+                if (!productsTableBody || !products || products.length === 0) return;
+                const existingMessageRow = productsTableBody.querySelector('.loading-row, .empty-table-message');
+                if (existingMessageRow) existingMessageRow.parentElement.remove();
+
+                const fragment = document.createDocumentFragment();
+                products.forEach(product => {
+                    const tr = document.createElement('tr');
+                    // Asegúrate que las propiedades (product.name, product.price, etc.) coincidan
+                    // con las que envía tu backend.
+                    tr.innerHTML = `
+                        <td>${product.name || 'N/A'}</td>
+                        <td class="price">$${(product.price || 0).toFixed(2)}</td>
+                        <td>
+                            <div class="rating">
+                                <div class="stars">${generateStars(product.rating)}</div>
+                                <span>(${product.ratingCount || 0})</span>
+                            </div>
+                        </td>
+                        <td>${product.date ? new Date(product.date).toLocaleDateString() : '-'}</td>
+                        <td>
+                            <a href="${product.storeUrl || '#'}" target="_blank" class="link-button">
+                                Ver Tienda
+                            </a>
+                        </td>
+                    `;
+                    fragment.appendChild(tr);
+                });
+                productsTableBody.appendChild(fragment);
+            }
+
+            // Helper to generate rating stars
+            function generateStars(rating) {
+                const roundedRating = Math.round(rating || 0);
+                if (roundedRating <= 0) return '☆☆☆☆☆';
+                const fullStars = '★'.repeat(roundedRating);
+                const emptyStars = '☆'.repeat(5 - roundedRating);
+                return `${fullStars}${emptyStars}`;
+            }
+
+            // --- Event Listener for "Load More" Button ---
+            if (loadMoreButton) {
+                loadMoreButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const nextPage = parseInt(loadMoreButton.dataset.nextPage || '2', 10);
+                    loadMoreButton.textContent = "Cargando..."; // Show loading feedback
+                    loadProductsFromBackend(nextPage);
+                });
+            }
+
+            // --- Initial Data Load ---
+            loadProductsFromBackend(1); // Load the first page when the DOM is ready
+
+        });
+    </script>
+</body>
+</html>

@@ -4,16 +4,14 @@ from pydantic import BaseModel
 from sqlalchemy import Column
 from sqlalchemy.dialects.mysql import JSON
 from sqlalchemy.ext.mutable import MutableDict, MutableList
+from datetime import date
 
 # Clases de usuario
 class UserBase(SQLModel):
     nombre: str = Field(index=True)
     correo: str = Field(index=True, unique=True)
     genero: str = Field(index=True)
-    edad: int = Field(index=True)
-    
-class CreateUser(UserBase):
-    contraseña: str = Field(index=True)
+    fecha_nacimiento: date = Field(index=True)  # Cambio aquí
     
 class ReadUser(UserBase):
     id: int = Field(default=None, primary_key=True)
@@ -39,8 +37,3 @@ class User(UserBase, table=True):
 
     class Config:
         orm_mode = True
-
-# Clase para logear
-class Login(BaseModel):
-    nombre: str
-    contraseña: str

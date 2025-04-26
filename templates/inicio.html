@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+<body>
+    <h1>Bienvenido {{ name }} (ID: {{ user_id }})</h1>
+    <!-- Puedes usar el user_id para guardar las búsquedas de este usuario -->
+    
+    <form method="POST" action="/guardar_busqueda">
+        <input type="text" name="busqueda" placeholder="Buscar...">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <a href="/logout">Cerrar sesión</a>
+</body>
+</html>

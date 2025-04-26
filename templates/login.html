@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="icon" href="static/img/LOGO.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --text-color: #333;
+            --text-muted: #666;
+            --input-bg: #fff;
+            --input-border: #e0e0e0;
+            --input-focus-border: #333;
+            --button-bg: #333;
+            --button-hover: #4a4a4a;
+            --button-text: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --link-color: #333;
+            --error-color: #d32f2f;
+            --success-color: #388e3c;
+            --accent-light: rgba(51, 51, 51, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #f5f5f5;
+                --text-muted: #aaa;
+                --input-bg: #262626;
+                --input-border: #444;
+                --input-focus-border: #666;
+                --button-bg: #333;
+                --button-hover: #4a4a4a;
+                --button-text: #fff;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                --link-color: #bbb;
+                --error-color: #f44336;
+                --success-color: #4caf50;
+                --accent-light: rgba(102, 102, 102, 0.15);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .login-container img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+
+        .form-group .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .form-group .icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .btn {
+            background-color: #333;
+            color: var(--button-text);
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 16px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--input-border);
+        }
+
+        .create-account, .forgot-password {
+            font-size: 14px;
+        }
+
+        .create-account a, .forgot-password a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .create-account a:hover, .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .form-group.error input {
+            border-color: var(--error-color);
+        }
+
+        .form-group.error .error-message {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .form-group.success input {
+            border-color: var(--success-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-container {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            .login-container img {
+                 width: 120px;
+                 height: 120px;
+                 margin-bottom: 20px;
+            }
+
+            .form-group input {
+                padding: 12px 14px;
+            }
+
+            .btn {
+                padding: 12px;
+            }
+
+            .form-footer {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .forgot-password {
+                align-self: flex-end;
+            }
+
+            .create-account {
+                align-self: flex-start;
+            }
+        }
+
+        .icon-user, .icon-lock {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+    </style>
+</head>
+<body>
+        <div class="login-container">
+          <h1>Inicio de sesión</h1>
+          <img src="/static/img/LOGO.png" alt="Logo de la Empresa" width="180px" height="180px">
+        <form id="loginForm" action="/users/login" method="post">
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <div class="input-wrapper">
+                    <input name="nombre" type="text" id="username" placeholder="jhon Doe" required>
+                    <div class="icon">
+                        <svg class="icon-user" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="7" r="4" />
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <div class="input-wrapper">
+                    <input name="contraseña" type="password" id="password" placeholder="••••••••••••" required>
+                    <div class="icon">
+                        <svg class="icon-lock" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn">Ingresar</button>
+            <div class="form-footer">
+                <div class="create-account">
+                    <a href="/registro">Crear cuenta</a>
+                </div>
+                <div class="forgot-password">
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

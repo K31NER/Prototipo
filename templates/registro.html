@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <link rel="icon" href="static/img/LOGO.png">
+    <style>
+        :root {
+            --background-color: #fef0f5;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --placeholder-color: #888888;
+            --button-background: #333333;
+            --button-text: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --input-background: #ffffff;
+            --svg-color: #333333;
+            --date-icon-filter: invert(0.5);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #1a1a1a;
+                --card-background: #2a2a2a;
+                --text-color: #f0f0f0;
+                --border-color: #444444;
+                --placeholder-color: #aaaaaa;
+                --button-background: #444444;
+                --button-text: #f0f0f0;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                --input-background: #333333;
+                --svg-color: #f0f0f0;
+                --date-icon-filter: invert(1);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s;
+            color: var(--text-color);
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 30px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        h1 {
+            color: var(--text-color);
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .profile-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-section p {
+            color: var(--text-color);
+            margin-bottom: 15px;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--input-background);
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .profile-pic svg {
+            width: 60%;
+            height: 60%;
+            stroke: var(--svg-color);
+            transition: stroke 0.3s;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--input-background);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #707070;
+        }
+
+        .form-control::placeholder {
+            color: var(--placeholder-color);
+            transition: color 0.3s;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            padding-right: 40px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--button-background);
+            color: var(--button-text);
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            background-color: #555555;
+        }
+
+        .login-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+        
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: var(--date-icon-filter);
+            transition: filter 0.3s;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Registro</h1>
+        
+        <form id="registroForm" method="post" action="/users/registro">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="User1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="contrasena">Contraseña</label>
+                <input type="password" id="contrasena" name="contraseña" class="form-control" placeholder="**************" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="correo">Correo</label>
+                <input type="email" id="correo" name="correo" class="form-control" placeholder="user1@gmail.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fechaNacimiento">Fecha de nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fecha_nacimiento" class="form-control" placeholder="dd / mm / aaaa" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="genero">Género</label>
+                <select id="genero" name="genero" class="form-control" required>
+                    <option value="" disabled selected>Seleccione su género</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="otro">LGBTIQ+</option>
+                </select>
+            </div>
+            
+            <button type="submit">Enviar</button>
+            
+            <a href="/" class="login-link">¿Ya tienes una cuenta? Inicia sesión</a>
+        </form>
+    </div>
+
+    <script>
+        // Comprobación del tema del sistema y aplicación al cargar la página
+        function checkColorScheme() {
+            const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.body.classList.toggle('dark-mode', isDarkMode);
+        }
+        
+        // Comprobar al cargar
+        checkColorScheme();
+        
+        // Detectar cambios en el tema del sistema
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', checkColorScheme);
+        }
+    </script>
+</body>
+</html>

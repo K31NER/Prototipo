@@ -3,9 +3,11 @@ import joblib
 import pandas as pd
 from models import *
 from db import sesion
+from datetime import datetime
 from sqlmodel import select
 from limpiar import limpiar_datos
-from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, HTTPException, status,Form
 from scraper_paralelismo import scrapear_todas_las_tiendas
 from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
 
@@ -52,24 +54,44 @@ def preparar_datos(data):
     
     return top_30
 
-@router.post("/registro",response_model=ReadUser, status_code=status.HTTP_201_CREATED)
-async def create_user(user: CreateUser, session:sesion):
+@router.post("/registro", response_model=ReadUser, status_code=status.HTTP_201_CREATED)
+async def create_user(session: sesion,
+                    nombre: str = Form(...),
+                    correo: str = Form(...),
+                    genero: str = Form(...),
+                    fecha_nacimiento: str = Form(...),
+                    contraseña: str = Form(...),):
     """ Crea un nuevo usuario """
-    user = User(**user.model_dump())
-    user.contraseña = hash_contraseña(user.contraseña)
-    session.add(user)
+    # Convertir fecha de string a objeto datetime
+    fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%Y-%m-%d").date()
+    
+    # Creamos el usuario en base al modelo 
+    new_user = User(
+        nombre=nombre,
+        correo=correo,
+        genero=genero,
+        fecha_nacimiento=fecha_nacimiento, 
+        contraseña=hash_contraseña(contraseña),
+    )
+    
+    # Agregamos el usuario
     session.commit()
-    session.refresh(user)
-    return user
+    session.refresh(new_user)
+    
+    # redireccionamos al usuario a la página de inicio
+    return RedirectResponse(url=f"/inicio?user_name={new_user.nombre}&user_id={new_user.id}", status_code=status.HTTP_303_SEE_OTHER)
 
-@router.post("/login",status_code=status.HTTP_200_OK)
-async def login(user:Login,session:sesion):
-    """ Funcion para verificar el usuario """
-    user = verificar_usuario(session,user.nombre,user.contraseña)
+
+@router.post("/login", status_code=status.HTTP_200_OK)
+async def login(session: sesion, nombre: str = Form(...), contraseña: str = Form(...)):
+    """Función para verificar el usuario"""
+    # Verificar si el usuario existe y la contraseña es correcta
+    user = verificar_usuario(session, nombre, contraseña)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales inválidas")
-    return {"mensaje": f"Bienvenido {user.nombre}"}
-
+    
+    # redireccionamos al usuario a la página de inicio
+    return RedirectResponse(url=f"/inicio?user_name={user.nombre}&user_id={user.id}", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.post("/buscar")
@@ -78,7 +100,7 @@ async def buscar(producto: str, id: str, session:sesion):
     datos = scrapear_todas_las_tiendas(producto)
     if not datos:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
-
+    
     # 2. Buscar usuario
     user = session.get(User, id)
     if not user:
