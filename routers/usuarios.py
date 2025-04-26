@@ -75,6 +75,7 @@ async def create_user(session: sesion,
     )
     
     # Agregamos el usuario
+    session.add(new_user)
     session.commit()
     session.refresh(new_user)
     
