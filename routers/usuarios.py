@@ -6,7 +6,7 @@ from db import sesion
 from datetime import datetime
 from sqlmodel import select
 from limpiar import limpiar_datos
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse,JSONResponse
 from fastapi import APIRouter, HTTPException, status,Form
 from scraper_paralelismo import scrapear_todas_las_tiendas
 from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
@@ -87,10 +87,13 @@ async def create_user(session: sesion,
 async def login(session: sesion, nombre: str = Form(...), contraseña: str = Form(...)):
     """Función para verificar el usuario"""
     # Verificar si el usuario existe y la contraseña es correcta
-    user = verificar_usuario(session, nombre, contraseña)
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales inválidas")
-    
+    try:
+        user = verificar_usuario(session, nombre, contraseña)
+    except HTTPException as e:
+        if e.status_code == status.HTTP_401_UNAUTHORIZED:
+            return JSONResponse(content={"error": "Credenciales inválidas"}, status_code=status.HTTP_401_UNAUTHORIZED)
+        raise e
+        
     # redireccionamos al usuario a la página de inicio
     return RedirectResponse(url=f"/inicio?user_name={user.nombre}&user_id={user.id}", status_code=status.HTTP_303_SEE_OTHER)
 
