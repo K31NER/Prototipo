@@ -162,9 +162,9 @@
 
         /* Table styling */
         .table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 16px var(--shadow-color); background-color: var(--card-bg); -webkit-overflow-scrolling: touch; border: 1px solid var(--input-border); }
-        .table-container { min-width: 100%; overflow: hidden; }
-        .table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-        .table th, .table td { padding: 16px 24px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--input-border); }
+        .table-container { min-width: 100%; }
+        .table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .table th, .table td { padding: 16px 24px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--input-border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .table th { font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; position: sticky; top: 0; background-color: var(--card-bg); z-index: 10; }
         .table tr:last-child td { border-bottom: none; }
         .table tbody tr { transition: background-color 0.2s; }
@@ -254,28 +254,36 @@
 
             <section class="section">
                 <div class="section-header">
-                    <h2 class="section-title">Productos Recientes</h2>
+                    <h2 class="section-title">Productos Buscados</h2>
                 </div>
                 <div class="table-wrapper">
                     <div class="table-container">
-                        <table class="table" id="productsTable">
+                        <table class="table">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Puntuación</th>
-                                    <th>Fecha</th>
-                                    <th>Ir al Comercio</th>
+                                    <th>Enlace</th>
                                 </tr>
                             </thead>
-                            <tbody id="productsTableBody">
-                                <tr class="loading-row">
-                                    <td colspan="5">Cargando productos...</td>
-                                </tr>
+                            <tbody>
+                                {% for producto in productos %}
+                                    <tr>
+                                        <td>{{ producto.nombre }}</td>
+                                        <td>${{ producto.precio | round(2) }}</td>
+                                        <td>{{ producto.puntuacion }}</td>
+                                        <td><a href="{{ producto.links }}" target="_blank" class="link-button">Ver Producto</a></td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center empty-table-message">No se encontraron productos.</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    <a href="#" class="show-more" id="loadMoreButton" style="display: none;">Mostrar más</a>
+                    <a href="/inicio" class="show-more">Volver al Inicio</a>
                 </div>
             </section>
         </main>
@@ -286,17 +294,22 @@
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const productsTableBody = document.getElementById('productsTableBody');
-            const loadMoreButton = document.getElementById('loadMoreButton');
 
             function toggleSidebar() {
-                 if (sidebar && sidebarOverlay) {
+                if (sidebar && sidebarOverlay) {
                     sidebar.classList.toggle('active');
                     sidebarOverlay.classList.toggle('active');
-                 }
+                }
             }
-            if (menuToggle) { menuToggle.addEventListener('click', toggleSidebar); }
-            if (sidebarOverlay) { sidebarOverlay.addEventListener('click', toggleSidebar); }
+
+            if (menuToggle) {
+                menuToggle.addEventListener('click', toggleSidebar);
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', toggleSidebar);
+            }
+
             if (sidebar) {
                 const navLinks = sidebar.querySelectorAll('.nav-link');
                 navLinks.forEach(link => {
@@ -307,170 +320,6 @@
                     });
                 });
             }
-
-            async function loadProductsFromBackend(page = 1) {
-                if (page === 1 && productsTableBody && !productsTableBody.querySelector('tr:not(.loading-row)')) {
-                   if (!productsTableBody.querySelector('.loading-row')) {
-                       productsTableBody.innerHTML = '<tr class="loading-row"><td colspan="5">Cargando productos...</td></tr>';
-                   }
-                }
-                if (loadMoreButton) loadMoreButton.style.display = 'none';
-
-                try {
-                    // -------------------------------------------------------------
-                    // --- INICIO: ÁREA PARA TU CÓDIGO DE BACKEND ---
-                    // -------------------------------------------------------------
-
-                    // 1. Define la URL de tu API (ajusta la ruta y parámetros)
-                    const apiUrl = `/api/v1/products?page=${page}&limit=10`; // Ejemplo
-
-                    // 2. Realiza la llamada fetch
-                    const response = await fetch(apiUrl, {
-                        method: 'GET', // O 'POST', etc.
-                        headers: {
-                            'Content-Type': 'application/json',
-                            // Añade cabeceras de autenticación si son necesarias (ej. token JWT)
-                            // 'Authorization': `Bearer ${tuToken}`
-                        }
-                    });
-
-                    // 3. Verifica si la respuesta fue exitosa
-                    if (!response.ok) {
-                        // Intenta obtener más detalles del error si el backend los envía
-                        let errorMsg = `Error HTTP: ${response.status}`;
-                        try {
-                            const errorData = await response.json();
-                            errorMsg += ` - ${errorData.message || JSON.stringify(errorData)}`;
-                        } catch (e) {
-                            // No se pudo parsear el cuerpo del error o no había
-                        }
-                        throw new Error(errorMsg);
-                    }
-
-                    // 4. Parsea la respuesta JSON
-                    //    ASEGÚRATE que tu backend devuelva un objeto con esta estructura:
-                    //    {
-                    //      products: [ { name: '...', price: ..., ... }, ... ], // Array de productos
-                    //      hasMore: true / false // Booleano indicando si hay más páginas
-                    //    }
-                    const data = await response.json();
-
-                    // -------------------------------------------------------------
-                    // --- FIN: ÁREA PARA TU CÓDIGO DE BACKEND ---
-                    // -------------------------------------------------------------
-
-
-                    // --- Process and Render Data ---
-                    if (productsTableBody) {
-                         if(page === 1) {
-                             renderProducts(data.products); // Replace content on first page
-                         } else {
-                             appendProducts(data.products); // Add content on subsequent pages
-                         }
-
-                        // Control visibility of "Load More" button
-                        if (loadMoreButton) {
-                            loadMoreButton.style.display = data.hasMore ? 'block' : 'none';
-                            if (data.hasMore) {
-                                loadMoreButton.dataset.nextPage = page + 1;
-                                loadMoreButton.textContent = "Mostrar más"; // Reset text after loading
-                            }
-                        }
-                    }
-
-                } catch (error) {
-                    console.error('Error al cargar productos desde el backend:', error);
-                     if (productsTableBody) {
-                        // Display error message in the table
-                        productsTableBody.innerHTML = `<tr><td colspan="5" class="empty-table-message">Error al cargar datos: ${error.message}. Inténtalo de nuevo.</td></tr>`;
-                     }
-                     if (loadMoreButton) {
-                        loadMoreButton.style.display = 'none'; // Hide button on error
-                     }
-                }
-            }
-
-            // --- Render Functions ---
-            function renderProducts(products) {
-                 if (!productsTableBody) return;
-                 if (!products || products.length === 0) {
-                     productsTableBody.innerHTML = '<tr><td colspan="5" class="empty-table-message">No se encontraron productos.</td></tr>';
-                     return;
-                 }
-                 const html = products.map(product => `
-                     <tr>
-                         <td>${product.name || 'N/A'}</td>
-                         <td class="price">$${(product.price || 0).toFixed(2)}</td>
-                         <td>
-                             <div class="rating">
-                                 <div class="stars">${generateStars(product.rating)}</div>
-                                 <span>(${product.ratingCount || 0})</span>
-                             </div>
-                         </td>
-                         <td>${product.date ? new Date(product.date).toLocaleDateString() : '-'}</td>
-                         <td>
-                             <a href="${product.storeUrl || '#'}" target="_blank" class="link-button">
-                                 Ver Tienda
-                             </a>
-                         </td>
-                     </tr>
-                 `).join('');
-                 productsTableBody.innerHTML = html;
-            }
-
-            function appendProducts(products) {
-                if (!productsTableBody || !products || products.length === 0) return;
-                const existingMessageRow = productsTableBody.querySelector('.loading-row, .empty-table-message');
-                if (existingMessageRow) existingMessageRow.parentElement.remove();
-
-                const fragment = document.createDocumentFragment();
-                products.forEach(product => {
-                    const tr = document.createElement('tr');
-                    // Asegúrate que las propiedades (product.name, product.price, etc.) coincidan
-                    // con las que envía tu backend.
-                    tr.innerHTML = `
-                        <td>${product.name || 'N/A'}</td>
-                        <td class="price">$${(product.price || 0).toFixed(2)}</td>
-                        <td>
-                            <div class="rating">
-                                <div class="stars">${generateStars(product.rating)}</div>
-                                <span>(${product.ratingCount || 0})</span>
-                            </div>
-                        </td>
-                        <td>${product.date ? new Date(product.date).toLocaleDateString() : '-'}</td>
-                        <td>
-                            <a href="${product.storeUrl || '#'}" target="_blank" class="link-button">
-                                Ver Tienda
-                            </a>
-                        </td>
-                    `;
-                    fragment.appendChild(tr);
-                });
-                productsTableBody.appendChild(fragment);
-            }
-
-            // Helper to generate rating stars
-            function generateStars(rating) {
-                const roundedRating = Math.round(rating || 0);
-                if (roundedRating <= 0) return '☆☆☆☆☆';
-                const fullStars = '★'.repeat(roundedRating);
-                const emptyStars = '☆'.repeat(5 - roundedRating);
-                return `${fullStars}${emptyStars}`;
-            }
-
-            // --- Event Listener for "Load More" Button ---
-            if (loadMoreButton) {
-                loadMoreButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const nextPage = parseInt(loadMoreButton.dataset.nextPage || '2', 10);
-                    loadMoreButton.textContent = "Cargando..."; // Show loading feedback
-                    loadProductsFromBackend(nextPage);
-                });
-            }
-
-            // --- Initial Data Load ---
-            loadProductsFromBackend(1); // Load the first page when the DOM is ready
-
         });
     </script>
 </body>
