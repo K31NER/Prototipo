@@ -1,17 +1,22 @@
+import json
 import bcrypt 
 import joblib
+import pyshorteners
 import pandas as pd
 from models import *
 from db import sesion
-from datetime import datetime
 from sqlmodel import select
+from datetime import datetime
+from urllib.parse import quote
 from limpiar import limpiar_datos
 from fastapi.responses import RedirectResponse,JSONResponse
-from fastapi import APIRouter, HTTPException, status,Form
+from fastapi import APIRouter, HTTPException, status,Form , Response
 from scraper_paralelismo import scrapear_todas_las_tiendas
 from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
 
 router = APIRouter(prefix="/users",tags=["users"])
+# Creamos el objeto Shortener
+s = pyshorteners.Shortener()
 
 def hash_contraseña(contraseña: str) -> str:
     """ Hash de contraseña de usuario"""
@@ -34,11 +39,15 @@ def verificar_usuario(session:sesion, nombre: str, contraseña: str):
     return result  # Puedes retornar el usuario completo
 
 def preparar_datos(data):
+    """ Prepara los datos para el modelo """
     # cargamos el modelo
     modelo = joblib.load("modelo_random_forest.pkl")
     
     # Limpiamos los datos
     df = limpiar_datos(pd.DataFrame(data))
+    
+    # Recortamos las URLs en la columna 'Links'
+    df["Links"] = df["Links"].apply(lambda x: s.tinyurl.short(x) if isinstance(x, str) else x)
     
     # Datos que usara el modelo
     x = df[["Precio", "Puntuacion", "PC", "PPW", "PS"]].values
@@ -50,9 +59,9 @@ def preparar_datos(data):
     df["IR"] = (df["IR"] - df["IR"].min()) / (df["IR"].max() - df["IR"].min()) * 100
     
     # Guardar y mostrar resultados
-    top_30 = df.nlargest(30, "IR")
+    top = df.nlargest(15, "IR")
     
-    return top_30
+    return top
 
 @router.post("/registro", response_model=ReadUser, status_code=status.HTTP_201_CREATED)
 async def create_user(session: sesion,
@@ -99,7 +108,7 @@ async def login(session: sesion, nombre: str = Form(...), contraseña: str = For
 
 
 @router.post("/buscar")
-async def buscar(producto: str, id: str, session:sesion):
+async def buscar(session:sesion,response:Response, producto: str = Form(...),id: str = Form(...)):
     # 1. Realizamos el scrapeo
     datos = scrapear_todas_las_tiendas(producto)
     if not datos:
@@ -131,11 +140,25 @@ async def buscar(producto: str, id: str, session:sesion):
 
     # 7. Procesamos los datos scrapeados
     productos_filtrados = preparar_datos(datos)
+    
+    # 8. Creamos una lista de productos y los almacenamos en una cookie
+    productos_lista = []
+    for producto in productos_filtrados.to_dict(orient="records"):
+        productos_lista.append({
+            "nombre": producto["Nombre"],
+            "precio": producto["Precio"],
+            "puntuacion": producto["Puntuacion"],
+            "links": producto["Links"]
+        })
+    
+    # Volvemos la lista un JSON
+    productos_json = quote(json.dumps(productos_lista))
+    
+    # 9. Redirigimos al usuario al dashboard con los parámetros de usuario
+    response = RedirectResponse(url=f"/dashboard?user_name={user.nombre}&user_id={user.id}", status_code=303)
+    response.set_cookie(key="productos", value=productos_json, max_age=1800, httponly=True)
+    response.set_cookie(key="user_name", value=user.nombre, max_age=1800, httponly=True)
+    
+    return response
 
-    return {
-        "mensaje": "Perfil actualizado correctamente",
-        "categorias_visitadas_raw": user.categorias_visitadas_raw,
-        "categorias_embedding": user.categorias_embedding,
-        "top_productos": productos_filtrados.to_dict(orient="records")
-    }
 
