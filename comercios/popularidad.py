@@ -77,4 +77,9 @@ def obtener_popularidad():
 
     except Exception as e:
         print(f"❌ Error al buscar popularidad: {e}")
+        if os.path.exists(RUTA_JSON):
+            print("♻️ Reciclando datos existentes debido al error.")
+            with open(RUTA_JSON, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return data.get("datos", [])
         return []
