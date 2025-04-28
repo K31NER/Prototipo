@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error de autenticación</title>
+    <link rel="icon" href="static/img/LOGO.png"> 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --text-color: #333;
+            --text-muted: #666;
+            --input-bg: #fff;
+            --input-border: #e0e0e0;
+            --input-focus-border: #333;
+            --button-bg: #333;
+            --button-hover: #4a4a4a;
+            --button-text: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --link-color: #333;
+            --error-color: #d32f2f;
+            --success-color: #388e3c;
+            --accent-light: rgba(51, 51, 51, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #f5f5f5;
+                --text-muted: #aaa;
+                --input-bg: #262626;
+                --input-border: #444;
+                --input-focus-border: #666;
+                --button-bg: #333;
+                --button-hover: #4a4a4a;
+                --button-text: #fff;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                --link-color: #bbb;
+                --error-color: #f44336;
+                --success-color: #4caf50;
+                --accent-light: rgba(102, 102, 102, 0.15);
+            }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            background-color: var(--card-bg);
+            padding: 30px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--error-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .logo {
+            max-width: 100px;
+            margin-bottom: 20px;
+            height: auto;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block; 
+            width: 100%;    
+            box-sizing: border-box; 
+            transition: background-color 0.3s ease;
+        }
+        
+
+        .btn:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .logo {
+                max-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="/static/img/LOGO.png" alt="Logo" class="logo">
+        
+        <h1>Acceso Denegado</h1>
+        <p>No hemos podido verificar tus credenciales. Por favor, inicia sesión o regístrate.</p>
+        <a href="/" class="btn">Inicia sesión o regístrate</a>
+    </div>
+
+</body>
+</html>

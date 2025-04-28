@@ -1,18 +1,15 @@
-import os
 import json
 from models import *
 from db import sesion
 from utils.utils import *
 from datetime import datetime
 from urllib.parse import quote
-from .render import get_current_user
 from fastapi.templating import Jinja2Templates
 from scraper_paralelismo import scrapear_todas_las_tiendas
 from fastapi.responses import RedirectResponse,JSONResponse
 from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import APIRouter, HTTPException, status,Form , Response, Request, Depends
-
 
 SECRET_KEY = Secret_key
 ALGORITHM = Algortihm
@@ -50,7 +47,8 @@ async def create_user(session: sesion,
     session.refresh(new_user)
     
     # Creamos el token JWT
-    access_token = create_jwt_token({"sub":new_user.nombre},SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
+    user_data = {"sub": new_user.nombre, "id": new_user.id}
+    access_token = create_jwt_token(user_data,SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
     
     # redireccionamos al usuario a la página de inicio
     response = RedirectResponse(url=f"/inicio?user_name={new_user.nombre}&user_id={new_user.id}", status_code=status.HTTP_303_SEE_OTHER)
@@ -69,7 +67,8 @@ async def login(session: sesion, nombre: str = Form(...), contraseña: str = For
         if e.status_code == status.HTTP_401_UNAUTHORIZED:
             return JSONResponse(content={"error": "Credenciales inválidas"}, status_code=status.HTTP_401_UNAUTHORIZED)
         raise e
-    access_token = create_jwt_token({"sub":user.nombre},SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
+    user_data:dict = {"sub":user.nombre, "id":user.id}
+    access_token = create_jwt_token(user_data,SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
     
     # redireccionamos al usuario a la página de inicio
     response = RedirectResponse(url=f"/inicio?user_name={user.nombre}&user_id={user.id}", status_code=status.HTTP_303_SEE_OTHER)
@@ -165,6 +164,7 @@ async def buscar(
         url=f"/dashboard?user_name={user.nombre}&user_id={user.id}",
         status_code=303
     )
+    # Creamos la cookie con los productos
     response.set_cookie("productos", productos_json, max_age=1800, httponly=True)
     response.set_cookie("user_name", user.nombre,   max_age=1800, httponly=True)
     return response

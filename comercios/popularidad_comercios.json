@@ -1,30 +1,30 @@
 {
-  "ultima_actualizacion": "2025-04-27 21:00",
+  "ultima_actualizacion": "2025-04-28 13:00",
   "status": "ok",
   "datos": [
     {
       "comercio": "Mercado Libre",
-      "popularidad": 66.0
+      "popularidad": 60.0
     },
     {
       "comercio": "Falabella",
-      "popularidad": 78.0
+      "popularidad": 64.0
     },
     {
       "comercio": "Alkosto",
-      "popularidad": 60.0
+      "popularidad": 70.0
     },
     {
       "comercio": "Jumbo",
-      "popularidad": 28.0
+      "popularidad": 63.0
     },
     {
       "comercio": "Linio",
-      "popularidad": 10
+      "popularidad": 100.0
     },
     {
       "comercio": "Exito",
-      "popularidad": 60.0
+      "popularidad": 87.0
     }
   ]
 }
