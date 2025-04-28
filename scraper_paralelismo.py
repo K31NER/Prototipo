@@ -1,4 +1,5 @@
 from playwright.sync_api import sync_playwright
+from playwright_stealth import stealth_sync
 import pandas as pd
 import concurrent.futures  # Para paralelismo con procesos
 import time
@@ -21,7 +22,15 @@ def scrapear_tienda(tienda, scrapear_func, articulo):
     
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
+        context = browser.new_context()
+        page = context.new_page()
+        
+        # Bloquear imágenes para ir más rápido
+        page.route("**/*", lambda route, request: 
+            route.abort() if request.resource_type in ["image", "font", "stylesheet"] else route.continue_()
+        )
+        stealth_sync(page) # Aplicar técnicas de stealth
+        
         df = scrapear_func(articulo, page)
         browser.close()  
 
