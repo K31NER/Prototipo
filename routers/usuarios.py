@@ -10,11 +10,13 @@ from datetime import datetime
 from urllib.parse import quote
 from limpiar import limpiar_datos
 from fastapi.responses import RedirectResponse,JSONResponse
-from fastapi import APIRouter, HTTPException, status,Form , Response
+from fastapi import APIRouter, HTTPException, status,Form , Response, Request
 from scraper_paralelismo import scrapear_todas_las_tiendas
 from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter(prefix="/users",tags=["users"])
+templates = Jinja2Templates(directory="templates")
 # Creamos el objeto Shortener
 s = pyshorteners.Shortener()
 
@@ -119,12 +121,32 @@ async def login(session: sesion, nombre: str = Form(...), contraseña: str = For
 
 
 @router.post("/buscar")
-async def buscar(session:sesion,response:Response, producto: str = Form(...),id: str = Form(...)):
+async def buscar(
+    request: Request,
+    session: sesion,
+    response: Response,
+    producto: str = Form(...),
+    id: str = Form(...)
+):
     # 1. Realizamos el scrapeo
     datos = scrapear_todas_las_tiendas(producto)
+
+    # Si no hay resultados, volvemos a la página de inicio con mensaje de error
     if not datos:
-        raise HTTPException(status_code=404, detail="Producto no encontrado")
-    
+        # opcionalmente puedes recuperar el nombre de usuario para el saludo
+        user = session.get(User, id)
+        nombre = user.nombre if user else ""
+        return templates.TemplateResponse(
+            "inicio.html",
+            {
+                "request": request,
+                "name": nombre.capitalize(),
+                "user_id": id,
+                "error": "No se encontraron productos, realice otra búsqueda"
+            },
+            status_code=200
+        )
+
     # 2. Buscar usuario
     user = session.get(User, id)
     if not user:
@@ -136,11 +158,12 @@ async def buscar(session:sesion,response:Response, producto: str = Form(...),id:
     # 4. Actualizamos conteo de categorías
     if user.categorias_visitadas_raw is None:
         user.categorias_visitadas_raw = {}
-
     categoria = obtener_categoria_meta(producto)
-    user.categorias_visitadas_raw[categoria] = user.categorias_visitadas_raw.get(categoria, 0) + 1
+    user.categorias_visitadas_raw[categoria] = (
+        user.categorias_visitadas_raw.get(categoria, 0) + 1
+    )
 
-    # 5. Recalculamos el embedding (basado en las claves, no los valores)
+    # 5. Recalculamos el embedding
     embedding = generar_embedding(user.categorias_visitadas_raw)
     user.categorias_embedding = embedding
 
@@ -151,25 +174,24 @@ async def buscar(session:sesion,response:Response, producto: str = Form(...),id:
 
     # 7. Procesamos los datos scrapeados
     productos_filtrados = preparar_datos(datos)
-    
-    # 8. Creamos una lista de productos y los almacenamos en una cookie
-    productos_lista = []
-    for producto in productos_filtrados.to_dict(orient="records"):
-        productos_lista.append({
-            "nombre": producto["Nombre"],
-            "precio": producto["Precio"],
-            "puntuacion": producto["Puntuacion"],
-            "links": producto["Links"]
-        })
-    
-    # Volvemos la lista un JSON
+
+    # 8. Creamos lista y la guardamos en cookie
+    productos_lista = [
+        {
+            "nombre": p["Nombre"],
+            "precio": p["Precio"],
+            "puntuacion": p["Puntuacion"],
+            "links": p["Links"],
+        }
+        for p in productos_filtrados.to_dict(orient="records")
+    ]
     productos_json = quote(json.dumps(productos_lista))
-    
-    # 9. Redirigimos al usuario al dashboard con los parámetros de usuario
-    response = RedirectResponse(url=f"/dashboard?user_name={user.nombre}&user_id={user.id}", status_code=303)
-    response.set_cookie(key="productos", value=productos_json, max_age=1800, httponly=True)
-    response.set_cookie(key="user_name", value=user.nombre, max_age=1800, httponly=True)
-    
+
+    # 9. Redirigimos al dashboard
+    response = RedirectResponse(
+        url=f"/dashboard?user_name={user.nombre}&user_id={user.id}",
+        status_code=303
+    )
+    response.set_cookie("productos", productos_json, max_age=1800, httponly=True)
+    response.set_cookie("user_name", user.nombre,   max_age=1800, httponly=True)
     return response
-
-
