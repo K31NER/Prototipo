@@ -158,6 +158,30 @@
             display: block;
         }
 
+        .alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 100, 100, 0.9);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+        .alert .close-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 16px;
+            line-height: 1;
+        }
+
         .search-container {
             width: 100%;
             max-width: 680px;
@@ -289,6 +313,17 @@
 
         <p class="user-greeting" id="userGreeting">Hola, {{name}}</p>
 
+        {% if error %}
+        <div class="alert" id="alertBox">
+            {{ error }}
+            <button type="button"
+                    class="close-btn"
+                    onclick="document.getElementById('alertBox').style.display='none'">
+              &times;
+            </button>
+        </div>
+        {% endif %}
+
         <div class="search-container">
             <!-- Envolver en form es buena práctica para búsquedas -->
             <form class="search-bar" action="/users/buscar" method="post"> <!-- Cambia action y method según tu backend -->
@@ -310,6 +345,18 @@
     </main>
 
     <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Si hay alerta, la cerramos a los 10 s
+    const alertBox = document.getElementById('alertBox');
+    if (alertBox) {
+      setTimeout(() => {
+        // con una transición suave (opcional):
+        alertBox.style.transition = 'opacity 0.5s ease';
+        alertBox.style.opacity = '0';
+        setTimeout(() => alertBox.remove(), 500);
+      }, 5000);
+    }
+
         // Placeholder focus/blur effect
         const searchInput = document.querySelector('.search-input');
         if(searchInput) {
@@ -364,7 +411,7 @@
             }
         }
         // --- FIN FUNCIÓN ---
-
+    });
     </script>
 </body>
 </html>
