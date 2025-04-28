@@ -9,7 +9,7 @@ from sqlmodel import select
 from dotenv import load_dotenv
 from limpiar import limpiar_datos
 from datetime import datetime, timedelta,timezone
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Request
 from jose import jwt, JWTError
 
 load_dotenv()
@@ -99,3 +99,33 @@ def decode_jwt_token(token:str, secret_key: str, algorithm: str) -> dict:
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
 
+# Validar el token JWT
+async def get_current_user(request: Request):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    # Intentar obtener el token de la cookie
+    token = request.cookies.get("access_token")
+
+    if not token:
+        # Si no hay token en la cookie, intentar obtenerlo del encabezado de autorización
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+
+    if not token:
+        raise credentials_exception
+
+    try:
+        payload = jwt.decode(token, Secret_key, algorithms=[Algortihm])
+        nombre: str = payload.get("sub")
+        id: str = payload.get("id")
+        if nombre is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    return {"sub": nombre, "id": id}

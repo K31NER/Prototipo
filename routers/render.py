@@ -17,36 +17,6 @@ templates = Jinja2Templates("templates")
 
 router = APIRouter()
 
-# Validar el token JWT
-async def get_current_user(request: Request):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
-    # Intentar obtener el token de la cookie
-    token = request.cookies.get("access_token")
-
-    if not token:
-        # Si no hay token en la cookie, intentar obtenerlo del encabezado de autorización
-        auth_header = request.headers.get("Authorization")
-        if auth_header and auth_header.startswith("Bearer "):
-            token = auth_header.split(" ")[1]
-
-    if not token:
-        raise credentials_exception
-
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-
-    return username
-
 @router.get("/",response_class=HTMLResponse)
 async def login(request:Request):
     return templates.TemplateResponse("login.html", {"request":request})
@@ -56,10 +26,10 @@ async def registro(request:Request):
     return templates.TemplateResponse("registro.html", {"request":request})
 
 @router.get("/inicio",response_class=HTMLResponse)
-async def inicio(request: Request,user:str = Depends(get_current_user)):
+async def inicio(request: Request, user:dict = Depends(get_current_user)):
     """Página de inicio después del login"""
-    user_name = request.query_params.get("user_name")  
-    user_id = request.query_params.get("user_id")
+    user_name = user.get("sub")
+    user_id = user.get("id")
     
     if not user_name:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)  
@@ -96,3 +66,4 @@ async def logout(response: Response):
     response.delete_cookie("productos")
     response.delete_cookie("user_name")
     return response
+
