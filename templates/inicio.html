@@ -72,6 +72,44 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        /* Loader estilo typewriter */
+        .loader {
+          position: relative;
+          overflow: hidden;
+          border-right: 3px solid;
+          width: 0;
+          animation: typewriter 2s steps(10) infinite alternate, blink 0.5s steps(10) infinite;
+        }
+        .loader-text {
+          font-size: 40px;
+          font-weight: 700;
+          background: linear-gradient(to right, #159957, #155799);
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        @keyframes typewriter {
+          0% { width: 0; }
+          100% { width: 240px; }
+        }
+        @keyframes blink {
+          0% { border-right-color: rgba(255,255,255,0.75); }
+          100% { border-right-color: transparent; }
+        }
+
         header {
             display: flex;
             justify-content: space-between;
@@ -296,6 +334,11 @@
     </style>
 </head>
 <body>
+    <!-- Spinner Overlay -->
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="loader"><span class="loader-text">Buscando...</span></div>
+    </div>
+
     <header>
         <div class="header-title">ScrapyMarket</div>
          <!-- Descomentar si necesitas botones de autenticación 
@@ -356,6 +399,14 @@
         setTimeout(() => alertBox.remove(), 500);
       }, 5000);
     }
+
+    const searchForm = document.querySelector('.search-bar');
+            const loaderOverlay = document.getElementById('loaderOverlay');
+            if (searchForm && loaderOverlay) {
+                searchForm.addEventListener('submit', function () {
+                    loaderOverlay.style.display = 'flex';
+                });
+            }
 
         // Placeholder focus/blur effect
         const searchInput = document.querySelector('.search-input');
