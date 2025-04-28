@@ -1,82 +1,30 @@
+import os
 import json
-import bcrypt 
-import joblib
-import pyshorteners
-import pandas as pd
 from models import *
 from db import sesion
-from sqlmodel import select
+from utils.utils import *
 from datetime import datetime
 from urllib.parse import quote
-from limpiar import limpiar_datos
-from fastapi.responses import RedirectResponse,JSONResponse
-from fastapi import APIRouter, HTTPException, status,Form , Response, Request
-from scraper_paralelismo import scrapear_todas_las_tiendas
-from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
+from .render import get_current_user
 from fastapi.templating import Jinja2Templates
+from scraper_paralelismo import scrapear_todas_las_tiendas
+from fastapi.responses import RedirectResponse,JSONResponse
+from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, HTTPException, status,Form , Response, Request, Depends
+
+
+SECRET_KEY = Secret_key
+ALGORITHM = Algortihm
+EXPIRES_DELTA = Expire_delta
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
 router = APIRouter(prefix="/users",tags=["users"])
 templates = Jinja2Templates(directory="templates")
-# Creamos el objeto Shortener
-s = pyshorteners.Shortener()
-
-def hash_contraseña(contraseña: str) -> str:
-    """ Hash de contraseña de usuario"""
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(contraseña.encode("utf-8"), salt)
-    return hashed.decode("utf-8")
-
-def verify_contraseña(plain_contraseña: str, hashed_contraseña: str)-> bool:
-    """ Verifica la contraseña del usuario """
-    return bcrypt.checkpw(plain_contraseña.encode("utf-8"), hashed_contraseña.encode("utf-8"))
-
-def verificar_usuario(session:sesion, nombre: str, contraseña: str):
-    # Buscar el usuario por nombre
-    statement = select(User).where(User.nombre == nombre)
-    result = session.exec(statement).first()
-    if not result:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Usuario no encontrado")
-    if not verify_contraseña(contraseña, result.contraseña):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Contraseña incorrecta")
-    return result  # Puedes retornar el usuario completo
-
-def _shorten_url(url):
-    try:
-        return s.tinyurl.short(url)
-    except Exception as e:
-        # Si la API falla, retornamos la URL original
-        return url
 
 
-def preparar_datos(data):
-    """ Prepara los datos para el modelo """
-    # Cargamos el modelo
-    modelo = joblib.load("modelo_random_forest.pkl")
-
-    # Limpiamos los datos
-    df = limpiar_datos(pd.DataFrame(data))
-
-    # Recortamos las URLs en la columna 'Links' con manejo de excepciones
-    df["Links"] = df["Links"].apply(
-        lambda x: _shorten_url(x) if isinstance(x, str) else x
-    )
-
-    # Datos que usará el modelo
-    x = df[["Precio", "Puntuacion", "PC", "PPW", "PS"]].values
-
-    # Predicción
-    df["IR"] = modelo.predict(x)
-
-    # Escalado final
-    df["IR"] = (df["IR"] - df["IR"].min()) / (df["IR"].max() - df["IR"].min()) * 100
-
-    # Guardar y mostrar resultados
-    top = df.nlargest(10, "IR")
-
-    return top
-
-
-@router.post("/registro", response_model=ReadUser, status_code=status.HTTP_201_CREATED)
+@router.post("/registro",status_code=status.HTTP_201_CREATED)
 async def create_user(session: sesion,
                     nombre: str = Form(...),
                     correo: str = Form(...),
@@ -101,24 +49,34 @@ async def create_user(session: sesion,
     session.commit()
     session.refresh(new_user)
     
+    # Creamos el token JWT
+    access_token = create_jwt_token({"sub":new_user.nombre},SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
+    
     # redireccionamos al usuario a la página de inicio
-    return RedirectResponse(url=f"/inicio?user_name={new_user.nombre}&user_id={new_user.id}", status_code=status.HTTP_303_SEE_OTHER)
-
+    response = RedirectResponse(url=f"/inicio?user_name={new_user.nombre}&user_id={new_user.id}", status_code=status.HTTP_303_SEE_OTHER)
+    # Creamos la cookie con el token
+    response.set_cookie(key="access_token", value=access_token, httponly=True,secure=True, samesite='strict')
+    
+    return response
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(session: sesion, nombre: str = Form(...), contraseña: str = Form(...)):
     """Función para verificar el usuario"""
-    # Verificar si el usuario existe y la contraseña es correcta
     try:
+        # Verificar si el usuario existe y la contraseña es correcta
         user = verificar_usuario(session, nombre, contraseña)
     except HTTPException as e:
         if e.status_code == status.HTTP_401_UNAUTHORIZED:
             return JSONResponse(content={"error": "Credenciales inválidas"}, status_code=status.HTTP_401_UNAUTHORIZED)
         raise e
-        
+    access_token = create_jwt_token({"sub":user.nombre},SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
+    
     # redireccionamos al usuario a la página de inicio
-    return RedirectResponse(url=f"/inicio?user_name={user.nombre}&user_id={user.id}", status_code=status.HTTP_303_SEE_OTHER)
-
+    response = RedirectResponse(url=f"/inicio?user_name={user.nombre}&user_id={user.id}", status_code=status.HTTP_303_SEE_OTHER)
+    # Creamos la cookie con el token
+    response.set_cookie(key="access_token", value=access_token, httponly=True,secure=True, samesite='strict')
+    
+    return response
 
 @router.post("/buscar")
 async def buscar(
@@ -126,7 +84,8 @@ async def buscar(
     session: sesion,
     response: Response,
     producto: str = Form(...),
-    id: str = Form(...)
+    id: str = Form(...),
+    user = Depends(get_current_user),
 ):
     # 1. Realizamos el scrapeo
     datos = scrapear_todas_las_tiendas(producto)

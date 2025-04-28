@@ -1,12 +1,51 @@
-from fastapi import APIRouter, Request , status ,HTTPException
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, RedirectResponse
 import json
+from utils.utils import *
 from urllib.parse import unquote
+from fastapi.templating import Jinja2Templates
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import APIRouter, Request , status ,HTTPException, Depends,Response
+
+# Asegúrate de que oauth2_scheme esté importado o definido
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
+
+SECRET_KEY = Secret_key
+ALGORITHM = Algortihm
+EXPIRES_DELTA = Expire_delta
 
 templates = Jinja2Templates("templates")
 
 router = APIRouter()
+
+# Validar el token JWT
+async def get_current_user(request: Request):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    # Intentar obtener el token de la cookie
+    token = request.cookies.get("access_token")
+
+    if not token:
+        # Si no hay token en la cookie, intentar obtenerlo del encabezado de autorización
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+
+    if not token:
+        raise credentials_exception
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    return username
 
 @router.get("/",response_class=HTMLResponse)
 async def login(request:Request):
@@ -16,12 +55,8 @@ async def login(request:Request):
 async def registro(request:Request):
     return templates.TemplateResponse("registro.html", {"request":request})
 
-@router.get("/buscar",response_class=HTMLResponse)
-async def buscar(request:Request):
-    return templates.TemplateResponse("buscar.html", {"request":request})
-
-@router.get("/inicio")
-async def inicio(request: Request):
+@router.get("/inicio",response_class=HTMLResponse)
+async def inicio(request: Request,user:str = Depends(get_current_user)):
     """Página de inicio después del login"""
     user_name = request.query_params.get("user_name")  
     user_id = request.query_params.get("user_id")
@@ -33,7 +68,7 @@ async def inicio(request: Request):
 
 
 @router.get("/dashboard", response_class=HTMLResponse)
-async def dashboard(request: Request):
+async def dashboard(request: Request,user:str = Depends(get_current_user)):
     productos_cookie = request.cookies.get("productos")
     user_name = request.cookies.get("user_name")
     
@@ -53,3 +88,11 @@ async def dashboard(request: Request):
         "name": user_name,
         "productos": productos
     })
+    
+@router.get("/logout")
+async def logout(response: Response):
+    response = RedirectResponse(url="/", status_code=303)
+    response.delete_cookie("access_token")
+    response.delete_cookie("productos")
+    response.delete_cookie("user_name")
+    return response
