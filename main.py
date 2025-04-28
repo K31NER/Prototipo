@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 app = FastAPI(
     title="Scrapymarket API",
     lifespan=crear_table,
+    docs_url=None, redoc_url=None # Deshabilitar documentación automática
 )
 
 templates = Jinja2Templates("templates")
