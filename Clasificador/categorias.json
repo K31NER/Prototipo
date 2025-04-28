@@ -352,5 +352,31 @@
         "Computación",
         "Portátiles y Accesorios",
         "Portátiles"
+    ],
+    "camisetas": [
+        "Ropa y Accesorios"
+    ],
+    "play 4": [
+        "Consolas y Videojuegos",
+        "Consolas"
+    ],
+    "xbox": [
+        "Consolas y Videojuegos",
+        "Consolas"
+    ],
+    "playstation": [
+        "Consolas y Videojuegos",
+        "Consolas"
+    ],
+    "colchon": [
+        "Hogar y Muebles",
+        "Camas, Colchones y Accesorios",
+        "Colchones"
+    ],
+    "comida para perros": [
+        "Mascotas",
+        "Perros",
+        "Alimento, Premios y Suplemento",
+        "Alimentos"
     ]
 }

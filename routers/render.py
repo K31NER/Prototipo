@@ -42,7 +42,7 @@ async def dashboard(request: Request):
         
     try:
         productos = json.loads(unquote(productos_cookie))
-        print(f"Productos en cookie -3 : {productos_cookie}")
+        #print(f"Productos en cookie -3 : {productos_cookie}")
         print(f"Nombre de usuario en cookie -3: {user_name}")
     except Exception as e:
         print(f"Error al deserializar productos: {e}")

@@ -38,30 +38,41 @@ def verificar_usuario(session:sesion, nombre: str, contraseña: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Contraseña incorrecta")
     return result  # Puedes retornar el usuario completo
 
+def _shorten_url(url):
+    try:
+        return s.tinyurl.short(url)
+    except Exception as e:
+        # Si la API falla, retornamos la URL original
+        return url
+
+
 def preparar_datos(data):
     """ Prepara los datos para el modelo """
-    # cargamos el modelo
+    # Cargamos el modelo
     modelo = joblib.load("modelo_random_forest.pkl")
-    
+
     # Limpiamos los datos
     df = limpiar_datos(pd.DataFrame(data))
-    
-    # Recortamos las URLs en la columna 'Links'
-    df["Links"] = df["Links"].apply(lambda x: s.tinyurl.short(x) if isinstance(x, str) else x)
-    
-    # Datos que usara el modelo
+
+    # Recortamos las URLs en la columna 'Links' con manejo de excepciones
+    df["Links"] = df["Links"].apply(
+        lambda x: _shorten_url(x) if isinstance(x, str) else x
+    )
+
+    # Datos que usará el modelo
     x = df[["Precio", "Puntuacion", "PC", "PPW", "PS"]].values
-    
+
     # Predicción
-    df["IR"] = modelo.predict(x)  
-    
+    df["IR"] = modelo.predict(x)
+
     # Escalado final
     df["IR"] = (df["IR"] - df["IR"].min()) / (df["IR"].max() - df["IR"].min()) * 100
-    
+
     # Guardar y mostrar resultados
-    top = df.nlargest(15, "IR")
-    
+    top = df.nlargest(10, "IR")
+
     return top
+
 
 @router.post("/registro", response_model=ReadUser, status_code=status.HTTP_201_CREATED)
 async def create_user(session: sesion,

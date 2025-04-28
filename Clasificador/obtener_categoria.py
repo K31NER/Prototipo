@@ -4,7 +4,7 @@ import pandas as pd
 
 # Rutas de los archivos
 RUTA_CATEGORIAS = "Clasificador/categorias.json"
-SALIDA_META = "Users/categorias_meta.json"
+SALIDA_META = "categorias_meta.json"
 
 def leer_json_categorias(ruta: str) -> dict:
     """
@@ -42,7 +42,7 @@ def generar_categorias_meta(data: dict) -> list:
 
     return df.to_dict(orient="records")
 
-def actualizar_categorias_meta(nueva_categoria: str, ruta_meta: str = "Users/categorias_meta.json"):
+def actualizar_categorias_meta(nueva_categoria: str, ruta_meta: str = "categorias_meta.json"):
     """
     Verifica si la categoría ya existe en el JSON meta y, si no, la agrega con un nuevo ID.
     """
