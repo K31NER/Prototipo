@@ -175,6 +175,20 @@ async def buscar(
     # 7. Procesamos los datos scrapeados
     productos_filtrados = preparar_datos(datos)
 
+    if productos_filtrados.empty:
+        user = session.get(User, id)
+        nombre = user.nombre if user else ""
+        return templates.TemplateResponse(
+            "inicio.html",
+            {
+                "request": request,
+                "name": nombre.capitalize(),
+                "user_id": id,
+                "error": "Error al cargar datos, intente de nuevo."
+            },
+            status_code=200
+        )
+
     # 8. Creamos lista y la guardamos en cookie
     productos_lista = [
         {

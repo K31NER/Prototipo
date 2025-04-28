@@ -3,9 +3,30 @@ import pandas as pd
 from datetime import datetime
 
 def scrapear(articulo, page):
+    page.set_extra_http_headers({
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/114.0.0.0 Safari/537.36"
+        ),
+        "Accept-Language": "es-CO,es;q=0.9",
+        "Accept": (
+            "text/html,application/xhtml+xml,application/xml;"
+            "q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8"
+        ),
+    })
+    
     url = f"https://linio.falabella.com.co/linio-co/search?Ntt={articulo}"
-    page.goto(url, timeout=20000)
-    page.wait_for_selector("div.search-results--products", timeout=10000)
+    try:
+        page.goto(url, timeout=20000)
+        page.wait_for_selector("div.search-results--products", timeout=10000)
+    except TimeoutError:
+        print(f"Error: Timeout al cargar {url}, omitiendo sitio…")
+        # Devuelves un DataFrame vacío con las mismas columnas
+        return pd.DataFrame({
+            "Nombre": [], "Precio": [], "Puntuacion": [],
+            "Fecha": [], "Links": [], "Pagina": []
+        }) 
 
     soup = BeautifulSoup(page.content(), "html.parser")
     productos = soup.select("div.grid-pod")

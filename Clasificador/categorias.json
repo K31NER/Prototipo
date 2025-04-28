@@ -378,5 +378,17 @@
         "Perros",
         "Alimento, Premios y Suplemento",
         "Alimentos"
+    ],
+    "chancleta": [
+        "Ropa y Accesorios",
+        "Calzado",
+        "Sandalias y Chanclas",
+        "Chanclas"
+    ],
+    "chancletas": [
+        "Ropa y Accesorios",
+        "Calzado",
+        "Sandalias y Chanclas",
+        "Chanclas"
     ]
 }
