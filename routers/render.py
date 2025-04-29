@@ -14,6 +14,7 @@ ALGORITHM = Algortihm
 EXPIRES_DELTA = Expire_delta
 
 templates = Jinja2Templates("templates")
+templates.env.filters['format_cop'] = format_colombian_peso_manual
 
 router = APIRouter()
 
@@ -55,7 +56,7 @@ async def dashboard(request: Request,user:str = Depends(get_current_user)):
 
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
-        "name": user_name,
+        "name": user_name.capitalize(),
         "productos": productos
     })
     
