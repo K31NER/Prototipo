@@ -390,5 +390,9 @@
         "Calzado",
         "Sandalias y Chanclas",
         "Chanclas"
+    ],
+    "smartphone": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
     ]
 }
