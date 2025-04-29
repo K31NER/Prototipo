@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/static/img/LOGO.png">
     <title>ScrapyMarket - Buscar Producto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Importar la fuente Inter (opcional, si quieres la misma que dashboard/login) */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -30,6 +31,17 @@
             --hover-border: var(--input-focus-border);
             --logo-border: var(--input-border);
             --blur-effect: 10px;
+            --logout-bg: #d32f2f; 
+            --logout-hover: #b71c1c;
+            --logout-text: #ffffff;
+            /* Nuevas variables para el modal de confirmación */
+            --modal-overlay: rgba(0, 0, 0, 0.7);
+            --modal-bg: #262626;
+            --modal-border: rgba(255, 255, 255, 0.1);
+            --confirm-btn-bg: #d32f2f;
+            --confirm-btn-hover: #b71c1c;
+            --cancel-btn-bg: #424242;
+            --cancel-btn-hover: #606060;
         }
 
         @media (prefers-color-scheme: light) {
@@ -52,6 +64,14 @@
                 --border-color: var(--input-border);
                 --hover-border: var(--input-focus-border);
                 --logo-border: var(--input-border);
+                /* Modal en modo claro */
+                --modal-overlay: rgba(0, 0, 0, 0.4);
+                --modal-bg: #ffffff;
+                --modal-border: rgba(0, 0, 0, 0.1);
+                --confirm-btn-bg: #d32f2f;
+                --confirm-btn-hover: #b71c1c;
+                --cancel-btn-bg: #424242;
+                --cancel-btn-hover: #606060;
             }
         }
         /* --- Fin Paleta de Colores --- */
@@ -124,6 +144,43 @@
             font-weight: 600;
             color: var(--text-color);
             flex-shrink: 0;
+        }
+
+        .nav-link {
+            background-color: var(--logout-bg) !important; /* !important para forzar el color */
+            color: var(--logout-text) !important; /* !important para forzar el color del texto */
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            background-color: var(--logout-hover) !important; /* !important para forzar el color al pasar el mouse */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+            color: var(--logout-text) !important;
+            text-decoration: none;
+        }
+
+        .nav-link:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-icon {
+            display: flex;
+            align-items: center;
         }
 
         .auth-buttons {
@@ -303,7 +360,114 @@
         .search-button:active {
             transform: translateY(0);
         }
-        /* --- FIN NUEVO --- */
+
+        /* ----- NUEVO: Modal de confirmación personalizado ----- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--modal-overlay);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-container {
+            background-color: var(--modal-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            width: 90%;
+            max-width: 380px;
+            padding: 24px;
+            border: 1px solid var(--modal-border);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            animation: modalAppear 0.3s forwards;
+        }
+
+        @keyframes modalAppear {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-color);
+        }
+
+        .modal-message {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            color: var(--text-muted);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .modal-button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .modal-button-confirm {
+            background-color: var(--confirm-btn-bg);
+            color: white;
+        }
+
+        .modal-button-confirm:hover {
+            background-color: var(--confirm-btn-hover);
+            transform: translateY(-1px);
+        }
+
+        .modal-button-cancel {
+            background-color: var(--cancel-btn-bg);
+            color: white;
+        }
+
+        .modal-button-cancel:hover {
+            background-color: var(--cancel-btn-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Añadir ícono de advertencia */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .modal-icon {
+            color: var(--confirm-btn-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+        /* ----- FIN NUEVO ----- */
 
 
         /* --- Responsive Adjustments --- */
@@ -317,6 +481,9 @@
             /* Ajustar botón de búsqueda en móvil */
             .search-button { padding: 7px 12px; font-size: 13px; }
             .search-bar { padding: 0 8px 0 15px; } /* Ajustar padding de barra */
+            /* Ajustes modal en móvil */
+            .modal-container { padding: 20px; }
+            .modal-title { font-size: 18px; }
         }
 
         @media (max-width: 480px) {
@@ -328,8 +495,14 @@
             .search-input { font-size: 16px; }
             .logo-container { width: 120px; height: 120px; }
             .user-greeting { font-size: 16px; margin-bottom: 20px; }
-             /* Ajustar botón de búsqueda en móvil pequeño */
+            /* Ajustar botón de búsqueda en móvil pequeño */
             .search-button { padding: 6px 10px; font-size: 12px; margin-left: 6px;}
+            /* Ajustes modal en móvil pequeño */
+            .modal-container { padding: 18px; max-width: 320px; }
+            .modal-title { font-size: 17px; margin-bottom: 12px; }
+            .modal-message { font-size: 14px; margin-bottom: 20px; }
+            .modal-buttons { gap: 8px; }
+            .modal-button { padding: 7px 14px; font-size: 13px; }
         }
     </style>
 </head>
@@ -339,14 +512,39 @@
         <div class="loader"><span class="loader-text">Buscando...</span></div>
     </div>
 
+    <!-- Modal de confirmación -->
+    <div id="logoutModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="modal-title">Cerrar sesión</div>
+            </div>
+            <div class="modal-message">¿Estás seguro que deseas cerrar sesión? Esta acción finalizará tu sesión actual.</div>
+            <div class="modal-buttons">
+                <button id="cancelLogout" class="modal-button modal-button-cancel">Cancelar</button>
+                <button id="confirmLogout" class="modal-button modal-button-confirm">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <header>
         <div class="header-title">ScrapyMarket</div>
-         <!-- Descomentar si necesitas botones de autenticación 
-        <div class="auth-buttons">
-            <button class="auth-button" onclick="location.href='login.html'">Iniciar sesión</button>
-            <button class="auth-button" onclick="location.href='registro.html'">Registrarse</button>
-        </div>
-        -->
+        <a href="/logout" id="logoutLink" class="nav-link">
+            <span class="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </span>
+            <span>Cerrar sesión</span>
+        </a>
     </header>
 
     <main>
@@ -388,25 +586,25 @@
     </main>
 
     <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Si hay alerta, la cerramos a los 10 s
-    const alertBox = document.getElementById('alertBox');
-    if (alertBox) {
-      setTimeout(() => {
-        // con una transición suave (opcional):
-        alertBox.style.transition = 'opacity 0.5s ease';
-        alertBox.style.opacity = '0';
-        setTimeout(() => alertBox.remove(), 500);
-      }, 5000);
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Si hay alerta, la cerramos a los 10 s
+        const alertBox = document.getElementById('alertBox');
+        if (alertBox) {
+            setTimeout(() => {
+                // con una transición suave (opcional):
+                alertBox.style.transition = 'opacity 0.5s ease';
+                alertBox.style.opacity = '0';
+                setTimeout(() => alertBox.remove(), 500);
+            }, 5000);
+        }
 
-    const searchForm = document.querySelector('.search-bar');
-            const loaderOverlay = document.getElementById('loaderOverlay');
-            if (searchForm && loaderOverlay) {
-                searchForm.addEventListener('submit', function () {
-                    loaderOverlay.style.display = 'flex';
-                });
-            }
+        const searchForm = document.querySelector('.search-bar');
+        const loaderOverlay = document.getElementById('loaderOverlay');
+        if (searchForm && loaderOverlay) {
+            searchForm.addEventListener('submit', function () {
+                loaderOverlay.style.display = 'flex';
+            });
+        }
 
         // Placeholder focus/blur effect
         const searchInput = document.querySelector('.search-input');
@@ -428,25 +626,6 @@
                     main.style.transform = 'translateY(0)';
                 }, 100);
             }
-
-            // --- Opcional: Manejar envío de búsqueda con JS (si no usas form action) ---
-            const searchForm = document.querySelector('.search-bar'); // Ahora es un form
-            if (searchForm && searchForm.tagName === 'FORM') { // Asegurarse que sea un form
-                searchForm.addEventListener('submit', function(event) {
-                    // event.preventDefault(); // Descomenta si quieres manejar con JS en lugar de action
-                    const query = searchInput.value.trim();
-                    if (query) {
-                        console.log('Buscando:', query);
-                        // Aquí podrías redirigir con JS:
-                        // window.location.href = `/ruta-de-busqueda?q=${encodeURIComponent(query)}`;
-                        // O hacer una llamada AJAX para mostrar resultados en la misma página
-                    } else {
-                       // event.preventDefault(); // Evitar envío si está vacío
-                        console.log('El campo de búsqueda está vacío.');
-                    }
-                });
-            }
-            // --- Fin Opcional ---
         });
 
         // --- FUNCIÓN PARA ACTUALIZAR EL SALUDO (Opcional - Llama desde tu lógica de backend) ---
@@ -457,11 +636,59 @@
                     greetingElement.textContent = `Hola, ${username}`;
                     greetingElement.style.display = 'block';
                 } else {
-                     greetingElement.style.display = 'none'; // Ocultar si no hay usuario
+                    greetingElement.style.display = 'none'; // Ocultar si no hay usuario
                 }
             }
         }
-        // --- FIN FUNCIÓN ---
+
+        // --- NUEVO: Gestión del modal de confirmación para cerrar sesión ---
+        const logoutLink = document.getElementById('logoutLink');
+        const logoutModal = document.getElementById('logoutModal');
+        const cancelLogout = document.getElementById('cancelLogout');
+        const confirmLogout = document.getElementById('confirmLogout');
+        
+        // Abrir modal al hacer clic en Cerrar sesión
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault(); // Evitar que el enlace funcione directamente
+            logoutModal.style.display = 'flex';
+            setTimeout(() => {
+                logoutModal.style.opacity = '1';
+            }, 10); // Pequeño retraso para activar la transición
+        });
+        
+        // Cerrar modal al hacer clic en Cancelar
+        cancelLogout.addEventListener('click', function() {
+            closeModal();
+        });
+        
+        // Confirmar cierre de sesión
+        confirmLogout.addEventListener('click', function() {
+            // Redirigir a la URL de cierre de sesión
+            window.location.href = '/logout';
+        });
+        
+        // Cerrar modal al hacer clic fuera
+        logoutModal.addEventListener('click', function(e) {
+            if (e.target === logoutModal) {
+                closeModal();
+            }
+        });
+        
+        // Función para cerrar el modal con animación
+        function closeModal() {
+            logoutModal.style.opacity = '0';
+            setTimeout(() => {
+                logoutModal.style.display = 'none';
+            }, 300); // Esperar a que termine la transición
+        }
+        
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
+                closeModal();
+            }
+        });
+        // --- FIN NUEVO ---
     });
     </script>
 </body>

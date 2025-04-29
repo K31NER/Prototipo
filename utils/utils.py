@@ -129,3 +129,19 @@ async def get_current_user(request: Request):
         raise credentials_exception
 
     return {"sub": nombre, "id": id}
+
+def format_colombian_peso_manual(value):
+    '''Funcion para formatear el precio en pesos colombianos'''
+    try:
+        num_int = int(float(value))
+        s = str(num_int)
+        n = len(s)
+        res = ""
+        for i in range(n):
+            res += s[i]
+            if (n - 1 - i) % 3 == 0 and i != n - 1:
+                res += "."
+        return f"{res}"
+    except (ValueError, TypeError):
+        #print(f"Advertencia: No se pudo formatear el valor '{value}' como moneda.")
+        return value
