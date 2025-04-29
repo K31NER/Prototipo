@@ -4,27 +4,27 @@
   "datos": [
     {
       "comercio": "Mercado Libre",
-      "popularidad": 68.0
+      "popularidad": 47.0
     },
     {
       "comercio": "Falabella",
-      "popularidad": 79.0
+      "popularidad": 46.0
     },
     {
       "comercio": "Alkosto",
-      "popularidad": 83.0
+      "popularidad": 43.0
     },
     {
       "comercio": "Jumbo",
-      "popularidad": 44.0
+      "popularidad": 19.0
     },
     {
       "comercio": "Linio",
-      "popularidad": 10
+      "popularidad": 83.0
     },
     {
       "comercio": "Exito",
-      "popularidad": 56.0
+      "popularidad": 40.0
     }
   ]
 }

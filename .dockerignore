@@ -1,8 +1,24 @@
+# Cache de Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*.so
+
+# Entornos virtuales
+env/
 venv/
-.env
-.git/
+
+# Archivos de configuración locales
+*.env
+
+# IDEs y herramientas
 .idea/
+.vscode/
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
