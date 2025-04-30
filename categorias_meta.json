@@ -58,5 +58,9 @@
     {
         "id": 15,
         "categoria": "Mascotas"
+    },
+    {
+        "id": 16,
+        "categoria": "Salud y Equipamiento Médico"
     }
 ]
