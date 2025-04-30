@@ -7,13 +7,15 @@ from datetime import datetime
 from comercios.falabella import scrapear as scrapear_falabella
 from comercios.linio import scrapear as scrapear_linio
 from comercios.mercado_libre import scrapear as scrapear_mercado_libre
+from comercios.ktronix import scrapear as scrapear_ktronix
 
 fecha = datetime.now().strftime("%Y-%m-%d")
 
 # Diccionario de tiendas
 TIENDAS = {
     #"Falabella": scrapear_falabella,
-    "Linio": scrapear_linio,
+    #"Linio": scrapear_linio,
+    "ktronix": scrapear_ktronix,
     #"Mercado Libre": scrapear_mercado_libre
 }
 

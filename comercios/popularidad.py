@@ -56,7 +56,7 @@ def obtener_popularidad():
                 return data.get("datos", [])
 
         print(f"⚡ Actualizando popularidad desde Google Trends: {timestamp_actual}")
-        comercios = ["Mercado Libre", "Falabella", "Alkosto", "Jumbo", "Linio", "Exito"]
+        comercios = ["Mercado Libre", "Falabella", "Ktronix", "Jumbo", "Linio", "Exito"]
         pytrends = TrendReq(hl='es', tz=360, timeout=(10, 25))
         resultados = []
 

@@ -39,11 +39,12 @@ def preparar_datos(data)-> pd.DataFrame:
     # Limpiamos los datos
     df = limpiar_datos(pd.DataFrame(data))
     
+    
     # Recortamos las URLs en la columna 'Links' con manejo de excepciones
     df["Links"] = df["Links"].apply(
         lambda x: _shorten_url(x) if isinstance(x, str) else x
     )
-
+    
     # Datos que usará el modelo
     x = df[["Precio", "Puntuacion", "PC", "PPW", "PS"]].values
 

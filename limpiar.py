@@ -16,13 +16,13 @@ valores_popularidad = dict(zip(df_popularidad["comercio"], df_popularidad["popul
 valores_popularidad = dict(zip(df_popularidad["comercio"], df_popularidad["popularidad"]))
 
 # Definir la popularidad ajustada
-popularidad = {k: valores_popularidad.get(k, 20) for k in ["Mercado Libre", "Alkosto", "Falabella", "Éxito", "Linio", "Jumbo"]}
+popularidad = {k: valores_popularidad.get(k, 20) for k in ["Mercado Libre", "Ktronix", "Falabella", "Éxito", "Linio", "Jumbo"]}
 
 # Índice de seguridad (ajustado a 1-100)
 seguridad = {
     "Mercado Libre": 5.0 * 20,
     "Falabella": 4.6 * 20,
-    "Alkosto": 4.5 * 20,
+    "Ktronix": 4.5 * 20,
     "Éxito": 3.7 * 20,
     "Linio": 2.6 * 20,
     "Jumbo": 1.9 * 20
