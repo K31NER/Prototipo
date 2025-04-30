@@ -394,5 +394,26 @@
     "smartphone": [
         "Celulares y Teléfonos",
         "Celulares y Smartphones"
+    ],
+    "iphon 14": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones",
+        "Iphone"
+    ],
+    "huawei": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "mackbook air": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "polo": [
+        "Carros, Motos y Otros",
+        "Carros y Camionetas"
+    ],
+    "nike": [
+        "Ropa y Accesorios"
     ]
 }

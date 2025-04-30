@@ -1,85 +1,77 @@
-from playwright.sync_api import sync_playwright
-#from playwright_stealth import stealth_sync
+import asyncio
+from playwright.async_api import async_playwright
 import pandas as pd
-import concurrent.futures  # Para paralelismo con procesos
-import time
 from datetime import datetime
 
-# Importar funciones de scraping
+# Importaciones locales
 from comercios.falabella import scrapear as scrapear_falabella
-from comercios.alkosto import scrapear as scrapear_alkosto
-from comercios.exito import scrapear as scrapear_exito
-from comercios.jumbo import scrapear as scrapear_jumbo
 from comercios.linio import scrapear as scrapear_linio
-from comercios.mercado_libre import scrapear as scrapear_mercado_libre  
+from comercios.mercado_libre import scrapear as scrapear_mercado_libre
 
-# Fecha actual en formato yyyy-mm-dd
 fecha = datetime.now().strftime("%Y-%m-%d")
 
-def scrapear_tienda(tienda, scrapear_func, articulo):
-    """Ejecuta el scraping para una tienda específica en un proceso separado."""
+# Diccionario de tiendas
+TIENDAS = {
+    #"Falabella": scrapear_falabella,
+    "Linio": scrapear_linio,
+    #"Mercado Libre": scrapear_mercado_libre
+}
+
+async def scrapear_tienda(context, tienda, scrapear_func, articulo):
     print(f"Scrapeando {tienda}...")
-    
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context()
-        page = context.new_page()
-        
-        # Bloquear imágenes para ir más rápido (Quitar si falla el scraping)
-        page.route("**/*", lambda route, request: 
-            route.abort() if request.resource_type in ["image"] else route.continue_()
-        )
-        #stealth_sync(page) # Aplicar técnicas de stealth
-        
-        df = scrapear_func(articulo, page)
-        browser.close()  
+    try:
+        page = await context.new_page()
+        df = await scrapear_func(articulo, page)
+        await page.close()
+        return df
+    except Exception as e:
+        print(f"Error en {tienda}: {e}")
+        return None
 
-    return df if not df.empty else None
-
-def scrapear_todas_las_tiendas(articulo):
+async def scrapear_todas_las_tiendas(articulo):
     dataframes = []
-    tiempo_inicio = time.perf_counter()
+    tiempo_inicio = asyncio.get_event_loop().time()
 
-    # Lista de funciones con parámetros
-    tareas = [
-        ("Falabella", scrapear_falabella, articulo),
-        #("Alkosto", scrapear_alkosto, articulo),
-        #("Éxito", scrapear_exito, articulo),
-        #("Jumbo", scrapear_jumbo, articulo),
-        ("Linio", scrapear_linio, articulo),
-        #("Mercado Libre", scrapear_mercado_libre, articulo)
-    ]
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
 
-    # Ejecutar en paralelo usando ProcessPoolExecutor y submit()
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        futuros = {executor.submit(scrapear_tienda, *tarea): tarea[0] for tarea in tareas}
+        async def route_handler(route, request):
+            if request.resource_type in ["image", "stylesheet", "font"]:
+                await route.abort()
+            else:
+                await route.continue_()
 
-        for futuro in concurrent.futures.as_completed(futuros):
-            tienda = futuros[futuro]
-            try:
-                df = futuro.result()
-                if df is not None:
-                    dataframes.append(df)
-            except Exception as e:
-                print(f"Error en {tienda}: {e}")
+        await context.route("**/*", route_handler)
 
-    tiempo_fin = time.perf_counter()
+        tareas = [
+            scrapear_tienda(context, tienda, func, articulo)
+            for tienda, func in TIENDAS.items()
+        ]
+
+        resultados = await asyncio.gather(*tareas)
+
+        for df in resultados:
+            if df is not None and not df.empty:
+                dataframes.append(df)
+
+        await browser.close()
+
+    tiempo_fin = asyncio.get_event_loop().time()
     print(f"Scraping completado en {tiempo_fin - tiempo_inicio:.2f} segundos.")
-    
-    # Esta tambien sirve para devolver csv
-    data =  pd.concat(dataframes, ignore_index=True) if dataframes else pd.DataFrame()
-    
-    # 🔁 Retornar lista de diccionarios (JSON-serializable)
+
+    data = pd.concat(dataframes, ignore_index=True) if dataframes else pd.DataFrame()
     return data.to_dict(orient="records") if not data.empty else []
 
 if __name__ == "__main__":
     articulo = input("Digite el nombre del artículo a buscar: ").strip()
-    df_final = scrapear_todas_las_tiendas(articulo)
+    resultados = asyncio.run(scrapear_todas_las_tiendas(articulo))
 
-    if not df_final.empty:
+    if resultados:
         nombre_archivo = f"scraping_{articulo.replace(' ', '_')}_{fecha}.csv"
         ruta_completa = f"DATA/{nombre_archivo}"
-        df_final.to_csv(ruta_completa, index=False, encoding="utf-8")
+        df = pd.DataFrame(resultados)
+        df.to_csv(ruta_completa, index=False, encoding="utf-8")
         print(f"Scraping finalizado. Datos guardados en {ruta_completa}")
     else:
         print("No se encontraron datos.")

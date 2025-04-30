@@ -47,7 +47,7 @@ def limpiar_datos(df) -> pd.DataFrame:
     df = df.dropna(subset=["Puntuacion"])
 
     # Filtrar productos con puntuación inválida
-    df = df[df["Puntuacion"] > 1]  
+    #df = df[df["Puntuacion"] > 1]  
 
 
     # Normalización de Puntuación y Precio

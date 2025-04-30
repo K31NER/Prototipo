@@ -1,15 +1,17 @@
 import os
 import time
 import json
+import pytz
 from datetime import datetime
 from pytrends.request import TrendReq
 
 # Horarios autorizados para actualizar popularidad (hora local Colombia)
 HORARIOS_VALIDOS = ["06:00", "13:00", "18:00", "21:00"]
 RUTA_JSON = "comercios/popularidad_comercios.json"
+ZONA_HORARIA_COLOMBIA = pytz.timezone('America/Bogota')
 
 def obtener_ultima_franja():
-    ahora = datetime.now()
+    ahora = datetime.now(ZONA_HORARIA_COLOMBIA)
     hora_actual = ahora.time()
     franjas = [datetime.strptime(h, "%H:%M").time() for h in HORARIOS_VALIDOS]
     franjas_pasadas = [h for h in franjas if h <= hora_actual]
@@ -43,7 +45,7 @@ def debe_actualizar_popularidad():
 
 def obtener_popularidad():
     try:
-        ahora = datetime.now()
+        ahora = datetime.now(ZONA_HORARIA_COLOMBIA)
         timestamp_actual = ahora.strftime("%Y-%m-%d %H:%M:%S")
         franja_actual, fecha_actual = obtener_ultima_franja()
 
