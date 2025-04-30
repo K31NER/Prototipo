@@ -1,9 +1,10 @@
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
-def scrapear(articulo, page):
-    page.set_extra_http_headers({
+async def scrapear(articulo, page):
+    await page.set_extra_http_headers({
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -20,20 +21,11 @@ def scrapear(articulo, page):
     url = f"https://listado.mercadolibre.com.co/{articulo}"
 
     try:
-        # Cargar la página con Playwright
-        try:
-            page.goto(url, timeout=30000)
-            page.wait_for_selector("li.ui-search-layout__item", timeout=30000)
-        except TimeoutError:
-            print(f"Error: Timeout al cargar {url}, omitiendo sitio…")
-        # Devuelves un DataFrame vacío con las mismas columnas
-            return pd.DataFrame({
-                "Nombre": [], "Precio": [], "Puntuacion": [],
-                "Fecha": [], "Links": [], "Pagina": []
-            }) 
-      # Esperar a los productos
-        
-        soup = BeautifulSoup(page.content(), "html.parser")
+        await page.goto(url, timeout=30000)
+        await page.wait_for_selector("li.ui-search-layout__item", timeout=30000)
+
+        content = await page.content()
+        soup = BeautifulSoup(content, "html.parser")
         productos = soup.find_all("li", class_="ui-search-layout__item")
 
         for producto in productos:
@@ -65,6 +57,12 @@ def scrapear(articulo, page):
             except Exception as e:
                 print(f"Error procesando producto: {e}")
 
+    except PlaywrightTimeoutError:
+        print(f"Error: Timeout al cargar {url}, omitiendo sitio…")
+        return pd.DataFrame({
+            "Nombre": [], "Precio": [], "Puntuacion": [],
+            "Fecha": [], "Links": [], "Pagina": []
+        }) 
     except Exception as e:
         print(f"Error en Mercado Libre: {e}")
 

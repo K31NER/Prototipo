@@ -38,7 +38,7 @@ def preparar_datos(data)-> pd.DataFrame:
 
     # Limpiamos los datos
     df = limpiar_datos(pd.DataFrame(data))
-
+    
     # Recortamos las URLs en la columna 'Links' con manejo de excepciones
     df["Links"] = df["Links"].apply(
         lambda x: _shorten_url(x) if isinstance(x, str) else x
@@ -49,6 +49,7 @@ def preparar_datos(data)-> pd.DataFrame:
 
     # Predicción
     df["IR"] = modelo.predict(x)
+
 
     # Escalado final
     df["IR"] = (df["IR"] - df["IR"].min()) / (df["IR"].max() - df["IR"].min()) * 100

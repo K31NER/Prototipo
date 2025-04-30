@@ -20,7 +20,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 router = APIRouter(prefix="/users",tags=["users"])
 templates = Jinja2Templates(directory="templates")
 
-
 @router.post("/registro",status_code=status.HTTP_201_CREATED)
 async def create_user(session: sesion,
                     nombre: str = Form(...),
@@ -87,7 +86,8 @@ async def buscar(
     user = Depends(get_current_user),
 ):
     # 1. Realizamos el scrapeo
-    datos = scrapear_todas_las_tiendas(producto)
+    busqueda_limpia = producto.lower().strip()
+    datos = await scrapear_todas_las_tiendas(busqueda_limpia)
 
     # Si no hay resultados, volvemos a la página de inicio con mensaje de error
     if not datos:
@@ -111,12 +111,12 @@ async def buscar(
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
     # 3. Actualizamos el historial de búsqueda
-    user.productos_buscados.append(producto)
+    user.productos_buscados.append(busqueda_limpia)
 
     # 4. Actualizamos conteo de categorías
     if user.categorias_visitadas_raw is None:
         user.categorias_visitadas_raw = {}
-    categoria = obtener_categoria_meta(producto)
+    categoria = obtener_categoria_meta(busqueda_limpia)
     user.categorias_visitadas_raw[categoria] = (
         user.categorias_visitadas_raw.get(categoria, 0) + 1
     )
@@ -131,9 +131,12 @@ async def buscar(
     session.refresh(user)
 
     # 7. Procesamos los datos scrapeados
-    productos_filtrados = preparar_datos(datos)
-
-    if productos_filtrados.empty:
+    try:
+        productos_filtrados = preparar_datos(datos)
+        if productos_filtrados.empty:
+            raise ValueError("No hay datos válidos tras el preprocesamiento")
+    except Exception as e:
+        print(f"Error procesando los datos: {e}")
         user = session.get(User, id)
         nombre = user.nombre if user else ""
         return templates.TemplateResponse(
@@ -142,7 +145,7 @@ async def buscar(
                 "request": request,
                 "name": nombre.capitalize(),
                 "user_id": id,
-                "error": "Error al cargar datos, intente de nuevo."
+                "error": "No se encontraron productos, realice otra búsqueda"
             },
             status_code=200
         )
