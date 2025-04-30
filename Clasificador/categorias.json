@@ -415,5 +415,40 @@
     ],
     "nike": [
         "Ropa y Accesorios"
+    ],
+    "portatiles": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "poco x6": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "pantalon": [
+        "Ropa y Accesorios"
+    ],
+    "pantalones": [
+        "Ropa y Accesorios"
+    ],
+    "jean": [
+        "Ropa y Accesorios",
+        "Pantalones"
+    ],
+    "restaurante dragon de oro": [
+        "Otras"
+    ],
+    "computador personal para trabajar": [
+        "Otras"
+    ],
+    "condon": [
+        "Salud y Equipamiento Médico",
+        "Cuidado de la Salud",
+        "Farmacia",
+        "Cuidado Sexual",
+        "Condones"
+    ],
+    "condones": [
+        "Otras"
     ]
 }
