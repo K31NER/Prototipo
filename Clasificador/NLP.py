@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import time
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import quote
@@ -46,6 +47,9 @@ def guardar_cache_json(ruta, datos):
 # --- Scraping de MercadoLibre ---
 def obtener_categorias_mercadolibre(producto):
     print(Fore.CYAN + f"> Scrapeando categorías para '{producto}'...")
+    delay = 5 + (os.getpid() % 5)  # entre 5 y 9 segundos dependiendo del PID
+    print(Fore.CYAN + f"Esperado {delay} segundos...")
+    time.sleep(delay)  # Esperar un tiempo aleatorio para evitar bloqueos
     url = f'https://listado.mercadolibre.com.co/{quote(producto)}'
     headers = {'User-Agent': USER_AGENT}
     try:

@@ -5,7 +5,7 @@ from utils.utils import *
 from datetime import datetime
 from urllib.parse import quote
 from fastapi.templating import Jinja2Templates
-from scraper_paralelismo import scrapear_todas_las_tiendas
+from scraper import scrapear_todas_las_tiendas
 from fastapi.responses import RedirectResponse,JSONResponse
 from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
