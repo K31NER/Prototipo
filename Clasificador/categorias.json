@@ -453,5 +453,22 @@
     ],
     "netflix": [
         "Otras"
+    ],
+    "cafetera": [
+        "Electrodomésticos",
+        "Pequeños Electrodomésticos",
+        "Para Cocina",
+        "Cafeteras"
+    ],
+    "basurero": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Almacenamiento y Organización",
+        "Canecas de Basura",
+        "Canecas Basura"
+    ],
+    "proteina": [
+        "Salud y Equipamiento Médico",
+        "Suplementos Alimenticios"
     ]
 }
