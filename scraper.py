@@ -14,7 +14,7 @@ fecha = datetime.now().strftime("%Y-%m-%d")
 # Diccionario de tiendas
 TIENDAS = {
     #"Falabella": scrapear_falabella,
-        "Linio": scrapear_linio,
+    "Linio": scrapear_linio,
     "ktronix": scrapear_ktronix,
     "Mercado Libre": scrapear_mercado_libre
 }
