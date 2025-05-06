@@ -1,4 +1,5 @@
 import os
+import httpx
 import bcrypt 
 import joblib
 import pyshorteners
@@ -12,14 +13,19 @@ from datetime import datetime, timedelta,timezone
 from fastapi import HTTPException, status, Request
 from jose import jwt, JWTError
 
+
+
+
 load_dotenv()
 
 Secret_key = os.getenv("SECRET_KEY")
 Algortihm = "HS256" 
-Expire_delta = 3600  
+Expire_delta = 3600 
+url = os.getenv("URL_BASE_SCRAPER") 
+apikey = os.getenv("KEY")
 
 
-# ___________________________ Funciones de manejo de datos _____________________________
+# ___________________________ Funciones de manejo de datos_________________________
 # Creamos el objeto Shortener
 s = pyshorteners.Shortener()
 
@@ -147,3 +153,17 @@ def format_colombian_peso_manual(value):
     except (ValueError, TypeError):
         #print(f"Advertencia: No se pudo formatear el valor '{value}' como moneda.")
         return value
+    
+# _______________________ Solicitudes a API _______________________________
+# o el dominio de producción
+
+async def hacer_peticion_scraper(producto: str):
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(120.0)) as client:
+            response = await client.post(url + producto, headers={"scraper-api": apikey})
+            response.raise_for_status()
+            data = response.json()
+            return data.get("data", [])
+    except Exception as e:
+        print(f"[ERROR] Error al pedir scraping para '{producto}': {e}")
+        return []

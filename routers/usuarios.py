@@ -87,7 +87,7 @@ async def buscar(
 ):
     # 1. Realizamos el scrapeo
     busqueda_limpia = producto.lower().strip()
-    datos = await scrapear_todas_las_tiendas(busqueda_limpia)
+    datos = await hacer_peticion_scraper(busqueda_limpia)
 
     # Si no hay resultados, volvemos a la página de inicio con mensaje de error
     if not datos:

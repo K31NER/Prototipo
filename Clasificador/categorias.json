@@ -470,5 +470,47 @@
     "proteina": [
         "Salud y Equipamiento Médico",
         "Suplementos Alimenticios"
+    ],
+    "cargador": [
+        "Otras"
+    ],
+    "marcador": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Escolar",
+        "Escritura",
+        "Marcadores y Resaltadores"
+    ],
+    "tablero": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Pizarras y Tableros"
+    ],
+    "chaqueta": [
+        "Ropa y Accesorios",
+        "Abrigos"
+    ],
+    "pañales": [
+        "Bebés",
+        "Higiene y Cuidado del Bebé"
+    ],
+    "preservativos": [
+        "Salud y Equipamiento Médico",
+        "Cuidado de la Salud",
+        "Farmacia",
+        "Cuidado Sexual",
+        "Condones"
+    ],
+    "python": [
+        "Otras"
+    ],
+    "freidora de aira": [
+        "Electrodomésticos",
+        "Pequeños Electrodomésticos",
+        "Para Cocina",
+        "Preparación de Alimentos",
+        "Freidoras",
+        "De Aire",
+        "Freidora"
     ]
 }

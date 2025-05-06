@@ -62,5 +62,9 @@
     {
         "id": 16,
         "categoria": "Salud y Equipamiento Médico"
+    },
+    {
+        "id": 17,
+        "categoria": "Bebés"
     }
 ]
