@@ -14,8 +14,6 @@ from fastapi import HTTPException, status, Request
 from jose import jwt, JWTError
 
 
-
-
 load_dotenv()
 
 Secret_key = os.getenv("SECRET_KEY")

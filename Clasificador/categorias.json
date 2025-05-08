@@ -512,5 +512,41 @@
         "Freidoras",
         "De Aire",
         "Freidora"
+    ],
+    "mochila": [
+        "Ropa y Accesorios",
+        "Equipaje, Bolsos y Carteras"
+    ],
+    "caballete para lienzo arte 30x40cm": [
+        "Otras"
+    ],
+    "silla ergonomica ejecutiva": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar",
+        "Sillas, Sofás y Butacos",
+        "Sillas para Oficina"
+    ],
+    "juguete para niños": [
+        "Juegos y Juguetes"
+    ],
+    "mini pc": [
+        "Computación",
+        "PC de Escritorio",
+        "Mini PCs"
+    ],
+    "minipc": [
+        "Computación",
+        "PC de Escritorio",
+        "Mini PCs"
+    ],
+    "moños coquette": [
+        "Ropa y Accesorios",
+        "Accesorios de Moda",
+        "Accesorios para el Cabello"
+    ],
+    "teclados": [
+        "Computación",
+        "Periféricos de PC",
+        "Mouses y Teclados"
     ]
 }
