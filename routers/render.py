@@ -1,6 +1,7 @@
 import json
 from utils.utils import *
 from urllib.parse import unquote
+from models import Email,PasswordRest
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -68,3 +69,24 @@ async def logout(response: Response):
     response.delete_cookie("user_name")
     return response
 
+
+@router.post("/recuperar_cuenta")
+async def pedir_codigo(request:Email,session:sesion):
+    # Obtenemos el correo del usuario
+    email = request.email
+    
+    # Preparamos la consulta
+    consulta = select(User).where(User.correo == email)
+    
+    # Ejecutamos la consulta
+    resultado = session.exec(consulta).first()
+    
+    if not resultado:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Correo no encontrado")
+    code = generar_codigo()
+    
+    codigos_recuperacion[code] = email
+    
+    await enviar_correo(email,code)
+    
+    return {"Message:Correo enviado"}

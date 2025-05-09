@@ -11,7 +11,7 @@ class UserBase(SQLModel):
     nombre: str = Field(index=True)
     correo: str = Field(index=True, unique=True)
     genero: str = Field(index=True)
-    fecha_nacimiento: date = Field(index=True)  # Cambio aquí
+    fecha_nacimiento: date = Field(index=True)  
     
 class ReadUser(UserBase):
     id: int = Field(default=None, primary_key=True)
@@ -37,3 +37,12 @@ class User(UserBase, table=True):
 
     class Config:
         orm_mode = True
+
+# Email schemas
+class Email(BaseModel):
+    email: str
+    
+class PasswordRest(Email):
+    code:str
+    new_passwprd: str
+    
