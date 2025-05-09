@@ -85,8 +85,42 @@ async def pedir_codigo(request:Email,session:sesion):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Correo no encontrado")
     code = generar_codigo()
     
-    codigos_recuperacion[code] = email
+    codigos_recuperacion[email] = code
     
     await enviar_correo(email,code)
     
     return {"Message:Correo enviado"}
+
+@router.post("/validar_codigo")
+async def validar_codigo(request:PasswordRest,session:sesion):
+    
+    # extreamos los datos
+    email = request.email
+    # Definimos la consulta
+    consulta = select(User).where(User.correo == email)
+    # Ejecutamos la consulta
+    user = session.exec(consulta).first()
+    
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Correo no encontrado")
+    
+    code = request.code
+    nueva_contraseña = request.new_passwprd
+    
+    if email not in codigos_recuperacion or codigos_recuperacion[email] != code:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Credenciales incorrectas")
+
+    # Ciframos al contraseña y la actualizamos
+    contraseña_cifrada =  hash_contraseña(nueva_contraseña)
+    user.contraseña = contraseña_cifrada
+    
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    
+    # Borramos el codigo del almacenamiento temporal
+    del codigos_recuperacion[email]
+    
+    return {"Message": "Contraseña actulizada"}
+
+    

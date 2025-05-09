@@ -42,7 +42,8 @@ class User(UserBase, table=True):
 class Email(BaseModel):
     email: str
     
-class PasswordRest(Email):
+class PasswordRest(BaseModel):
+    email: str
     code:str
     new_passwprd: str
     
