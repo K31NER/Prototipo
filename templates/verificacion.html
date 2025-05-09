@@ -1,236 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/static/img/LOGO.png">
-    <title>Verificación de Código - ScrapyMarket</title>
-    <style>
-        :root {
-            --bg-color: #f9f9f9;
-            --card-bg: #fff;
-            --text-color: #333;
-            --text-muted: #666;
-            --input-bg: #fff;
-            --input-border: #e0e0e0;
-            --input-focus-border: #333;
-            --button-bg: #333;
-            --button-hover: #4a4a4a;
-            --button-text: #fff;
-            --shadow-color: rgba(0, 0, 0, 0.08);
-            --link-color: #333;
-            --error-color: #d32f2f;
-            --success-color: #388e3c;
-            --accent-light: rgba(51, 51, 51, 0.05);
-            --active-bg: rgba(51, 51, 51, 0.1);
-            --sidebar-bg: var(--card-bg);
-            --hover-bg: var(--accent-light);
-            --modal-overlay: rgba(0, 0, 0, 0.4);
-            --modal-bg: #ffffff;
-            --modal-border: rgba(0, 0, 0, 0.1);
-            --confirm-btn-bg: #d32f2f;
-            --confirm-btn-hover: #b71c1c;
-            --cancel-btn-bg: #424242;
-            --cancel-btn-hover: #606060;
-        }
+  <!-- ... (tu head sin cambios) ... -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/static/img/LOGO.png" />
+  <title>Verificación de Código - ScrapyMarket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ... (Tus estilos completos como en la respuesta anterior, incluyendo .btn-secondary) ... */
+    :root {
+      --bg: #f9f9f9;
+      --text: #333;
+      --card: #fff;
+      --border: #e0e0e0;
+      --focus: #333;
+      --error: #d32f2f;
+      --success: #388e3c;
+      --accent-light: rgba(51, 51, 51, 0.1);
+      --text-muted: #666;
+      --modal-overlay: rgba(0, 0, 0, 0.4);
+      --modal-bg: #ffffff;
+      --modal-border: rgba(0, 0, 0, 0.1);
+      --button-secondary-bg: #e0e0e0; /* Color para el botón secundario */
+      --button-secondary-text: #333;
+      --button-secondary-hover-bg: #d5d5d5;
+    }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #121212;
-                --card-bg: #1e1e1e;
-                --text-color: #f5f5f5;
-                --text-muted: #aaa;
-                --input-bg: #262626;
-                --input-border: #444;
-                --input-focus-border: #666;
-                --button-bg: #333;
-                --button-hover: #4a4a4a;
-                --button-text: #fff;
-                --shadow-color: rgba(0, 0, 0, 0.3);
-                --link-color: #bbb;
-                --error-color: #f44336;
-                --success-color: #4caf50;
-                --accent-light: rgba(245, 245, 245, 0.08);
-                --active-bg: rgba(245, 245, 245, 0.15);
-                --sidebar-bg: var(--card-bg);
-                --hover-bg: var(--accent-light);
-                --modal-overlay: rgba(0, 0, 0, 0.7);
-                --modal-bg: #262626;
-                --modal-border: rgba(255, 255, 255, 0.1);
-                --confirm-btn-bg: #d32f2f;
-                --confirm-btn-hover: #b71c1c;
-                --cancel-btn-bg: #424242;
-                --cancel-btn-hover: #606060;
-            }
-        }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --text: #f5f5f5;
+        --card: #1e1e1e;
+        --border: #444;
+        --focus: #666;
+        --error: #f44336;
+        --success: #4caf50;
+        --accent-light: rgba(102, 102, 102, 0.15);
+        --text-muted: #aaa;
+        --modal-overlay: rgba(0, 0, 0, 0.7);
+        --modal-bg: #262626;
+        --modal-border: rgba(255, 255, 255, 0.1);
+        --button-secondary-bg: #3a3a3a; /* Color para el botón secundario en modo oscuro */
+        --button-secondary-text: #f5f5f5;
+        --button-secondary-hover-bg: #4a4a4a;
+      }
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .verification-container {
+      background: var(--card);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.5s ease-out;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 400px;
-            padding: 15px;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        .auth-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px var(--shadow-color);
-            padding: 25px;
-            width: 100%;
-            position: relative;
-        }
+    h1 { font-size: 28px; margin-bottom: 15px; }
+    .logo-container { margin-bottom: 25px; }
+    .logo-container img { width: 100px; height: 100px; }
+    p.instructions { color: var(--text-muted); margin-bottom: 25px; font-size: 15px; line-height: 1.6; }
 
-        .logo-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
+    .code-inputs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
 
-        .logo {
-            width: 80px;
-            height: 80px;
-        }
+    .code-input {
+      width: 50px;
+      height: 60px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+      caret-color: var(--focus);
+      text-transform: uppercase;
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 15px;
-            font-weight: 500;
-            font-size: 1.5rem;
-        }
+    .code-input:focus {
+      border-color: var(--focus);
+      outline: none;
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
 
-        .message {
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--text-muted);
-            line-height: 1.5;
-            font-size: 0.95rem;
-        }
+    .btn {
+      background: var(--focus);
+      color: white;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-bottom: 15px; 
+    }
+    .btn:hover { background: #4a4a4a; }
 
-        .code-container {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .code-input {
-            width: 40px;
-            height: 45px;
-            text-align: center;
-            font-size: 1.3rem;
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            transition: border-color 0.2s;
-        }
-
-        .code-input:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-        }
-
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .submit-btn:hover {
-            background-color: var(--button-hover);
-        }
-
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .footer a {
-            color: var(--link-color);
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        .footer a:hover {
-            opacity: 0.8;
-        }
-
-        /* Mensaje de error que desaparece */
-        .error-message {
-            background-color: var(--error-color);
-            color: white;
-            text-align: center;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            opacity: 0;
-            height: 0;
-            overflow: hidden;
-            transition: opacity 0.3s ease, height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
-        }
-
-        .error-message.show {
-            opacity: 1;
-            height: auto;
-            padding: 10px;
-            margin-top: 15px;
-            animation: fadeOut 10s forwards;
-        }
-
-
-        
-        :root {
-            /* ... (tus variables existentes) ... */
-            --modal-overlay: rgba(0, 0, 0, 0.4); /* Añadido para tema claro */
-            --modal-bg: #ffffff; /* Añadido para tema claro */
-            --modal-border: rgba(0, 0, 0, 0.1); /* Añadido para tema claro */
-            /* ... (el resto de tus variables para tema claro) ... */
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                /* ... (tus variables existentes para tema oscuro) ... */
-                --modal-overlay: rgba(0, 0, 0, 0.7); /* Ya lo tenías */
-                --modal-bg: #262626; /* Ya lo tenías */
-                --modal-border: rgba(255, 255, 255, 0.1); /* Ya lo tenías */
-                /* ... (el resto de tus variables para tema oscuro) ... */
-            }
-        }
-
-/* ... (tu CSS existente) ... */
-
-    /* Estilos para el Modal */
+    .btn-secondary { 
+        background-color: var(--button-secondary-bg);
+        color: var(--button-secondary-text);
+        border: 1px solid var(--border); 
+    }
+    .btn-secondary:hover {
+        background-color: var(--button-secondary-hover-bg);
+    }
+    
     .modal {
-        display: none; /* Oculto por defecto, se mostrará con JS o por el if de Jinja */
+        display: none;
         position: fixed;
         z-index: 1000;
         left: 0;
@@ -239,185 +132,120 @@
         height: 100%;
         overflow: auto;
         background-color: var(--modal-overlay);
-        display: flex; /* Para centrar el contenido */
-        align-items: center; /* Centrado vertical */
-        justify-content: center; /* Centrado horizontal */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-
     .modal-content {
         background-color: var(--modal-bg);
-        color: var(--text-color);
-        margin: auto;
+        color: var(--text);
         padding: 25px;
-        border: 1px solid var(--modal-border);
         border-radius: 8px;
-        box-shadow: 0 4px 12px var(--shadow-color);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         width: 90%;
-        max-width: 400px; /* Similar al auth-card */
+        max-width: 380px;
         text-align: center;
     }
-
-    .modal-content p {
-        margin-bottom: 20px;
-        font-size: 1rem;
-        line-height: 1.5;
-    }
-
+    .modal-content p { margin-bottom: 20px; font-size: 1rem; line-height: 1.5; }
     .modal-content button {
         padding: 10px 20px;
-        background-color: var(--button-bg);
-        color: var(--button-text);
+        background-color: var(--focus);
+        color: white;
         border: none;
         border-radius: 6px;
-        font-size: 0.9rem;
         cursor: pointer;
         transition: background-color 0.2s;
     }
-
-    .modal-content button:hover {
-        background-color: var(--button-hover);
-    }
-        @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                height: auto;
-                padding: 10px;
-                margin-top: 15px;
-            }
-            80% {
-                opacity: 1;
-                height: auto;
-                padding: 10px;
-                margin-top: 15px;
-            }
-            100% {
-                opacity: 0;
-                height: 0;
-                padding: 0;
-                margin-top: 0;
-            }
-        }
-
-        /* Mejoras para responsividad */
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-                max-width: 100%;
-            }
-
-            .auth-card {
-                padding: 20px 15px;
-            }
-
-            .code-container {
-                gap: 6px;
-            }
-
-            .code-input {
-                width: 35px;
-                height: 40px;
-                font-size: 1.1rem;
-            }
-
-            .footer {
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .code-input {
-                width: 30px;
-                height: 35px;
-                font-size: 1rem;
-            }
-
-            h1 {
-                font-size: 1.3rem;
-            }
-
-            .message {
-                font-size: 0.85rem;
-            }
-        }
-    </style>
+    .modal-content button:hover { background: #4a4a4a; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="auth-card">
-            <div class="logo-container">
-                <img src="/static/img/LOGO.png" alt="ScrapyMarket Logo" class="logo">
-            </div>
-
-            <h1>Verificación de Código</h1>
-
-            <div class="message">
-                Hemos enviado un código de verificación de 6 dígitos a tu correo electrónico.
-                <br>
-                Si no lo has recibido, revisa tu bandeja de spam o correo no deseado.
-            </div>
-
-            <form action="/validar_codigo" method="POST">
-                <div class="code-container">
-                    <input type="hidden" name="correo" value="{{ correo }}">
-                    <input type="text" name="code1" class="code-input" maxlength="1" required autofocus>
-                    <input type="text" name="code2" class="code-input" maxlength="1" required>
-                    <input type="text" name="code3" class="code-input" maxlength="1" required>
-                    <input type="text" name="code4" class="code-input" maxlength="1" required>
-                    <input type="text" name="code5" class="code-input" maxlength="1" required>
-                    <input type="text" name="code6" class="code-input" maxlength="1" required>
-                </div>
-
-                <button type="submit" class="submit-btn">Verificar</button>
-                
-                <!-- Mensaje de error -->
-                <div class="error-message" id="error-msg">
-                    Código inválido. Por favor, inténtelo nuevamente.
-                </div>
-            </form>
-
-            <div class="footer">
-                <a href="/">Volver al inicio de sesión</a>
-                <!-- <a href="/resend-code">Reenviar código</a> -->
-            </div>
-        </div>
+  <div class="verification-container">
+    <h1>Verificar Código</h1>
+    <div class="logo-container">
+      <img src="/static/img/LOGO.png" alt="ScrapyMarket Logo" />
     </div>
-    {% if modal_message %}
-    <div id="modal" class="modal">
+    <p class="instructions">
+      Hemos enviado un código de 6 dígitos a tu correo electrónico: <strong>{{ correo }}</strong>.
+      Por favor, ingrésalo a continuación. Si no te ha llegado el correo, revisa tu carpeta de spam o correo no deseado.
+    </p>
+
+    <form id="verificationForm" action="/validar_codigo" method="POST">
+      <input type="hidden" name="correo" value="{{ correo }}" />
+      <div class="code-inputs">
+        <input type="text" name="code1" id="code1" maxlength="1" class="code-input" required pattern="[a-zA-Z0-9]" title="Solo letras y números" />
+        <input type="text" name="code2" id="code2" maxlength="1" class="code-input" required pattern="[a-zA-Z0-9]" title="Solo letras y números" />
+        <input type="text" name="code3" id="code3" maxlength="1" class="code-input" required pattern="[a-zA-Z0-9]" title="Solo letras y números" />
+        <input type="text" name="code4" id="code4" maxlength="1" class="code-input" required pattern="[a-zA-Z0-9]" title="Solo letras y números" />
+        <input type="text" name="code5" id="code5" maxlength="1" class="code-input" required pattern="[a-zA-Z0-9]" title="Solo letras y números" />
+        <input type="text" name="code6" id="code6" maxlength="1" class="code-input" required pattern="[a-zA-Z0-9]" title="Solo letras y números" />
+      </div>
+      <button type="submit" class="btn">Verificar Código</button>
+    </form>
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Ir al Inicio</button>
+  </div>
+
+  {% if modal_message %}
+  <div id="modal" class="modal" style="display: flex;"> <!-- Mostrar si hay mensaje -->
     <div class="modal-content">
-        <p>{{ modal_message }}</p>
+        <!-- CAMBIO AQUÍ: Siempre mostrar el mensaje genérico si modal_message existe -->
+        <p>Código inválido. Intente de nuevo.</p>
         <button onclick="document.getElementById('modal').style.display='none'">Cerrar</button>
     </div>
-    </div>
-    {% endif %}
+  </div>
+  {% endif %}
 
-    <script>
-        // Para navegar entre campos de código
-        const inputs = document.querySelectorAll('.code-input');
-        inputs.forEach((input, index) => {
-            input.addEventListener('input', function() {
-                if (this.value.length === this.maxLength) {
-                    if (index < inputs.length - 1) {
-                        inputs[index + 1].focus();
-                    }
-                }
-            });
-            
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Backspace' && !this.value && index > 0) {
-                    inputs[index - 1].focus();
-                }
-            });
+  <script>
+    // Tu JavaScript existente para manejar los codeInputs (mayúsculas, pegado, etc.)
+    // va aquí sin cambios.
+    document.addEventListener('DOMContentLoaded', () => {
+      const codeInputs = document.querySelectorAll('.code-input');
+
+      codeInputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          let value = e.target.value;
+          value = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+          e.target.value = value;
+          if (value && index < codeInputs.length - 1) {
+            codeInputs[index + 1].focus();
+          }
         });
 
-        // Verificar si hay un parámetro de error en la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('error')) {
-            const errorMsg = document.getElementById('error-msg');
-            errorMsg.textContent = urlParams.get('error') || 'Código inválido. Por favor, inténtelo nuevamente.';
-            errorMsg.classList.add('show');
-        }
-    </script>
+        input.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const pasteData = (e.clipboardData || window.clipboardData).getData('text').toUpperCase();
+          const characters = pasteData.replace(/[^a-zA-Z0-9]/g, '').split('');
+
+          characters.forEach((char, i) => {
+            if (index + i < codeInputs.length) {
+              codeInputs[index + i].value = char;
+            }
+          });
+
+          let nextFocusIndex = Math.min(index + characters.length, codeInputs.length -1);
+          if (index + characters.length >= codeInputs.length) {
+             nextFocusIndex = codeInputs.length - 1;
+          } else {
+             nextFocusIndex = index + characters.length;
+          }
+          codeInputs[nextFocusIndex].focus();
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            codeInputs[index - 1].focus();
+          }
+        });
+
+        input.addEventListener('focus', (e) => {
+          e.target.select();
+        });
+      });
+
+      if (codeInputs.length > 0) {
+        codeInputs[0].focus();
+      }
+    });
+  </script>
 </body>
 </html>
