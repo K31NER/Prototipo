@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
-    <link rel="icon" href="static/img/LOGO.png"> 
+    <link rel="icon" href="static/img/LOGO.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -24,6 +24,9 @@
             --error-color: #d32f2f;
             --success-color: #388e3c;
             --accent-light: rgba(51, 51, 51, 0.1);
+            --modal-overlay: rgba(0, 0, 0, 0.4);
+            --modal-bg: var(--card-bg);
+            --modal-border: rgba(0, 0, 0, 0.1);
         }
 
         @media (prefers-color-scheme: dark) {
@@ -43,6 +46,8 @@
                 --error-color: #f44336;
                 --success-color: #4caf50;
                 --accent-light: rgba(102, 102, 102, 0.15);
+                --modal-overlay: rgba(0, 0, 0, 0.7);
+                --modal-border: rgba(255, 255, 255, 0.1);
             }
         }
 
@@ -227,44 +232,122 @@
             .toggle-password { right: 40px; }
         }
 
-        .icon-user, .icon-lock { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
+        .icon-user, .icon-lock, .icon-mail {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
 
-        /* Estilos para el modal */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 9999;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: var(--modal-overlay);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
         }
 
         .modal-content {
-            background-color: var(--card-bg);
-            margin: 20% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 350px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: var(--modal-bg);
+            margin: 0;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--modal-border);
             text-align: center;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
-        .modal-content p {
-            font-size: 16px;
-            color: var(--error-color);
+        .modal.show .modal-content {
+            animation: modalAppear 0.3s forwards;
+        }
+
+        @keyframes modalAppear {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
             margin-bottom: 20px;
         }
 
-        .modal-content span {
+        .modal-header h2 {
             font-size: 24px;
-            cursor: pointer;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .modal-description {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .close-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s ease;
+            background: none;
+            border: none;
+            padding: 5px;
+            line-height: 1;
+            border-radius: 50%;
+        }
+
+        .close-button:hover {
+            color: var(--text-color);
+            background-color: var(--accent-light);
+        }
+
+        #forgotPasswordForm .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Contenedor para mensajes dinámicos en el modal de recuperación */
+        #forgotPasswordMessageContainer {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        #forgotPasswordMessageContainer .success-message {
+            color: var(--success-color);
+        }
+        #forgotPasswordMessageContainer .error-message {
+            color: var(--error-color);
+        }
+
+
+        #errorModal .modal-content {
+            max-width: 350px;
+        }
+
+        #errorModal p#errorMessage { /* Aseguramos que el ID se aplique al p */
+            font-size: 16px;
+            color: var(--error-color);
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -272,7 +355,8 @@
     <div class="login-container">
         <h1>Inicio de sesión</h1>
         <img src="/static/img/LOGO.png" alt="Logo de la Empresa" width="180px" height="180px">
-        <form id="loginForm">
+        <!-- MODIFICADO: action y method añadidos -->
+        <form id="loginForm" action="/users/login" method="POST">
             <div class="form-group">
                 <label for="username">Usuario</label>
                 <div class="input-wrapper">
@@ -313,7 +397,7 @@
                     <a href="/registro">Crear cuenta</a>
                 </div>
                 <div class="forgot-password">
-                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
                 </div>
             </div>
         </form>
@@ -322,40 +406,73 @@
     <!-- Modal de error -->
     <div id="errorModal" class="modal">
         <div class="modal-content">
-            <span id="closeModal">&times;</span>
-            <p id="errorMessage">Credenciales inválidas</p>
+            <button class="close-button" id="closeErrorModal">×</button>
+            <p id="errorMessage">Credenciales inválidas</p> <!-- El mensaje se actualizará por JS si viene en URL -->
+        </div>
+    </div>
+
+    <!-- Modal de recuperación de contraseña -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" id="closeForgotPasswordModal">×</button>
+            <div class="modal-header">
+                <h2>Recuperar contraseña</h2>
+            </div>
+            <!-- NUEVO: Contenedor para mensajes dinámicos -->
+            <div id="forgotPasswordMessageContainer">
+                <!-- El mensaje de éxito o error se insertará aquí por JS si viene en URL -->
+            </div>
+            <p class="modal-description" id="forgotPasswordDescription">¿Olvidaste tu contraseña? Puedes recuperarla colocando una dirección de correo válida para enviarte un código de verificación de 6 dígitos.</p>
+            <!-- MODIFICADO: action y method añadidos -->
+            <form id="forgotPasswordForm" action="/recuperar_cuenta" method="POST">
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="correo" placeholder="correo@ejemplo.com" required>
+                        <div class="icon">
+                            <svg class="icon-mail" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Enviar código</button>
+            </form>
         </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        // --- Funciones para abrir/cerrar modal (sin cambios, pero importantes) ---
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.style.display = 'flex';
+            void modal.offsetWidth; // Forzar reflow
+            modal.classList.add('show');
+        }
 
-            const formData = new FormData(event.target);
-            const response = await fetch('/users/login', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.status === 401) {
-                document.getElementById('errorModal').style.display = 'block';
-            } else {
-                window.location.href = response.url;
-            }
-        });
-
-        document.getElementById('closeModal').addEventListener('click', function() {
-            document.getElementById('errorModal').style.display = 'none';
-        });
-
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('errorModal');
-            if (event.target == modal) {
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.classList.remove('show');
+            setTimeout(() => {
                 modal.style.display = 'none';
-            }
-        });
+                // Resetear el contenido específico del modal de recuperación si es necesario
+                if (modalId === 'forgotPasswordModal') {
+                    const form = document.getElementById('forgotPasswordForm');
+                    if(form) form.reset();
+                    const msgContainer = document.getElementById('forgotPasswordMessageContainer');
+                    if(msgContainer) msgContainer.innerHTML = ''; // Limpiar mensajes
+                    const description = document.getElementById('forgotPasswordDescription');
+                    if(description) description.style.display = 'block'; // Mostrar descripción original
+                    if(form) form.style.display = 'block'; // Mostrar formulario
+                }
+            }, 300); // Coincide con la duración de la transición
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Script para mostrar/ocultar contraseña (sin cambios) ---
             const passwordInput = document.getElementById('password');
             const togglePasswordButton = document.getElementById('togglePassword');
             const eyeOpenIcon = togglePasswordButton ? togglePasswordButton.querySelector('.eye-open') : null;
@@ -376,7 +493,6 @@
                 togglePasswordButton.addEventListener('click', function() {
                     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                     passwordInput.setAttribute('type', type);
-
                     if (type === 'password') {
                         eyeClosedIcon.style.display = 'block';
                         eyeOpenIcon.style.display = 'none';
@@ -387,8 +503,86 @@
                         this.setAttribute('aria-label', 'Ocultar contraseña');
                     }
                 });
-
                 togglePasswordButton.setAttribute('aria-label', 'Mostrar contraseña');
+            }
+
+            // --- Manejadores para cerrar modales ---
+            const closeErrorModalBtn = document.getElementById('closeErrorModal');
+            if (closeErrorModalBtn) {
+                closeErrorModalBtn.addEventListener('click', function() {
+                    closeModal('errorModal');
+                });
+            }
+
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const closeForgotPasswordModalBtn = document.getElementById('closeForgotPasswordModal');
+            const forgotPasswordModal = document.getElementById('forgotPasswordModal'); // Referencia al modal
+
+            if (forgotPasswordLink) {
+                forgotPasswordLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openModal('forgotPasswordModal');
+                });
+            }
+            if (closeForgotPasswordModalBtn) {
+                closeForgotPasswordModalBtn.addEventListener('click', function() {
+                    closeModal('forgotPasswordModal');
+                });
+            }
+
+            // Cerrar modal al hacer clic fuera del contenido
+            window.addEventListener('click', function(event) {
+                const errorModal = document.getElementById('errorModal');
+                const forgotPwdModal = document.getElementById('forgotPasswordModal');
+                if (event.target === errorModal) {
+                    closeModal('errorModal');
+                }
+                if (event.target === forgotPwdModal) {
+                    closeModal('forgotPasswordModal');
+                }
+            });
+
+            // --- NUEVO: Manejo de modales basados en parámetros URL ---
+            const params = new URLSearchParams(window.location.search);
+            const modalToShow = params.get('show_modal');
+            const message = params.get('message');
+            const messageType = params.get('message_type'); // 'success' o 'error' para forgotPasswordModal
+
+            if (modalToShow) {
+                openModal(modalToShow);
+                if (message) {
+                    if (modalToShow === 'errorModal') {
+                        const errorMessageElement = document.getElementById('errorMessage');
+                        if (errorMessageElement) {
+                            errorMessageElement.textContent = decodeURIComponent(message);
+                        }
+                    } else if (modalToShow === 'forgotPasswordModal') {
+                        const msgContainer = document.getElementById('forgotPasswordMessageContainer');
+                        const form = document.getElementById('forgotPasswordForm');
+                        const description = document.getElementById('forgotPasswordDescription');
+
+                        if (msgContainer) {
+                            msgContainer.innerHTML = ''; // Limpiar por si acaso
+                            const p = document.createElement('p');
+                            p.textContent = decodeURIComponent(message);
+                            if (messageType === 'success') {
+                                p.className = 'success-message';
+                                if(form) form.style.display = 'none'; // Ocultar formulario en éxito
+                                if(description) description.style.display = 'none'; // Ocultar descripción original
+                            } else if (messageType === 'error') {
+                                p.className = 'error-message';
+                                // Mantener el formulario visible para reintentar
+                            }
+                            msgContainer.appendChild(p);
+                        }
+                    }
+                }
+                // Limpiar los parámetros de la URL para que no se muestre el modal de nuevo al refrescar
+                // sin cambiar la URL base.
+                if (window.history.replaceState) {
+                    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                    window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+                }
             }
         });
     </script>

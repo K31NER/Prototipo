@@ -1,11 +1,10 @@
 import json
 from utils.utils import *
 from urllib.parse import unquote
-from models import Email,PasswordRest
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi import APIRouter, Request , status ,HTTPException, Depends,Response
+from fastapi import APIRouter, Form, Query, Request , status ,HTTPException, Depends,Response
 
 # Asegúrate de que oauth2_scheme esté importado o definido
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
@@ -26,6 +25,14 @@ async def login(request:Request):
 @router.get("/registro",response_class=HTMLResponse)
 async def registro(request:Request):
     return templates.TemplateResponse("registro.html", {"request":request})
+
+@router.get("/verificacion",response_class=HTMLResponse)
+async def verificacion(request:Request, correo: str = Query(...)):
+    return templates.TemplateResponse("verificacion.html", {"request":request, "correo": correo})
+
+@router.get("/contraseña",response_class=HTMLResponse)
+async def contraseña(request:Request, correo: str = Query(...)):
+    return templates.TemplateResponse("contraseña.html", {"request":request, "correo": correo})
 
 @router.get("/inicio",response_class=HTMLResponse)
 async def inicio(request: Request, user:dict = Depends(get_current_user)):
@@ -71,17 +78,17 @@ async def logout(response: Response):
 
 
 @router.post("/recuperar_cuenta")
-async def pedir_codigo(request:Email,session:sesion):
+async def pedir_codigo(session:sesion, correo: str = Form(...)):
     # Obtenemos el correo del usuario
-    email = request.email
+    email = correo
     
     # Preparamos la consulta
     consulta = select(User).where(User.correo == email)
     
     # Ejecutamos la consulta
-    resultado = session.exec(consulta).first()
+    user = session.exec(consulta).first()
     
-    if not resultado:
+    if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Correo no encontrado")
     code = generar_codigo()
     
@@ -89,38 +96,61 @@ async def pedir_codigo(request:Email,session:sesion):
     
     await enviar_correo(email,code)
     
-    return {"Message:Correo enviado"}
+    return RedirectResponse(url=f"/verificacion?correo={user.correo}", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.post("/validar_codigo")
-async def validar_codigo(request:PasswordRest,session:sesion):
+async def validar_codigo(session: sesion, correo: str = Form(...),
+                                          code1: str = Form(...),
+                                          code2: str = Form(...),
+                                          code3: str = Form(...),
+                                          code4: str = Form(...),
+                                          code5: str = Form(...),
+                                          code6: str = Form(...)):
     
-    # extreamos los datos
-    email = request.email
-    # Definimos la consulta
+    email = correo
+    code = f"{code1}{code2}{code3}{code4}{code5}{code6}"
+
     consulta = select(User).where(User.correo == email)
-    # Ejecutamos la consulta
+    print(f"email: {email}")
     user = session.exec(consulta).first()
-    
+
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Correo no encontrado")
-    
-    code = request.code
-    nueva_contraseña = request.new_passwprd
-    
-    if email not in codigos_recuperacion or codigos_recuperacion[email] != code:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Credenciales incorrectas")
 
-    # Ciframos al contraseña y la actualizamos
-    contraseña_cifrada =  hash_contraseña(nueva_contraseña)
-    user.contraseña = contraseña_cifrada
+    if email not in codigos_recuperacion or codigos_recuperacion[email] != code:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código incorrecto")
+
+    # Guardamos que el código fue validado para ese email
+    codigos_validados[email] = True
+    return RedirectResponse(url=f"/contraseña?correo={user.correo}", status_code=status.HTTP_303_SEE_OTHER)
+
+@router.post("/cambiar_contraseña")
+async def cambiar_contraseña(session: sesion, new_password: str = Form(...), correo: str = Form(...)):
     
+    email = correo
+    nueva_contraseña = new_password
+
+    if email not in codigos_validados:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Código no validado o expirado")
+
+    consulta = select(User).where(User.correo == email)
+    user = session.exec(consulta).first()
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
+
+    # Ciframos la contraseña y la actualizamos
+    contraseña_cifrada = hash_contraseña(nueva_contraseña)
+    user.contraseña = contraseña_cifrada
+
     session.add(user)
     session.commit()
     session.refresh(user)
-    
-    # Borramos el codigo del almacenamiento temporal
-    del codigos_recuperacion[email]
-    
-    return {"Message": "Contraseña actulizada"}
+
+    # Limpiamos los datos temporales
+    codigos_validados.pop(email, None)
+    codigos_recuperacion.pop(email, None)
+
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
 
     

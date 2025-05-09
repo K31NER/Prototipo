@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/img/LOGO.png">
+    <title>Verificación de Código - ScrapyMarket</title>
+    <style>
+        :root {
+            --bg-color: #f9f9f9;
+            --card-bg: #fff;
+            --text-color: #333;
+            --text-muted: #666;
+            --input-bg: #fff;
+            --input-border: #e0e0e0;
+            --input-focus-border: #333;
+            --button-bg: #333;
+            --button-hover: #4a4a4a;
+            --button-text: #fff;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --link-color: #333;
+            --error-color: #d32f2f;
+            --success-color: #388e3c;
+            --accent-light: rgba(51, 51, 51, 0.05);
+            --active-bg: rgba(51, 51, 51, 0.1);
+            --sidebar-bg: var(--card-bg);
+            --hover-bg: var(--accent-light);
+            --modal-overlay: rgba(0, 0, 0, 0.4);
+            --modal-bg: #ffffff;
+            --modal-border: rgba(0, 0, 0, 0.1);
+            --confirm-btn-bg: #d32f2f;
+            --confirm-btn-hover: #b71c1c;
+            --cancel-btn-bg: #424242;
+            --cancel-btn-hover: #606060;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --card-bg: #1e1e1e;
+                --text-color: #f5f5f5;
+                --text-muted: #aaa;
+                --input-bg: #262626;
+                --input-border: #444;
+                --input-focus-border: #666;
+                --button-bg: #333;
+                --button-hover: #4a4a4a;
+                --button-text: #fff;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                --link-color: #bbb;
+                --error-color: #f44336;
+                --success-color: #4caf50;
+                --accent-light: rgba(245, 245, 245, 0.08);
+                --active-bg: rgba(245, 245, 245, 0.15);
+                --sidebar-bg: var(--card-bg);
+                --hover-bg: var(--accent-light);
+                --modal-overlay: rgba(0, 0, 0, 0.7);
+                --modal-bg: #262626;
+                --modal-border: rgba(255, 255, 255, 0.1);
+                --confirm-btn-bg: #d32f2f;
+                --confirm-btn-hover: #b71c1c;
+                --cancel-btn-bg: #424242;
+                --cancel-btn-hover: #606060;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+        }
+
+        .auth-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: 25px;
+            width: 100%;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        .message {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .code-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .code-input {
+            width: 40px;
+            height: 45px;
+            text-align: center;
+            font-size: 1.3rem;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.2s;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--button-hover);
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .footer a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .footer a:hover {
+            opacity: 0.8;
+        }
+
+        /* Mensaje de error que desaparece */
+        .error-message {
+            background-color: var(--error-color);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease, height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            height: auto;
+            padding: 10px;
+            margin-top: 15px;
+            animation: fadeOut 10s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                height: auto;
+                padding: 10px;
+                margin-top: 15px;
+            }
+            80% {
+                opacity: 1;
+                height: auto;
+                padding: 10px;
+                margin-top: 15px;
+            }
+            100% {
+                opacity: 0;
+                height: 0;
+                padding: 0;
+                margin-top: 0;
+            }
+        }
+
+        /* Mejoras para responsividad */
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                max-width: 100%;
+            }
+
+            .auth-card {
+                padding: 20px 15px;
+            }
+
+            .code-container {
+                gap: 6px;
+            }
+
+            .code-input {
+                width: 35px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .footer {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .code-input {
+                width: 30px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            .message {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-card">
+            <div class="logo-container">
+                <img src="/static/img/LOGO.png" alt="ScrapyMarket Logo" class="logo">
+            </div>
+
+            <h1>Verificación de Código</h1>
+
+            <div class="message">
+                Hemos enviado un código de verificación de 6 dígitos a tu correo electrónico.
+                <br>
+                Si no lo has recibido, revisa tu bandeja de spam o correo no deseado.
+            </div>
+
+            <form action="/validar_codigo" method="POST">
+                <div class="code-container">
+                    <input type="hidden" name="correo" value="{{ correo }}">
+                    <input type="text" name="code1" class="code-input" maxlength="1" required autofocus>
+                    <input type="text" name="code2" class="code-input" maxlength="1" required>
+                    <input type="text" name="code3" class="code-input" maxlength="1" required>
+                    <input type="text" name="code4" class="code-input" maxlength="1" required>
+                    <input type="text" name="code5" class="code-input" maxlength="1" required>
+                    <input type="text" name="code6" class="code-input" maxlength="1" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Verificar</button>
+                
+                <!-- Mensaje de error -->
+                <div class="error-message" id="error-msg">
+                    Código inválido. Por favor, inténtelo nuevamente.
+                </div>
+            </form>
+
+            <div class="footer">
+                <a href="/login">Volver al inicio de sesión</a>
+                <!-- <a href="/resend-code">Reenviar código</a> -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Para navegar entre campos de código
+        const inputs = document.querySelectorAll('.code-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', function() {
+                if (this.value.length === this.maxLength) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Verificar si hay un parámetro de error en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            const errorMsg = document.getElementById('error-msg');
+            errorMsg.textContent = urlParams.get('error') || 'Código inválido. Por favor, inténtelo nuevamente.';
+            errorMsg.classList.add('show');
+        }
+    </script>
+</body>
+</html>
