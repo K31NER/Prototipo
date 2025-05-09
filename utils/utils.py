@@ -45,6 +45,7 @@ conf = ConnectionConfig(
 )
 # Almacenamiento temporal para códigos de recuperación
 codigos_recuperacion = {}
+codigos_validados = {}
 
 # ___________________________ Funciones de manejo de datos_________________________
 
