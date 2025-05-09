@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrapyMarket - Password Recovery</title>
+    <style>
+        /* Reset styles */
+        body, p, h1, h2, h3, h4, h5, h6, ul, ol, li, div, span, table, tr, td {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+
+        /* Base styles */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Header */
+        .email-header {
+            background-color: #1a2632;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 120px;
+            height: auto;
+        }
+
+        /* Content */
+        .email-content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1a2632;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* Verification code */
+        .verification-code {
+            background-color: #f5f7fa;
+            padding: 15px;
+            font-size: 32px;
+            letter-spacing: 8px;
+            font-weight: bold;
+            border-radius: 6px;
+            margin: 30px 0;
+            color: #1a2632;
+            border: 1px dashed #ccc;
+        }
+
+        /* Button */
+        .action-button {
+            display: inline-block;
+            background-color: #1a2632;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        .email-footer {
+            background-color: #f5f7fa;
+            padding: 20px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .email-footer p {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .social-links {
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            color: #1a2632;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 100%;
+                border-radius: 0;
+            }
+            
+            .email-content {
+                padding: 20px;
+            }
+            
+            .verification-code {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <img src="/static/img/LOGO.png" alt="ScrapyMarket Logo" class="logo">
+        </div>
+        
+        <div class="email-content">
+            <h1>Recuperación de Contraseña</h1>
+            <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en ScrapyMarket. Ingresa el siguiente código de verificación para continuar:</p>
+            
+            <div class="verification-code">{recovery_code}</div>
+            
+            <p>Este código expirará en 15 minutos. Si no solicitaste un restablecimiento de contraseña, por favor ignora este correo.</p>
+
+        </div>
+        
+        <div class="email-footer">
+            <p>© 2025 ScrapyMarket. All rights reserved.</p>
+
+        </div>
+    </div>
+</body>
+</html>
