@@ -144,7 +144,7 @@ async def validar_codigo(request:Request,session: sesion, correo: str = Form(...
             })
 
         if email not in codigos_recuperacion or codigos_recuperacion[email] != code:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código incorrecto")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código incorrecto, intente de nuevo")
 
         # Guardamos que el código fue validado para ese email
         codigos_validados[email] = True
