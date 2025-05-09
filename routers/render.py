@@ -78,79 +78,115 @@ async def logout(response: Response):
 
 
 @router.post("/recuperar_cuenta")
-async def pedir_codigo(session:sesion, correo: str = Form(...)):
-    # Obtenemos el correo del usuario
-    email = correo
+async def pedir_codigo(request:Request,session:sesion, correo: str = Form(...)):
+    try:
+        # Obtenemos el correo del usuario
+        email = correo
+        
+        # Preparamos la consulta
+        consulta = select(User).where(User.correo == email)
+        
+        # Ejecutamos la consulta
+        user = session.exec(consulta).first()
+        
+        if not user:
+            return templates.TemplateResponse("login.html", {
+            "request": request,
+            "modal_message": f"Error inesperado: {str(e)}"
+        })
+            
+        code = generar_codigo()
+        
+        codigos_recuperacion[email] = code
+        
+        await enviar_correo(email,code)
+        
+        return RedirectResponse(url=f"/verificacion?correo={user.correo}", status_code=status.HTTP_303_SEE_OTHER)
     
-    # Preparamos la consulta
-    consulta = select(User).where(User.correo == email)
+    except Exception as e:
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "modal_message": f"Error inesperado: {str(e)}"
+        })
     
-    # Ejecutamos la consulta
-    user = session.exec(consulta).first()
-    
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Correo no encontrado")
-    code = generar_codigo()
-    
-    codigos_recuperacion[email] = code
-    
-    await enviar_correo(email,code)
-    
-    return RedirectResponse(url=f"/verificacion?correo={user.correo}", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.post("/validar_codigo")
-async def validar_codigo(session: sesion, correo: str = Form(...),
-                                          code1: str = Form(...),
-                                          code2: str = Form(...),
-                                          code3: str = Form(...),
-                                          code4: str = Form(...),
-                                          code5: str = Form(...),
-                                          code6: str = Form(...)):
-    
-    email = correo
-    code = f"{code1}{code2}{code3}{code4}{code5}{code6}"
+async def validar_codigo(request:Request,session: sesion, correo: str = Form(...),
+                                        code1: str = Form(...),
+                                        code2: str = Form(...),
+                                        code3: str = Form(...),
+                                        code4: str = Form(...),
+                                        code5: str = Form(...),
+                                        code6: str = Form(...)):
+    try:
+        email = correo
+        code = f"{code1}{code2}{code3}{code4}{code5}{code6}"
 
-    consulta = select(User).where(User.correo == email)
-    print(f"email: {email}")
-    user = session.exec(consulta).first()
+        consulta = select(User).where(User.correo == email)
+        print(f"email: {email}")
+        user = session.exec(consulta).first()
 
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Correo no encontrado")
+        if not user:
+            return templates.TemplateResponse("verificacion.html", {
+                "request": request,
+                "modal_message": "No se pudo validar el codigo",
+                "correo": correo
+            })
 
-    if email not in codigos_recuperacion or codigos_recuperacion[email] != code:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código incorrecto")
+        if email not in codigos_recuperacion or codigos_recuperacion[email] != code:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Código incorrecto")
 
-    # Guardamos que el código fue validado para ese email
-    codigos_validados[email] = True
-    return RedirectResponse(url=f"/contraseña?correo={user.correo}", status_code=status.HTTP_303_SEE_OTHER)
-
+        # Guardamos que el código fue validado para ese email
+        codigos_validados[email] = True
+        return RedirectResponse(url=f"/contraseña?correo={user.correo}", status_code=status.HTTP_303_SEE_OTHER)
+    except Exception as e:
+        return templates.TemplateResponse("verificacion.html", {
+            "request": request,
+            "modal_message": f"Error inesperado: {str(e)}",
+            "correo": correo
+        })
+        
 @router.post("/cambiar_contraseña")
-async def cambiar_contraseña(session: sesion, new_password: str = Form(...), correo: str = Form(...)):
+async def cambiar_contraseña(request:Request,session: sesion, new_password: str = Form(...), correo: str = Form(...)):
+    try:
+        email = correo
+        nueva_contraseña = new_password
+
+        if email not in codigos_validados:
+            return templates.TemplateResponse("contraseña.html", {
+            "request": request,
+            "modal_message": f"Error inesperado: {str(e)}",
+            "correo": correo
+        })
+
+        consulta = select(User).where(User.correo == email)
+        user = session.exec(consulta).first()
+
+        if not user:
+            return templates.TemplateResponse("contraseña.html", {
+            "request": request,
+            "modal_message": f"Error inesperado: {str(e)}",
+            "correo": correo
+        })
+
+        # Ciframos la contraseña y la actualizamos
+        contraseña_cifrada = hash_contraseña(nueva_contraseña)
+        user.contraseña = contraseña_cifrada
+
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+
+        # Limpiamos los datos temporales
+        codigos_validados.pop(email, None)
+        codigos_recuperacion.pop(email, None)
+
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     
-    email = correo
-    nueva_contraseña = new_password
-
-    if email not in codigos_validados:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Código no validado o expirado")
-
-    consulta = select(User).where(User.correo == email)
-    user = session.exec(consulta).first()
-
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuario no encontrado")
-
-    # Ciframos la contraseña y la actualizamos
-    contraseña_cifrada = hash_contraseña(nueva_contraseña)
-    user.contraseña = contraseña_cifrada
-
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-
-    # Limpiamos los datos temporales
-    codigos_validados.pop(email, None)
-    codigos_recuperacion.pop(email, None)
-
-    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
-
+    except Exception as e:
+        return templates.TemplateResponse("contraseña.html", {
+            "request": request,
+            "modal_message": f"Error inesperado: {str(e)}",
+            "correo": correo
+        })
     

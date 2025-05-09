@@ -1,30 +1,30 @@
 {
-  "ultima_actualizacion": "2025-05-08 21:00",
+  "ultima_actualizacion": "2025-05-09 06:00",
   "status": "ok",
   "datos": [
     {
       "comercio": "Mercado Libre",
-      "popularidad": 67.0
-    },
-    {
-      "comercio": "Falabella",
-      "popularidad": 37.0
-    },
-    {
-      "comercio": "Ktronix",
-      "popularidad": 43.0
-    },
-    {
-      "comercio": "Jumbo",
-      "popularidad": 39.0
-    },
-    {
-      "comercio": "Linio",
       "popularidad": 38.0
     },
     {
+      "comercio": "Falabella",
+      "popularidad": 31.0
+    },
+    {
+      "comercio": "Ktronix",
+      "popularidad": 94.0
+    },
+    {
+      "comercio": "Jumbo",
+      "popularidad": 44.0
+    },
+    {
+      "comercio": "Linio",
+      "popularidad": 10
+    },
+    {
       "comercio": "Exito",
-      "popularidad": 71.0
+      "popularidad": 54.0
     }
   ]
 }

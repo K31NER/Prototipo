@@ -59,6 +59,73 @@
       width: 100%;
       animation: fadeIn 0.5s ease-out;
     }
+    
+        :root {
+            /* ... (tus variables existentes) ... */
+            --modal-overlay: rgba(0, 0, 0, 0.4); /* Añadido para tema claro */
+            --modal-bg: #ffffff; /* Añadido para tema claro */
+            --modal-border: rgba(0, 0, 0, 0.1); /* Añadido para tema claro */
+            /* ... (el resto de tus variables para tema claro) ... */
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* ... (tus variables existentes para tema oscuro) ... */
+                --modal-overlay: rgba(0, 0, 0, 0.7); /* Ya lo tenías */
+                --modal-bg: #262626; /* Ya lo tenías */
+                --modal-border: rgba(255, 255, 255, 0.1); /* Ya lo tenías */
+                /* ... (el resto de tus variables para tema oscuro) ... */
+            }
+        }
+
+    .modal {
+        display: none; /* Oculto por defecto, se mostrará con JS o por el if de Jinja */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: var(--modal-overlay);
+        display: flex; /* Para centrar el contenido */
+        align-items: center; /* Centrado vertical */
+        justify-content: center; /* Centrado horizontal */
+    }
+
+    .modal-content {
+        background-color: var(--modal-bg);
+        color: var(--text-color);
+        margin: auto;
+        padding: 25px;
+        border: 1px solid var(--modal-border);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px var(--shadow-color);
+        width: 90%;
+        max-width: 400px; /* Similar al auth-card */
+        text-align: center;
+    }
+
+    .modal-content p {
+        margin-bottom: 20px;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    .modal-content button {
+        padding: 10px 20px;
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .modal-content button:hover {
+        background-color: var(--button-hover);
+    }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -239,6 +306,15 @@
       <button type="submit" class="btn">Guardar Contraseña</button>
     </form>
   </div>
+  {% if modal_message %}
+  <div id="modal" class="modal">
+  <div class="modal-content">
+      <p>{{ modal_message }}</p>
+      <button onclick="document.getElementById('modal').style.display='none'">Cerrar</button>
+  </div>
+  </div>
+  {% endif %}
+
 
   <script>
     const form = document.getElementById('resetPasswordForm');
