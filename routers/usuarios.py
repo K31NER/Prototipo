@@ -171,3 +171,4 @@ async def buscar(
     response.set_cookie("productos", productos_json, max_age=1800, httponly=True)
     response.set_cookie("user_name", user.nombre,   max_age=1800, httponly=True)
     return response
+

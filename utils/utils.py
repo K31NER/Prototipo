@@ -1,4 +1,6 @@
 import os
+import secrets
+import string
 import httpx
 import bcrypt 
 import joblib
@@ -9,23 +11,42 @@ from models import User
 from sqlmodel import select
 from dotenv import load_dotenv
 from limpiar import limpiar_datos
+from models import Email
+from jose import jwt, JWTError
 from datetime import datetime, timedelta,timezone
 from fastapi import HTTPException, status, Request
-from jose import jwt, JWTError
-
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 
 load_dotenv()
 
+# Constante 
 Secret_key = os.getenv("SECRET_KEY")
 Algortihm = "HS256" 
 Expire_delta = 3600 
 url = os.getenv("URL_BASE_SCRAPER") 
 apikey = os.getenv("KEY")
+email = os.getenv("EMAIL")
+password_email = os.getenv("PASSWORD_EMAIL")
 
-
-# ___________________________ Funciones de manejo de datos_________________________
 # Creamos el objeto Shortener
 s = pyshorteners.Shortener()
+
+# Configuración de FastAPI-Mail
+conf = ConnectionConfig(
+    MAIL_USERNAME=email,
+    MAIL_PASSWORD=password_email,
+    MAIL_FROM=email,
+    MAIL_PORT=587,
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_STARTTLS=True,
+    MAIL_SSL_TLS=False,
+    USE_CREDENTIALS=True,
+    VALIDATE_CERTS=True
+)
+# Almacenamiento temporal para códigos de recuperación
+codigos_recuperacion = {}
+
+# ___________________________ Funciones de manejo de datos_________________________
 
 def _shorten_url(url) -> str:
     """ Acorta la URL usando la API de TinyURL """
@@ -153,7 +174,6 @@ def format_colombian_peso_manual(value):
         return value
     
 # _______________________ Solicitudes a API _______________________________
-# o el dominio de producción
 
 async def hacer_peticion_scraper(producto: str):
     try:
@@ -165,3 +185,32 @@ async def hacer_peticion_scraper(producto: str):
     except Exception as e:
         print(f"[ERROR] Error al pedir scraping para '{producto}': {e}")
         return []
+
+# ______________________________________ Email _____________________________________________________________
+
+def generar_codigo() -> str:
+    """ Generar codigo de recuperacion de cuenta"""
+    ""
+    return ''.join(secrets.choice(string.ascii_uppercase + string.digits) for i in range(6))
+
+async def enviar_correo(correo:Email,code:str):
+    """ Envia el mensaje al usuario con el correo"""
+    # Leemos el archivo html para pasar la informacion
+    with open("templates/email_templates.html", "r", encoding="utf-8") as file:
+        html_template = file.read()
+    
+    # Ponemos el codigo en el html
+    templates = string.Template(html_template)
+    html_content = templates.safe_substitute(code=code)
+    
+    # Definimos el cuerpo del mensaje       
+    mensaje = MessageSchema(
+        subject="Recuperacion de contraseña",
+        recipients=[correo],
+        body=html_content,
+        subtype="html"
+    )
+    
+    # Enviamos con la configuracion definida
+    fm = FastMail(config=conf)
+    await fm.send_message(mensaje)
