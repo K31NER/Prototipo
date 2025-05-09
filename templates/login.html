@@ -340,14 +340,14 @@
         }
 
 
-        #errorModal .modal-content {
+        #errorModal .modal-content { /* Estilos específicos para el modal de error si son necesarios */
             max-width: 350px;
         }
 
-        #errorModal p#errorMessage { /* Aseguramos que el ID se aplique al p */
+        #errorModal p#errorMessageText { /* Cambiado ID para el texto del mensaje de error */
             font-size: 16px;
             color: var(--error-color);
-            margin-bottom: 20px;
+            margin-bottom: 0; /* Ajustar si es necesario */
         }
     </style>
 </head>
@@ -355,17 +355,14 @@
     <div class="login-container">
         <h1>Inicio de sesión</h1>
         <img src="/static/img/LOGO.png" alt="Logo de la Empresa" width="180px" height="180px">
-        <!-- MODIFICADO: action y method añadidos -->
-        <form id="loginForm" action="/users/login" method="POST">
+        <!-- Formulario de Login: NO action/method, se manejará con fetch -->
+        <form id="loginForm">
             <div class="form-group">
                 <label for="username">Usuario</label>
                 <div class="input-wrapper">
                     <input name="nombre" type="text" id="username" placeholder="jhon Doe" required>
                     <div class="icon">
-                        <svg class="icon-user" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="7" r="4" />
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        </svg>
+                        <svg class="icon-user" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4" /><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /></svg>
                     </div>
                 </div>
             </div>
@@ -374,20 +371,11 @@
                 <div class="input-wrapper">
                     <input name="contraseña" type="password" id="password" placeholder="••••••••••••" required>
                     <div class="icon">
-                        <svg class="icon-lock" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
+                        <svg class="icon-lock" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                     </div>
                     <span class="toggle-password" id="togglePassword">
-                        <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                            <line x1="1" y1="1" x2="23" y2="23"></line>
-                        </svg>
-                        <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
+                        <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </span>
                 </div>
             </div>
@@ -403,37 +391,34 @@
         </form>
     </div>
 
-    <!-- Modal de error -->
+    <!-- Modal de error (para login) -->
     <div id="errorModal" class="modal">
         <div class="modal-content">
             <button class="close-button" id="closeErrorModal">×</button>
-            <p id="errorMessage">Credenciales inválidas</p> <!-- El mensaje se actualizará por JS si viene en URL -->
+            <!-- CAMBIADO: ID del párrafo para el mensaje -->
+            <p id="errorMessageText">Credenciales inválidas</p>
         </div>
     </div>
 
-    <!-- Modal de recuperación de contraseña -->
+    <!-- Modal de recuperación de contraseña (se maneja con redirección y parámetros URL) -->
     <div id="forgotPasswordModal" class="modal">
         <div class="modal-content">
             <button class="close-button" id="closeForgotPasswordModal">×</button>
             <div class="modal-header">
                 <h2>Recuperar contraseña</h2>
             </div>
-            <!-- NUEVO: Contenedor para mensajes dinámicos -->
             <div id="forgotPasswordMessageContainer">
-                <!-- El mensaje de éxito o error se insertará aquí por JS si viene en URL -->
+                <!-- Mensajes de éxito/error por JS desde parámetros URL -->
             </div>
             <p class="modal-description" id="forgotPasswordDescription">¿Olvidaste tu contraseña? Puedes recuperarla colocando una dirección de correo válida para enviarte un código de verificación de 6 dígitos.</p>
-            <!-- MODIFICADO: action y method añadidos -->
+            <!-- Formulario de Olvido de Contraseña: SÍ action/method para envío nativo -->
             <form id="forgotPasswordForm" action="/recuperar_cuenta" method="POST">
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
                     <div class="input-wrapper">
                         <input type="email" id="email" name="correo" placeholder="correo@ejemplo.com" required>
                         <div class="icon">
-                            <svg class="icon-mail" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
+                            <svg class="icon-mail" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                         </div>
                     </div>
                 </div>
@@ -443,68 +428,126 @@
     </div>
 
     <script>
-        // --- Funciones para abrir/cerrar modal (sin cambios, pero importantes) ---
+        // --- Funciones para abrir/cerrar modal (reutilizables) ---
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
-            if (!modal) return;
+            if (!modal) {
+                console.error("Modal no encontrado:", modalId);
+                return;
+            }
             modal.style.display = 'flex';
-            void modal.offsetWidth; // Forzar reflow
+            void modal.offsetWidth; // Forzar reflow para transición
             modal.classList.add('show');
         }
 
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
-            if (!modal) return;
+            if (!modal) {
+                console.error("Modal no encontrado al cerrar:", modalId);
+                return;
+            }
             modal.classList.remove('show');
             setTimeout(() => {
                 modal.style.display = 'none';
-                // Resetear el contenido específico del modal de recuperación si es necesario
                 if (modalId === 'forgotPasswordModal') {
                     const form = document.getElementById('forgotPasswordForm');
                     if(form) form.reset();
                     const msgContainer = document.getElementById('forgotPasswordMessageContainer');
-                    if(msgContainer) msgContainer.innerHTML = ''; // Limpiar mensajes
+                    if(msgContainer) msgContainer.innerHTML = '';
                     const description = document.getElementById('forgotPasswordDescription');
-                    if(description) description.style.display = 'block'; // Mostrar descripción original
-                    if(form) form.style.display = 'block'; // Mostrar formulario
+                    if(description) description.style.display = 'block';
+                    if(form) form.style.display = 'block';
                 }
-            }, 300); // Coincide con la duración de la transición
+                // Para el errorModal, el mensaje se resetea o se actualiza antes de mostrarlo
+            }, 300); // Coincide con la duración de la transición CSS
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Manejo del Formulario de LOGIN con FETCH (como en tu primer código) ---
+            const loginForm = document.getElementById('loginForm');
+            const errorModal = document.getElementById('errorModal'); // Referencia al modal de error
+            const errorMessageTextElement = document.getElementById('errorMessageText'); // Referencia al P DENTRO del modal de error
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Prevenir envío tradicional
+
+                    const formData = new FormData(event.target);
+                    try {
+                        const response = await fetch('/users/login', { // Endpoint de login
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (response.status === 401) { // Credenciales inválidas
+                            if (errorMessageTextElement) {
+                                // Intenta obtener un mensaje del cuerpo de la respuesta si tu backend lo envía
+                                try {
+                                    const errorData = await response.json();
+                                    errorMessageTextElement.textContent = errorData.detail || "Credenciales inválidas.";
+                                } catch (e) {
+                                    errorMessageTextElement.textContent = "Credenciales inválidas.";
+                                }
+                            } else {
+                                console.error("Elemento errorMessageText no encontrado");
+                            }
+                            openModal('errorModal');
+                        } else if (response.ok) { // Login exitoso
+                            // Si el backend redirige después de un login exitoso con fetch,
+                            // la URL de redirección estará en response.url
+                            window.location.href = response.url;
+                        } else {
+                            // Otros errores del servidor
+                            if (errorMessageTextElement) {
+                                errorMessageTextElement.textContent = `Error ${response.status}: No se pudo iniciar sesión.`;
+                            }
+                            openModal('errorModal');
+                            console.error("Error de login:", response.status, await response.text());
+                        }
+                    } catch (error) {
+                        console.error('Error en la petición fetch de login:', error);
+                        if (errorMessageTextElement) {
+                            errorMessageTextElement.textContent = "Error de conexión. Inténtalo más tarde.";
+                        }
+                        openModal('errorModal');
+                    }
+                });
+            }
+
             // --- Script para mostrar/ocultar contraseña (sin cambios) ---
             const passwordInput = document.getElementById('password');
             const togglePasswordButton = document.getElementById('togglePassword');
-            const eyeOpenIcon = togglePasswordButton ? togglePasswordButton.querySelector('.eye-open') : null;
-            const eyeClosedIcon = togglePasswordButton ? togglePasswordButton.querySelector('.eye-closed') : null;
-
-            if (passwordInput && togglePasswordButton && eyeOpenIcon && eyeClosedIcon) {
-                passwordInput.addEventListener('input', function() {
-                    if (passwordInput.value.length > 0) {
-                        togglePasswordButton.classList.add('visible');
-                    } else {
-                        togglePasswordButton.classList.remove('visible');
-                        passwordInput.setAttribute('type', 'password');
-                        eyeClosedIcon.style.display = 'block';
-                        eyeOpenIcon.style.display = 'none';
-                    }
-                });
-
-                togglePasswordButton.addEventListener('click', function() {
-                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                    passwordInput.setAttribute('type', type);
-                    if (type === 'password') {
-                        eyeClosedIcon.style.display = 'block';
-                        eyeOpenIcon.style.display = 'none';
-                        this.setAttribute('aria-label', 'Mostrar contraseña');
-                    } else {
-                        eyeClosedIcon.style.display = 'none';
-                        eyeOpenIcon.style.display = 'block';
-                        this.setAttribute('aria-label', 'Ocultar contraseña');
-                    }
-                });
-                togglePasswordButton.setAttribute('aria-label', 'Mostrar contraseña');
+            if (passwordInput && togglePasswordButton) { // Asegurar que ambos existen
+                const eyeOpenIcon = togglePasswordButton.querySelector('.eye-open');
+                const eyeClosedIcon = togglePasswordButton.querySelector('.eye-closed');
+                if (eyeOpenIcon && eyeClosedIcon) { // Asegurar que los iconos existen
+                    passwordInput.addEventListener('input', function() {
+                        if (passwordInput.value.length > 0) {
+                            togglePasswordButton.classList.add('visible');
+                        } else {
+                            togglePasswordButton.classList.remove('visible');
+                            passwordInput.setAttribute('type', 'password');
+                            eyeClosedIcon.style.display = 'block';
+                            eyeOpenIcon.style.display = 'none';
+                        }
+                    });
+                    togglePasswordButton.addEventListener('click', function() {
+                        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                        passwordInput.setAttribute('type', type);
+                        if (type === 'password') {
+                            eyeClosedIcon.style.display = 'block';
+                            eyeOpenIcon.style.display = 'none';
+                            this.setAttribute('aria-label', 'Mostrar contraseña');
+                        } else {
+                            eyeClosedIcon.style.display = 'none';
+                            eyeOpenIcon.style.display = 'block';
+                            this.setAttribute('aria-label', 'Ocultar contraseña');
+                        }
+                    });
+                    togglePasswordButton.setAttribute('aria-label', 'Mostrar contraseña');
+                }
             }
+
 
             // --- Manejadores para cerrar modales ---
             const closeErrorModalBtn = document.getElementById('closeErrorModal');
@@ -516,7 +559,6 @@
 
             const forgotPasswordLink = document.getElementById('forgotPasswordLink');
             const closeForgotPasswordModalBtn = document.getElementById('closeForgotPasswordModal');
-            const forgotPasswordModal = document.getElementById('forgotPasswordModal'); // Referencia al modal
 
             if (forgotPasswordLink) {
                 forgotPasswordLink.addEventListener('click', function(e) {
@@ -532,53 +574,44 @@
 
             // Cerrar modal al hacer clic fuera del contenido
             window.addEventListener('click', function(event) {
-                const errorModal = document.getElementById('errorModal');
-                const forgotPwdModal = document.getElementById('forgotPasswordModal');
-                if (event.target === errorModal) {
+                const currentErrorModal = document.getElementById('errorModal'); // Re-obtener por si acaso
+                const currentForgotPwdModal = document.getElementById('forgotPasswordModal');
+
+                if (currentErrorModal && event.target === currentErrorModal) {
                     closeModal('errorModal');
                 }
-                if (event.target === forgotPwdModal) {
+                if (currentForgotPwdModal && event.target === currentForgotPwdModal) {
                     closeModal('forgotPasswordModal');
                 }
             });
 
-            // --- NUEVO: Manejo de modales basados en parámetros URL ---
+            // --- Manejo de forgotPasswordModal basado en parámetros URL (sin cambios) ---
             const params = new URLSearchParams(window.location.search);
             const modalToShow = params.get('show_modal');
             const message = params.get('message');
-            const messageType = params.get('message_type'); // 'success' o 'error' para forgotPasswordModal
+            const messageType = params.get('message_type');
 
-            if (modalToShow) {
+            if (modalToShow && modalToShow === 'forgotPasswordModal') { // Solo para forgotPasswordModal
                 openModal(modalToShow);
                 if (message) {
-                    if (modalToShow === 'errorModal') {
-                        const errorMessageElement = document.getElementById('errorMessage');
-                        if (errorMessageElement) {
-                            errorMessageElement.textContent = decodeURIComponent(message);
-                        }
-                    } else if (modalToShow === 'forgotPasswordModal') {
-                        const msgContainer = document.getElementById('forgotPasswordMessageContainer');
-                        const form = document.getElementById('forgotPasswordForm');
-                        const description = document.getElementById('forgotPasswordDescription');
+                    const msgContainer = document.getElementById('forgotPasswordMessageContainer');
+                    const form = document.getElementById('forgotPasswordForm');
+                    const description = document.getElementById('forgotPasswordDescription');
 
-                        if (msgContainer) {
-                            msgContainer.innerHTML = ''; // Limpiar por si acaso
-                            const p = document.createElement('p');
-                            p.textContent = decodeURIComponent(message);
-                            if (messageType === 'success') {
-                                p.className = 'success-message';
-                                if(form) form.style.display = 'none'; // Ocultar formulario en éxito
-                                if(description) description.style.display = 'none'; // Ocultar descripción original
-                            } else if (messageType === 'error') {
-                                p.className = 'error-message';
-                                // Mantener el formulario visible para reintentar
-                            }
-                            msgContainer.appendChild(p);
+                    if (msgContainer) {
+                        msgContainer.innerHTML = '';
+                        const p = document.createElement('p');
+                        p.textContent = decodeURIComponent(message);
+                        if (messageType === 'success') {
+                            p.className = 'success-message';
+                            if(form) form.style.display = 'none';
+                            if(description) description.style.display = 'none';
+                        } else if (messageType === 'error') {
+                            p.className = 'error-message';
                         }
+                        msgContainer.appendChild(p);
                     }
                 }
-                // Limpiar los parámetros de la URL para que no se muestre el modal de nuevo al refrescar
-                // sin cambiar la URL base.
                 if (window.history.replaceState) {
                     const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
                     window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
