@@ -100,13 +100,23 @@ async def pedir_codigo(request:Request,session:sesion, correo: str = Form(...)):
         codigos_recuperacion[email] = code
         
         await enviar_correo(email,code)
-        
+    
+        if not user:
+        # Cuando el correo no está registrado
+            return templates.TemplateResponse("login.html", {
+                "request": request,
+                "modal_message": "El correo electrónico no está registrado. Inténtalo de nuevo.", # Mensaje específico
+                "is_forgot_password_error": True # NUEVA BANDERA
+            })
+            
         return RedirectResponse(url=f"/verificacion?correo={user.correo}", status_code=status.HTTP_303_SEE_OTHER)
     
     except Exception as e:
+        # Error general al procesar la recuperación
         return templates.TemplateResponse("login.html", {
             "request": request,
-            "modal_message": f"Error inesperado: {str(e)}"
+            "modal_message": f"El correo electrónico no está registrado. Inténtalo de nuevo.", # Mensaje específico
+            "is_forgot_password_error": True # NUEVA BANDERA
         })
     
 

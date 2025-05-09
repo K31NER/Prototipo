@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- ... (tu head sin cambios) ... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
     <link rel="icon" href="static/img/LOGO.png">
     <style>
+        /* TU CSS COMPLETO DEL ÚLTIMO CÓDIGO QUE TE FUNCIONA BIEN VA AQUÍ */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         :root {
@@ -352,10 +354,17 @@
     </style>
 </head>
 <body>
+    <!-- Contenedor oculto para pasar el mensaje Jinja2 al JavaScript -->
+    <!-- Suponiendo que tu backend pasa 'modal_message' y 'is_forgot_password_error' -->
+    <div id="jinjaForgotPasswordMessage" style="display: none;"
+         data-message="{{ modal_message if modal_message and is_forgot_password_error else '' }}">
+    </div>
+
+
     <div class="login-container">
+        <!-- ... (tu login-container sin cambios) ... -->
         <h1>Inicio de sesión</h1>
         <img src="/static/img/LOGO.png" alt="Logo de la Empresa" width="180px" height="180px">
-        <!-- Formulario de Login: NO action/method, se manejará con fetch -->
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Usuario</label>
@@ -393,25 +402,25 @@
 
     <!-- Modal de error (para login) -->
     <div id="errorModal" class="modal">
+        <!-- ... (tu errorModal sin cambios) ... -->
         <div class="modal-content">
             <button class="close-button" id="closeErrorModal">×</button>
-            <!-- CAMBIADO: ID del párrafo para el mensaje -->
             <p id="errorMessageText">Credenciales inválidas</p>
         </div>
     </div>
 
-    <!-- Modal de recuperación de contraseña (se maneja con redirección y parámetros URL) -->
+    <!-- Modal de recuperación de contraseña -->
     <div id="forgotPasswordModal" class="modal">
+        <!-- ... (tu forgotPasswordModal sin cambios en estructura, solo el JS lo afectará) ... -->
         <div class="modal-content">
             <button class="close-button" id="closeForgotPasswordModal">×</button>
             <div class="modal-header">
                 <h2>Recuperar contraseña</h2>
             </div>
             <div id="forgotPasswordMessageContainer">
-                <!-- Mensajes de éxito/error por JS desde parámetros URL -->
+                <!-- Mensajes de éxito/error por JS -->
             </div>
             <p class="modal-description" id="forgotPasswordDescription">¿Olvidaste tu contraseña? Puedes recuperarla colocando una dirección de correo válida para enviarte un código de verificación de 6 dígitos.</p>
-            <!-- Formulario de Olvido de Contraseña: SÍ action/method para envío nativo -->
             <form id="forgotPasswordForm" action="/recuperar_cuenta" method="POST">
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
@@ -451,58 +460,51 @@
                 modal.style.display = 'none';
                 if (modalId === 'forgotPasswordModal') {
                     const form = document.getElementById('forgotPasswordForm');
-                    if(form) form.reset();
+                    if(form) form.reset(); // Opcional: resetear el formulario
                     const msgContainer = document.getElementById('forgotPasswordMessageContainer');
-                    if(msgContainer) msgContainer.innerHTML = '';
+                    if(msgContainer) msgContainer.innerHTML = ''; // Limpiar mensajes
                     const description = document.getElementById('forgotPasswordDescription');
-                    if(description) description.style.display = 'block';
-                    if(form) form.style.display = 'block';
+                    if(description) description.style.display = 'block'; // Mostrar descripción original
+                    if(form) form.style.display = 'block'; // Mostrar formulario
                 }
-                // Para el errorModal, el mensaje se resetea o se actualiza antes de mostrarlo
-            }, 300); // Coincide con la duración de la transición CSS
+            }, 300);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Manejo del Formulario de LOGIN con FETCH (como en tu primer código) ---
+            // --- Manejo del Formulario de LOGIN con FETCH (sin cambios) ---
             const loginForm = document.getElementById('loginForm');
-            const errorModal = document.getElementById('errorModal'); // Referencia al modal de error
-            const errorMessageTextElement = document.getElementById('errorMessageText'); // Referencia al P DENTRO del modal de error
+            // ... (resto del código de loginForm como en la respuesta anterior)
+            const errorModal = document.getElementById('errorModal'); 
+            const errorMessageTextElement = document.getElementById('errorMessageText'); 
 
             if (loginForm) {
                 loginForm.addEventListener('submit', async function(event) {
-                    event.preventDefault(); // Prevenir envío tradicional
+                    event.preventDefault(); 
 
                     const formData = new FormData(event.target);
                     try {
-                        const response = await fetch('/users/login', { // Endpoint de login
+                        const response = await fetch('/users/login', { 
                             method: 'POST',
                             body: formData
                         });
 
-                        if (response.status === 401) { // Credenciales inválidas
+                        if (response.status === 401) { 
                             if (errorMessageTextElement) {
-                                // Intenta obtener un mensaje del cuerpo de la respuesta si tu backend lo envía
                                 try {
                                     const errorData = await response.json();
                                     errorMessageTextElement.textContent = errorData.detail || "Credenciales inválidas.";
                                 } catch (e) {
                                     errorMessageTextElement.textContent = "Credenciales inválidas.";
                                 }
-                            } else {
-                                console.error("Elemento errorMessageText no encontrado");
                             }
                             openModal('errorModal');
-                        } else if (response.ok) { // Login exitoso
-                            // Si el backend redirige después de un login exitoso con fetch,
-                            // la URL de redirección estará en response.url
+                        } else if (response.ok) { 
                             window.location.href = response.url;
                         } else {
-                            // Otros errores del servidor
                             if (errorMessageTextElement) {
                                 errorMessageTextElement.textContent = `Error ${response.status}: No se pudo iniciar sesión.`;
                             }
                             openModal('errorModal');
-                            console.error("Error de login:", response.status, await response.text());
                         }
                     } catch (error) {
                         console.error('Error en la petición fetch de login:', error);
@@ -516,11 +518,12 @@
 
             // --- Script para mostrar/ocultar contraseña (sin cambios) ---
             const passwordInput = document.getElementById('password');
+            // ... (resto del código de togglePassword como en la respuesta anterior)
             const togglePasswordButton = document.getElementById('togglePassword');
-            if (passwordInput && togglePasswordButton) { // Asegurar que ambos existen
+            if (passwordInput && togglePasswordButton) { 
                 const eyeOpenIcon = togglePasswordButton.querySelector('.eye-open');
                 const eyeClosedIcon = togglePasswordButton.querySelector('.eye-closed');
-                if (eyeOpenIcon && eyeClosedIcon) { // Asegurar que los iconos existen
+                if (eyeOpenIcon && eyeClosedIcon) { 
                     passwordInput.addEventListener('input', function() {
                         if (passwordInput.value.length > 0) {
                             togglePasswordButton.classList.add('visible');
@@ -549,7 +552,7 @@
             }
 
 
-            // --- Manejadores para cerrar modales ---
+            // --- Manejadores para abrir/cerrar modales ---
             const closeErrorModalBtn = document.getElementById('closeErrorModal');
             if (closeErrorModalBtn) {
                 closeErrorModalBtn.addEventListener('click', function() {
@@ -563,6 +566,14 @@
             if (forgotPasswordLink) {
                 forgotPasswordLink.addEventListener('click', function(e) {
                     e.preventDefault();
+                    // Limpiar mensajes previos al abrir
+                    const msgContainer = document.getElementById('forgotPasswordMessageContainer');
+                    if(msgContainer) msgContainer.innerHTML = '';
+                    const description = document.getElementById('forgotPasswordDescription');
+                    if(description) description.style.display = 'block';
+                    const form = document.getElementById('forgotPasswordForm');
+                    if(form) form.style.display = 'block';
+
                     openModal('forgotPasswordModal');
                 });
             }
@@ -574,7 +585,7 @@
 
             // Cerrar modal al hacer clic fuera del contenido
             window.addEventListener('click', function(event) {
-                const currentErrorModal = document.getElementById('errorModal'); // Re-obtener por si acaso
+                const currentErrorModal = document.getElementById('errorModal');
                 const currentForgotPwdModal = document.getElementById('forgotPasswordModal');
 
                 if (currentErrorModal && event.target === currentErrorModal) {
@@ -585,15 +596,41 @@
                 }
             });
 
-            // --- Manejo de forgotPasswordModal basado en parámetros URL (sin cambios) ---
-            const params = new URLSearchParams(window.location.search);
-            const modalToShow = params.get('show_modal');
-            const message = params.get('message');
-            const messageType = params.get('message_type');
+            // --- NUEVA LÓGICA: Manejo de forgotPasswordModal con mensajes Jinja2 ---
+            // Y también manejo de parámetros URL para cuando el backend SÍ redirige con ellos.
+            
+            // Primero, verificar si hay un mensaje Jinja2 para forgotPassword
+            const jinjaMessageDiv = document.getElementById('jinjaForgotPasswordMessage');
+            const jinjaMessage = jinjaMessageDiv ? jinjaMessageDiv.dataset.message : null;
 
-            if (modalToShow && modalToShow === 'forgotPasswordModal') { // Solo para forgotPasswordModal
-                openModal(modalToShow);
-                if (message) {
+            if (jinjaMessage) {
+                console.log("Mensaje Jinja2 detectado para forgotPasswordModal:", jinjaMessage);
+                openModal('forgotPasswordModal');
+                const msgContainer = document.getElementById('forgotPasswordMessageContainer');
+                const form = document.getElementById('forgotPasswordForm');
+                const description = document.getElementById('forgotPasswordDescription');
+
+                if (msgContainer) {
+                    msgContainer.innerHTML = ''; // Limpiar
+                    const p = document.createElement('p');
+                    p.textContent = jinjaMessage; // Usar el mensaje de Jinja
+                    p.className = 'error-message'; // Asumir que es un error si viene de esta forma
+                    msgContainer.appendChild(p);
+                }
+                // Mantener el formulario visible para reintentar
+                if(description) description.style.display = 'block'; // Ocultar descripción original si se muestra un error grande
+                if(form) form.style.display = 'block';
+
+            } else {
+                // Si no hay mensaje Jinja2, verificar parámetros URL (para cuando el backend redirige a / con parámetros)
+                const params = new URLSearchParams(window.location.search);
+                const modalToShow = params.get('show_modal');
+                const messageFromUrl = params.get('message');
+                const messageTypeFromUrl = params.get('message_type');
+
+                if (modalToShow && modalToShow === 'forgotPasswordModal' && messageFromUrl) {
+                    console.log("Parámetros URL detectados para forgotPasswordModal:", messageFromUrl);
+                    openModal(modalToShow);
                     const msgContainer = document.getElementById('forgotPasswordMessageContainer');
                     const form = document.getElementById('forgotPasswordForm');
                     const description = document.getElementById('forgotPasswordDescription');
@@ -601,20 +638,21 @@
                     if (msgContainer) {
                         msgContainer.innerHTML = '';
                         const p = document.createElement('p');
-                        p.textContent = decodeURIComponent(message);
-                        if (messageType === 'success') {
+                        p.textContent = decodeURIComponent(messageFromUrl);
+                        if (messageTypeFromUrl === 'success') {
                             p.className = 'success-message';
                             if(form) form.style.display = 'none';
                             if(description) description.style.display = 'none';
-                        } else if (messageType === 'error') {
+                        } else if (messageTypeFromUrl === 'error') {
                             p.className = 'error-message';
+                            // Mantener el formulario visible
                         }
                         msgContainer.appendChild(p);
                     }
-                }
-                if (window.history.replaceState) {
-                    const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                    window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+                    if (window.history.replaceState) {
+                        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                        window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+                    }
                 }
             }
         });
