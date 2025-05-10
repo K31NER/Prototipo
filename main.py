@@ -1,3 +1,4 @@
+from fastapi.responses import RedirectResponse
 from db import crear_table
 from routers import usuarios,render
 from fastapi.staticfiles import StaticFiles
@@ -38,18 +39,16 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
 
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
-
     user_id = request.cookies.get("user_id", "")
     user_name = request.cookies.get("user_name", "Usuario")
 
-    return templates.TemplateResponse(
-        "inicio.html",
-        {
-            "request": request,
-            "name": user_name.capitalize(),
-            "user_id": user_id,
-            "error": "Has alcanzado el límite de búsquedas. Intenta nuevamente más tarde."
-        },
-        status_code=429
-    )
+    redirect_url = f"/inicio?user_name={user_name}&user_id={user_id}&error=rate_limit"
+    response = RedirectResponse(url=redirect_url, status_code=303)
+
+    response.set_cookie("user_id", user_id, max_age=1800, httponly=True)
+    response.set_cookie("user_name", user_name, max_age=1800, httponly=True)
+
+    return response
+
+
     

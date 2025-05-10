@@ -35,7 +35,7 @@ async def contraseña(request:Request, correo: str = Query(...)):
     return templates.TemplateResponse("contraseña.html", {"request":request, "correo": correo})
 
 @router.get("/inicio",response_class=HTMLResponse)
-async def inicio(request: Request, user:dict = Depends(get_current_user)):
+async def inicio(request: Request, user:dict = Depends(get_current_user), error: str = ""):
     """Página de inicio después del login"""
     user_name = user.get("sub")
     user_id = user.get("id")
@@ -43,7 +43,19 @@ async def inicio(request: Request, user:dict = Depends(get_current_user)):
     if not user_name:
         return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)  
     
-    return templates.TemplateResponse("inicio.html", {"request": request, "name": user_name.capitalize() , "user_id":user_id})
+    error_message = None
+    if error == "rate_limit":
+        error_message = "Has alcanzado el límite de búsquedas. Intenta nuevamente más tarde."
+
+    return templates.TemplateResponse(
+        "inicio.html", 
+        {
+            "request": request, 
+            "name": user_name.capitalize(), 
+            "user_id": user_id,
+            "error": error_message
+        }
+    )
 
 
 @router.get("/dashboard", response_class=HTMLResponse)
@@ -199,4 +211,3 @@ async def cambiar_contraseña(request:Request,session: sesion, new_password: str
             "modal_message": f"Error inesperado: {str(e)}",
             "correo": correo
         })
-    
