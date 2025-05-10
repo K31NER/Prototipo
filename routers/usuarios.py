@@ -2,8 +2,10 @@ import json
 from models import *
 from db import sesion
 from utils.utils import *
+from slowapi import Limiter
 from datetime import datetime
 from urllib.parse import quote
+from slowapi.util import get_remote_address
 from fastapi.templating import Jinja2Templates
 from scraper import scrapear_todas_las_tiendas
 from fastapi.responses import RedirectResponse,JSONResponse
@@ -15,13 +17,21 @@ SECRET_KEY = Secret_key
 ALGORITHM = Algortihm
 EXPIRES_DELTA = Expire_delta
 
+# Schema de autentificacion
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
+# Objeto router
 router = APIRouter(prefix="/users",tags=["users"])
+
+# Limitador de peticiones
+limiter = Limiter(key_func=get_remote_address)
+
+# Ubicacion de los templates
 templates = Jinja2Templates(directory="templates")
 
 @router.post("/registro",status_code=status.HTTP_201_CREATED)
-async def create_user(session: sesion,
+@limiter.limit("5/minute")  # Limitar registro a 5 peticiones por minuto
+async def create_user(session: sesion, request:Request,
                     nombre: str = Form(...),
                     correo: str = Form(...),
                     genero: str = Form(...),
@@ -57,7 +67,9 @@ async def create_user(session: sesion,
     return response
 
 @router.post("/login", status_code=status.HTTP_200_OK)
-async def login(session: sesion, nombre: str = Form(...), contraseña: str = Form(...)):
+@limiter.limit("5/minute")  # Limitar registro a 5 peticiones por minuto
+async def login(session: sesion,request:Request,
+                nombre: str = Form(...), contraseña: str = Form(...)):
     """Función para verificar el usuario"""
     try:
         # Verificar si el usuario existe y la contraseña es correcta
@@ -77,6 +89,7 @@ async def login(session: sesion, nombre: str = Form(...), contraseña: str = For
     return response
 
 @router.post("/buscar")
+@limiter.limit("3/minute")
 async def buscar(
     request: Request,
     session: sesion,
