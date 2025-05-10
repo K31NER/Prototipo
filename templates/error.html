@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error de autenticación</title>
+    <title>Error {{ title }}</title>
     <link rel="icon" href="static/img/LOGO.png"> 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -136,8 +136,8 @@
     <div class="container">
         <img src="/static/img/LOGO.png" alt="Logo" class="logo">
         
-        <h1>Acceso Denegado</h1>
-        <p>No hemos podido verificar tus credenciales. Por favor, inicia sesión o regístrate.</p>
+        <h1>{{ message }}</h1>
+        <p>{{ error_description }}</p>
         <a href="/" class="btn">Inicia sesión o regístrate</a>
     </div>
 
