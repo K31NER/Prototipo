@@ -29,12 +29,12 @@
             --sidebar-bg: var(--card-bg);
             --hover-bg: var(--accent-light);
             --modal-overlay: rgba(0, 0, 0, 0.4);
-                --modal-bg: #ffffff;
-                --modal-border: rgba(0, 0, 0, 0.1);
-                --confirm-btn-bg: #d32f2f;
-                --confirm-btn-hover: #b71c1c;
-                --cancel-btn-bg: #424242;
-                --cancel-btn-hover: #606060;
+            --modal-bg: #ffffff;
+            --modal-border: rgba(0, 0, 0, 0.1);
+            --confirm-btn-bg: #d32f2f;
+            --confirm-btn-hover: #b71c1c;
+            --cancel-btn-bg: #424242;
+            --cancel-btn-hover: #606060;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -176,11 +176,41 @@
         .section-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; color: var(--text-color); }
 
         /* Table styling */
-        .table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 16px var(--shadow-color); background-color: var(--card-bg); -webkit-overflow-scrolling: touch; border: 1px solid var(--input-border); }
-        .table-container { min-width: 100%; }
-        .table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        .table th, .table td { padding: 16px 24px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--input-border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .table th { font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; position: sticky; top: 0; background-color: var(--card-bg); z-index: 10; }
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto; /* Mantenido para scroll horizontal en pantallas medianas */
+            border-radius: 12px;
+            box-shadow: 0 4px 16px var(--shadow-color);
+            background-color: var(--card-bg);
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--input-border);
+        }
+        .table-container { min-width: 100%; } /* Este div podría no ser necesario si table-wrapper ya maneja el overflow */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Puede cambiar a 'auto' en vistas de tarjeta */
+        }
+        .table th, .table td {
+            padding: 16px 24px;
+            text-align: left;
+            font-size: 14px;
+            border-bottom: 1px solid var(--input-border);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .table th {
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            background-color: var(--card-bg); /* Asegurar que el fondo cubra el contenido al hacer scroll */
+            z-index: 10;
+        }
         .table tr:last-child td { border-bottom: none; }
         .table tbody tr { transition: background-color 0.2s; }
         .table tbody tr:hover { background-color: var(--hover-bg); }
@@ -188,9 +218,34 @@
         .rating { display: flex; align-items: center; }
         .stars { color: #ff9f00; font-size: 14px; margin-right: 8px; }
         .rating span { color: var(--text-muted); font-size: 12px; }
-        .link-button { display: inline-flex; align-items: center; justify-content: center; background-color: var(--button-bg); color: var(--button-text); border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; text-decoration: none; }
+        .link-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+        }
         .link-button:hover { background-color: var(--button-hover); }
-        .show-more { display: block; text-align: center; padding: 16px; color: var(--link-color); text-decoration: none; font-weight: 500; border-top: 1px solid var(--input-border); transition: background-color 0.2s; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
+        .show-more {
+            display: block;
+            text-align: center;
+            padding: 16px;
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-top: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
         .show-more:hover { background-color: var(--hover-bg); text-decoration: underline; }
         .empty-table-message { text-align: center; padding: 40px; color: var(--text-muted); }
         .loading-row td { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
@@ -202,129 +257,138 @@
         .menu-toggle svg { width: 24px; height: 24px; fill: var(--text-color); display: block; }
         .sidebar-overlay.active + .menu-toggle { opacity: 0; pointer-events: none; }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--modal-overlay);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-container {
-            background-color: var(--modal-bg);
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-            width: 90%;
-            max-width: 380px;
-            padding: 24px;
-            border: 1px solid var(--modal-border);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-            animation: modalAppear 0.3s forwards;
-        }
-
-        @keyframes modalAppear {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-color);
-        }
-
-        .modal-message {
-            font-size: 15px;
-            line-height: 1.5;
-            margin-bottom: 24px;
-            color: var(--text-muted);
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        .modal-button {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-        }
-
-        .modal-button-confirm {
-            background-color: var(--confirm-btn-bg);
-            color: white;
-        }
-
-        .modal-button-confirm:hover {
-            background-color: var(--confirm-btn-hover);
-            transform: translateY(-1px);
-        }
-
-        .modal-button-cancel {
-            background-color: var(--cancel-btn-bg);
-            color: white;
-        }
-
-        .modal-button-cancel:hover {
-            background-color: var(--cancel-btn-hover);
-            transform: translateY(-1px);
-        }
-
-        /* Añadir ícono de advertencia */
-        .modal-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .modal-icon {
-            color: var(--confirm-btn-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--modal-overlay); display: none; justify-content: center; align-items: center; z-index: 9999; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-container { background-color: var(--modal-bg); border-radius: 12px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); width: 90%; max-width: 380px; padding: 24px; border: 1px solid var(--modal-border); transform: translateY(20px); transition: transform 0.3s ease; animation: modalAppear 0.3s forwards; }
+        @keyframes modalAppear { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--text-color); }
+        .modal-message { font-size: 15px; line-height: 1.5; margin-bottom: 24px; color: var(--text-muted); }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; }
+        .modal-button { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; border: none; }
+        .modal-button-confirm { background-color: var(--confirm-btn-bg); color: white; }
+        .modal-button-confirm:hover { background-color: var(--confirm-btn-hover); transform: translateY(-1px); }
+        .modal-button-cancel { background-color: var(--cancel-btn-bg); color: white; }
+        .modal-button-cancel:hover { background-color: var(--cancel-btn-hover); transform: translateY(-1px); }
+        .modal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .modal-icon { color: var(--confirm-btn-bg); display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
 
         @media (max-width: 1024px) {
             .sidebar { width: 220px; }
             main { margin-left: 220px; width: calc(100% - 220px); padding: 32px; }
         }
+
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); box-shadow: 5px 0 15px var(--shadow-color); border-right: none; }
             .sidebar.active { transform: translateX(0); }
             main { margin-left: 0; width: 100%; padding: 24px; padding-top: 85px; transition: none; }
             .menu-toggle { display: block; }
-            .table th, .table td { padding: 12px 16px; }
             .dashboard-title { font-size: 24px; }
+
+            /* Ajustes para la tabla en pantallas medianas */
+            .table th, .table td {
+                padding: 12px 16px; /* Reducir padding */
+            }
+            .table-wrapper {
+                /* overflow-x: auto; ya está definido arriba, se mantiene */
+                /* -webkit-overflow-scrolling: touch; ya está definido arriba */
+            }
+            .table {
+                min-width: 600px; /* Fuerza el scroll horizontal si la tabla es más ancha que esto */
+            }
         }
+
+        /* Estilo de "tarjetas" para pantallas muy pequeñas */
+        @media (max-width: 600px) {
+            .table-wrapper {
+                border: none;
+                box-shadow: none;
+                background-color: transparent;
+                overflow-x: visible; /* No necesitamos scroll horizontal si las filas son bloques */
+            }
+            .table {
+                width: 100%;
+                min-width: 0; /* Resetear min-width */
+                border-collapse: separate;
+                border-spacing: 0 10px; /* Espacio vertical entre "tarjetas" */
+                table-layout: auto; /* El contenido determina el ancho */
+            }
+
+            .table thead {
+                display: none; /* Ocultar encabezados tradicionales */
+            }
+
+            .table tr {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                background-color: var(--card-bg);
+                box-shadow: 0 2px 8px var(--shadow-color);
+                border: 1px solid var(--input-border);
+                padding: 10px;
+            }
+            .table tr:last-child {
+                margin-bottom: 0;
+            }
+            .table tbody tr:hover {
+                background-color: var(--card-bg); /* Evitar hover que no tiene sentido en modo tarjeta */
+            }
+
+            .table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 5px;
+                text-align: right; /* Contenido a la derecha */
+                border-bottom: 1px solid var(--accent-light);
+                white-space: normal; /* Permitir que el texto se ajuste */
+                overflow: visible;
+                text-overflow: clip;
+                font-size: 14px; /* Asegurar un buen tamaño de fuente */
+            }
+            .table td:last-child {
+                border-bottom: none;
+            }
+
+            .table td::before {
+                content: attr(data-label); /* Mostrar el label */
+                font-weight: 600;
+                color: var(--text-muted);
+                text-align: left; /* Label a la izquierda */
+                margin-right: 10px;
+                white-space: nowrap;
+            }
+
+            .table td .link-button {
+                padding: 6px 10px;
+                font-size: 12px;
+                margin-left: auto; /* Empujar el botón a la derecha */
+            }
+
+            .table .empty-table-message {
+                display: block;
+                text-align: center;
+                padding: 20px;
+                justify-content: center;
+                background-color: var(--card-bg); /* Para que tenga fondo si table-wrapper es transparente */
+                border-radius: 8px;
+                border: 1px solid var(--input-border);
+            }
+            .table .empty-table-message::before {
+                display: none; /* No mostrar data-label */
+            }
+            .table .empty-table-message td { /* Para asegurar que el td interno se comporte bien */
+                display: block;
+                text-align: center;
+                border-bottom: none;
+            }
+        }
+
+
         @media (max-width: 480px) {
             main { padding: 16px; padding-top: 85px; }
-            .table th, .table td { padding: 10px 12px; font-size: 13px; }
+            /* Los estilos de .table th, .table td ya se manejan en los media queries de 768px y 600px */
             .dashboard-title { font-size: 22px; }
-            .link-button { padding: 6px 12px; font-size: 12px; }
+            /* .link-button general ya tiene estilos, el específico de tabla se maneja en el media query de 600px */
             .sidebar .brand { padding-left: 16px; padding-right: 16px; font-size: 20px; }
             .sidebar .brand img { height: 25px; margin-right: 8px; }
             .sidebar .user-info { padding-left: 16px; padding-right: 16px; }
@@ -368,7 +432,7 @@
             <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="/inicio" class="nav-link active">
-                        <span class="nav-icon"><i class="fa-solid fa-house-chimney"></i></i></span>
+                        <span class="nav-icon"><i class="fa-solid fa-house-chimney"></i></span>
                         Inicio
                     </a>
                 </li>
@@ -399,7 +463,8 @@
                     <h2 class="section-title">Productos Buscados</h2>
                 </div>
                 <div class="table-wrapper">
-                    <div class="table-container">
+                    <!-- El div .table-container puede ser redundante si .table-wrapper ya maneja el overflow -->
+                    <!-- <div class="table-container"> -->
                         <table class="table">
                             <thead>
                                 <tr>
@@ -412,19 +477,19 @@
                             <tbody>
                                 {% for producto in productos %}
                                     <tr>
-                                        <td>{{ producto.nombre }}</td>
-                                        <td>${{ producto.precio | format_cop}}</td>
-                                        <td>{{ producto.puntuacion }}</td>
-                                        <td><a href="{{ producto.links }}" target="_blank" class="link-button">Ver Producto</a></td>
+                                        <td data-label="Nombre">{{ producto.nombre }}</td>
+                                        <td data-label="Precio">${{ producto.precio | format_cop}}</td>
+                                        <td data-label="Puntuación">{{ producto.puntuacion }}</td>
+                                        <td data-label="Enlace"><a href="{{ producto.links }}" target="_blank" class="link-button">Ver Producto</a></td>
                                     </tr>
                                 {% else %}
-                                    <tr>
-                                        <td colspan="5" class="text-center empty-table-message">No se encontraron productos.</td>
+                                    <tr class="empty-table-row"> <!-- Añadida clase para mejor manejo si es necesario -->
+                                        <td colspan="4" class="empty-table-message">No se encontraron productos.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                    </div>
+                    <!-- </div> -->
                     <a href="/inicio" class="show-more">Volver al Inicio</a>
                 </div>
             </section>
@@ -462,54 +527,57 @@
                     });
                 });
             }
-                // --- NUEVO: Gestión del modal de confirmación para cerrar sesión ---
-                const logoutLink = document.getElementById('logoutLink');
-        const logoutModal = document.getElementById('logoutModal');
-        const cancelLogout = document.getElementById('cancelLogout');
-        const confirmLogout = document.getElementById('confirmLogout');
-        
-        // Abrir modal al hacer clic en Cerrar sesión
-        logoutLink.addEventListener('click', function(e) {
-            e.preventDefault(); // Evitar que el enlace funcione directamente
-            logoutModal.style.display = 'flex';
-            setTimeout(() => {
-                logoutModal.style.opacity = '1';
-            }, 10); // Pequeño retraso para activar la transición
-        });
-        
-        // Cerrar modal al hacer clic en Cancelar
-        cancelLogout.addEventListener('click', function() {
-            closeModal();
-        });
-        
-        // Confirmar cierre de sesión
-        confirmLogout.addEventListener('click', function() {
-            // Redirigir a la URL de cierre de sesión
-            window.location.href = '/logout';
-        });
-        
-        // Cerrar modal al hacer clic fuera
-        logoutModal.addEventListener('click', function(e) {
-            if (e.target === logoutModal) {
-                closeModal();
+            // --- NUEVO: Gestión del modal de confirmación para cerrar sesión ---
+            const logoutLink = document.getElementById('logoutLink');
+            const logoutModal = document.getElementById('logoutModal');
+            const cancelLogout = document.getElementById('cancelLogout');
+            const confirmLogout = document.getElementById('confirmLogout');
+            
+            if (logoutLink && logoutModal && cancelLogout && confirmLogout) { // Verificar que los elementos existen
+                // Abrir modal al hacer clic en Cerrar sesión
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault(); // Evitar que el enlace funcione directamente
+                    logoutModal.style.display = 'flex';
+                    setTimeout(() => {
+                        logoutModal.style.opacity = '1';
+                    }, 10); // Pequeño retraso para activar la transición
+                });
+                
+                // Cerrar modal al hacer clic en Cancelar
+                cancelLogout.addEventListener('click', function() {
+                    closeModal();
+                });
+                
+                // Confirmar cierre de sesión
+                confirmLogout.addEventListener('click', function() {
+                    // Redirigir a la URL de cierre de sesión
+                    window.location.href = '/logout';
+                });
+                
+                // Cerrar modal al hacer clic fuera
+                logoutModal.addEventListener('click', function(e) {
+                    if (e.target === logoutModal) {
+                        closeModal();
+                    }
+                });
             }
-        });
-        
-        // Función para cerrar el modal con animación
-        function closeModal() {
-            logoutModal.style.opacity = '0';
-            setTimeout(() => {
-                logoutModal.style.display = 'none';
-            }, 300); // Esperar a que termine la transición
-        }
-        
-        // Cerrar modal con ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && logoutModal.style.display === 'flex') {
-                closeModal();
+            
+            // Función para cerrar el modal con animación
+            function closeModal() {
+                if (logoutModal) { // Verificar que el modal existe
+                    logoutModal.style.opacity = '0';
+                    setTimeout(() => {
+                        logoutModal.style.display = 'none';
+                    }, 300); // Esperar a que termine la transición
+                }
             }
-        });
-        
+            
+            // Cerrar modal con ESC
+            document.addEventListener('keydown', function(e) {
+                if (logoutModal && e.key === 'Escape' && logoutModal.style.display === 'flex') {
+                    closeModal();
+                }
+            });
         });
     </script>
 </body>

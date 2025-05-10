@@ -100,6 +100,19 @@ async def buscar(
 ):
     # 1. Realizamos el scrapeo
     busqueda_limpia = producto.lower().strip()
+    if not busqueda_limpia:
+        user = session.get(User, id)
+        nombre = user.nombre if user else ""
+        return templates.TemplateResponse(
+            "inicio.html",
+            {
+                "request": request,
+                "name": nombre.capitalize(),
+                "user_id": id,
+                "error": "No se encontraron productos, realice otra búsqueda"
+            },
+            status_code=200
+        )
     datos = await hacer_peticion_scraper(busqueda_limpia)
 
     # Si no hay resultados, volvemos a la página de inicio con mensaje de error
