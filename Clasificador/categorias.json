@@ -548,5 +548,16 @@
         "Computación",
         "Periféricos de PC",
         "Mouses y Teclados"
+    ],
+    "mac book": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles",
+        "Mac"
+    ],
+    "monitor": [
+        "Computación",
+        "Monitores y Accesorios",
+        "Monitores"
     ]
 }
