@@ -1,6 +1,6 @@
 import json
 from utils.utils import *
-from urllib.parse import unquote
+from urllib.parse import quote, unquote
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -34,19 +34,25 @@ async def verificacion(request:Request, correo: str = Query(...)):
 async def contraseña(request:Request, correo: str = Query(...)):
     return templates.TemplateResponse("contraseña.html", {"request":request, "correo": correo})
 
-@router.get("/inicio",response_class=HTMLResponse)
-async def inicio(request: Request, user:dict = Depends(get_current_user), error: str = ""):
+@router.get("/inicio", response_class=HTMLResponse)
+async def inicio(request: Request, 
+                user: dict = Depends(get_current_user), 
+                error:str =Query(default="")):
+    
     """Página de inicio después del login"""
     user_name = user.get("sub")
     user_id = user.get("id")
     
     if not user_name:
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)  
+        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
     
     error_message = None
     if error == "rate_limit":
         error_message = "Has alcanzado el límite de búsquedas. Intenta nuevamente más tarde."
-
+    elif error:
+        error_message = error
+    else:
+        error_message = None
     return templates.TemplateResponse(
         "inicio.html", 
         {
@@ -56,7 +62,25 @@ async def inicio(request: Request, user:dict = Depends(get_current_user), error:
             "error": error_message
         }
     )
-
+    
+# Endpoint que maneja la redirección
+@router.get("/redirect_to_inicio", response_class=HTMLResponse)
+async def redirect_to_inicio(
+    request: Request,
+    user: dict = Depends(get_current_user),
+    error: str = ""
+):
+    user_name = user.get("sub")
+    user_id = user.get("id")
+    
+    if not user_name:
+        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    
+    error_escaped = quote(error)
+    return RedirectResponse(
+        url=f"/inicio?user_name={user_name}&user_id={user_id}&error={error_escaped}",
+        status_code=status.HTTP_302_FOUND
+    )
 
 @router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request,user:str = Depends(get_current_user)):

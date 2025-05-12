@@ -101,34 +101,17 @@ async def buscar(
     # 1. Realizamos el scrapeo
     busqueda_limpia = producto.lower().strip()
     if not busqueda_limpia:
-        user = session.get(User, id)
-        nombre = user.nombre if user else ""
-        return templates.TemplateResponse(
-            "inicio.html",
-            {
-                "request": request,
-                "name": nombre.capitalize(),
-                "user_id": id,
-                "error": "No se encontraron productos, realice otra búsqueda"
-            },
-            status_code=200
+        return RedirectResponse(
+            url="/redirect_to_inicio?error=No se encontraron productos, realice otra búsqueda",
+            status_code=303
         )
     datos = await hacer_peticion_scraper(busqueda_limpia)
 
     # Si no hay resultados, volvemos a la página de inicio con mensaje de error
     if not datos:
-        # opcionalmente puedes recuperar el nombre de usuario para el saludo
-        user = session.get(User, id)
-        nombre = user.nombre if user else ""
-        return templates.TemplateResponse(
-            "inicio.html",
-            {
-                "request": request,
-                "name": nombre.capitalize(),
-                "user_id": id,
-                "error": "No se encontraron productos, realice otra búsqueda"
-            },
-            status_code=200
+        return RedirectResponse(
+            url="/redirect_to_inicio?error=No se encontraron productos, realice otra búsqueda",
+            status_code=303
         )
 
     # 2. Buscar usuario
@@ -163,17 +146,9 @@ async def buscar(
             raise ValueError("No hay datos válidos tras el preprocesamiento")
     except Exception as e:
         print(f"Error procesando los datos: {e}")
-        user = session.get(User, id)
-        nombre = user.nombre if user else ""
-        return templates.TemplateResponse(
-            "inicio.html",
-            {
-                "request": request,
-                "name": nombre.capitalize(),
-                "user_id": id,
-                "error": "No se encontraron productos, realice otra búsqueda"
-            },
-            status_code=200
+        return RedirectResponse(
+            url="/redirect_to_inicio?error=No se encontraron productos, realice otra búsqueda",
+            status_code=303
         )
 
     # 8. Creamos lista y la guardamos en cookie
