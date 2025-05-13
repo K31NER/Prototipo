@@ -1,9 +1,13 @@
-from fastapi.responses import RedirectResponse
+import os
+import time
+import pandas as pd
 from db import crear_table
+from datetime import datetime
 from routers import usuarios,render
 from fastapi.staticfiles import StaticFiles
 from slowapi.errors import RateLimitExceeded
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from fastapi import FastAPI,HTTPException, Request
 
 app = FastAPI(
@@ -14,6 +18,43 @@ app = FastAPI(
 
 templates = Jinja2Templates("templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Ruta del csv
+CSV_PATH = "Metricas.csv"
+
+# Si no existe, crea el archivo con encabezado
+if not os.path.exists(CSV_PATH):
+    df_init = pd.DataFrame(columns=["FechaHora", "Metodo","Endpoints","Status", "DuracionSegundos"])
+    df_init.to_csv(CSV_PATH, index=False, encoding="utf-8")
+
+
+# Middleware para monitorear el trafico
+@app.middleware("http")
+async def monitorear(request: Request, call_next):
+    inicio = time.perf_counter() # Iniciamos el contador
+    http_method = request.method # Obtener el metodo de la request
+    endpoint = request.url.path  # Obtener la ruta  
+    response = await call_next(request) 
+    status = response.status_code
+    final = time.perf_counter() - inicio # Finalizar el tiempo
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S") # Fecha y hora actual
+    duracion_formateada = round(final, 4) # Duracion formateada
+
+    # Crear un DataFrame con una sola fila
+    df = pd.DataFrame([{
+        "FechaHora": timestamp,
+        "Metodo": http_method,
+        "Endpoints": endpoint,
+        "Status":status,
+        "DuracionSegundos": duracion_formateada
+    }])
+
+    # Escribir al CSV en modo append, sin escribir encabezado
+    df.to_csv(CSV_PATH, mode='a', header=False, index=False, encoding="utf-8")
+
+    print(f"[{timestamp}] Método: {http_method} | Duración: {duracion_formateada} segundos")
+
+    return response
 
 app.include_router(usuarios.router)
 app.include_router(render.router)
