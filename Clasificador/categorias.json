@@ -559,5 +559,12 @@
         "Computación",
         "Monitores y Accesorios",
         "Monitores"
+    ],
+    "libro": [
+        "Libros, Revistas y Comics",
+        "Libros Físicos"
+    ],
+    "coca cola": [
+        "Otras"
     ]
 }
