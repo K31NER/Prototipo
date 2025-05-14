@@ -1,17 +1,16 @@
 import json
-import sqlmodel
-from sqlalchemy.exc import SQLAlchemyError
+import asyncio
 from db import sesion
 from utils.utils import *
 from slowapi import Limiter
 from datetime import datetime
 from urllib.parse import quote
+from sqlalchemy.exc import SQLAlchemyError
 from slowapi.util import get_remote_address
 from fastapi.templating import Jinja2Templates
-from scraper import scrapear_todas_las_tiendas
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import RedirectResponse,JSONResponse
 from perfil_de_usuarios import obtener_categoria_meta, generar_embedding
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import APIRouter, HTTPException, status,Form , Response, Request, Depends
 
 SECRET_KEY = Secret_key
@@ -30,6 +29,8 @@ limiter = Limiter(key_func=get_remote_address)
 # Ubicacion de los templates
 templates = Jinja2Templates(directory="templates")
 
+# Bloqueador de session
+registro_lock = asyncio.Lock()
 @router.post("/registro",status_code=status.HTTP_201_CREATED)
 @limiter.limit("5/minute")  # Limitar registro a 5 peticiones por minuto
 async def create_user(session: sesion, request:Request,
@@ -39,44 +40,46 @@ async def create_user(session: sesion, request:Request,
                     fecha_nacimiento: str = Form(...),
                     contraseña: str = Form(...),):
     """Crea un nuevo usuario, o muestra mensaje si ya existe el correo"""
-    # Validar si el correo ya existe
-    existing_user = session.execute(select(User).where(User.correo == correo)).scalar_one_or_none()
-
-    if existing_user:
-        return RedirectResponse(url=f"/registro?mensaje=Correo_existente", status_code=303)
     
-    try:
-        """ Crea un nuevo usuario """
-        # Convertir fecha de string a objeto datetime
-        fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%Y-%m-%d").date()
+    async with registro_lock:
+        # Validar si el correo ya existe
+        existing_user = session.execute(select(User).where(User.correo == correo)).scalar_one_or_none()
+
+        if existing_user:
+            return RedirectResponse(url=f"/registro?mensaje=Correo_existente", status_code=303)
         
-        # Creamos el usuario en base al modelo 
-        new_user = User(
-            nombre=nombre,
-            correo=correo,
-            genero=genero,
-            fecha_nacimiento=fecha_nacimiento, 
-            contraseña=hash_contraseña(contraseña),
-        )
-        
-        # Agregamos el usuario
-        session.add(new_user)
-        session.commit()
-        session.refresh(new_user)
-        
-        # Creamos el token JWT
-        user_data = {"sub": new_user.nombre, "id": new_user.id}
-        access_token = create_jwt_token(user_data,SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
-        
-        # redireccionamos al usuario a la página de inicio
-        response = RedirectResponse(url=f"/inicio?user_name={new_user.nombre}&user_id={new_user.id}", status_code=status.HTTP_303_SEE_OTHER)
-        # Creamos la cookie con el token
-        response.set_cookie(key="access_token", value=access_token, httponly=True,secure=True, samesite='strict')
-        
-        return response
-    except SQLAlchemyError as e:
-        session.rollback()  # Limpiamos al session
-        return RedirectResponse(url=f"/registro?mensaje=Error_registro", status_code=303)
+        try:
+            """ Crea un nuevo usuario """
+            # Convertir fecha de string a objeto datetime
+            fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%Y-%m-%d").date()
+            
+            # Creamos el usuario en base al modelo 
+            new_user = User(
+                nombre=nombre,
+                correo=correo,
+                genero=genero,
+                fecha_nacimiento=fecha_nacimiento, 
+                contraseña=hash_contraseña(contraseña),
+            )
+            
+            # Agregamos el usuario
+            session.add(new_user)
+            session.commit()
+            session.refresh(new_user)
+            
+            # Creamos el token JWT
+            user_data = {"sub": new_user.nombre, "id": new_user.id}
+            access_token = create_jwt_token(user_data,SECRET_KEY,ALGORITHM,EXPIRES_DELTA)
+            
+            # redireccionamos al usuario a la página de inicio
+            response = RedirectResponse(url=f"/inicio?user_name={new_user.nombre}&user_id={new_user.id}", status_code=status.HTTP_303_SEE_OTHER)
+            # Creamos la cookie con el token
+            response.set_cookie(key="access_token", value=access_token, httponly=True,secure=True, samesite='strict')
+            
+            return response
+        except SQLAlchemyError as e:
+            session.rollback()  # Limpiamos al session
+            return RedirectResponse(url=f"/registro?mensaje=Error_registro", status_code=303)
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")  # Limitar registro a 5 peticiones por minuto
