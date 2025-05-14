@@ -42,12 +42,6 @@ async def create_user(session: sesion, request:Request,
     """Crea un nuevo usuario, o muestra mensaje si ya existe el correo"""
     
     async with registro_lock:
-        # Validar si el correo ya existe
-        existing_user = session.execute(select(User).where(User.correo == correo)).scalar_one_or_none()
-
-        if existing_user:
-            return RedirectResponse(url=f"/registro?mensaje=Correo_existente", status_code=303)
-        
         try:
             """ Crea un nuevo usuario """
             # Convertir fecha de string a objeto datetime
@@ -79,8 +73,17 @@ async def create_user(session: sesion, request:Request,
             return response
         except SQLAlchemyError as e:
             session.rollback()  # Limpiamos al session
+            # Detectamos que fue por el correo duplicado
+            if "correo" in str(e.orig) or "UNIQUE constraint failed" in str(e.orig):
+                return RedirectResponse(url="/registro?mensaje=Correo_existente", status_code=303)
+            print(f"[DEBUG] Error de integridad al registrar: {str(e)}")
             return RedirectResponse(url=f"/registro?mensaje=Error_registro", status_code=303)
 
+        except SQLAlchemyError as e:
+            session.rollback()
+            print(f"[ERROR] SQLAlchemy general: {str(e)}")
+            return RedirectResponse(url=f"/registro?mensaje=Error_registro", status_code=303)
+        
 @router.post("/login", status_code=status.HTTP_200_OK)
 @limiter.limit("5/minute")  # Limitar registro a 5 peticiones por minuto
 async def login(session: sesion,request:Request,
