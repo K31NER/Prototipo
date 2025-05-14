@@ -566,5 +566,250 @@
     ],
     "coca cola": [
         "Otras"
+    ],
+    "libros": [
+        "Libros, Revistas y Comics",
+        "Libros Físicos"
+    ],
+    "lenovo": [
+        "Computación"
+    ],
+    "portátil": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "celulares": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "acer nitro": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "neveras": [
+        "Electrodomésticos",
+        "Refrigeración",
+        "Neveras y Nevecones"
+    ],
+    "honor x8b": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones",
+        "Honor"
+    ],
+    "atlético nacional": [
+        "Deportes y Fitness",
+        "Fútbol"
+    ],
+    "relojes": [
+        "Relojes y Joyas",
+        "Relojes de Pulso"
+    ],
+    "9 am dive": [
+        "Belleza y Cuidado Personal",
+        "Perfumes"
+    ],
+    "4090": [
+        "Computación",
+        "Componentes de PC",
+        "Tarjetas",
+        "Tarjetas de Video"
+    ],
+    "ventilador": [
+        "Electrodomésticos",
+        "Climatización",
+        "Ventiladores"
+    ],
+    "infinix": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "asus": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "motorola": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "computadores": [
+        "Computación"
+    ],
+    "mause inalámbrico": [
+        "Computación",
+        "Periféricos de PC",
+        "Mouses y Teclados",
+        "Mouses"
+    ],
+    "microfono": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Micrófonos y Preamplificadores",
+        "Micrófonos"
+    ],
+    "portátiles": [
+        "Computación",
+        "Portátiles y Accesorios"
+    ],
+    "samsugn": [
+        "Otras"
+    ],
+    "zanahoria": [
+        "Otras"
+    ],
+    "impresoras": [
+        "Computación",
+        "Impresión"
+    ],
+    "lg": [
+        "Otras"
+    ],
+    "office": [
+        "Computación",
+        "Software",
+        "Softwares de oficinas"
+    ],
+    "cctv": [
+        "Hogar y Muebles",
+        "Seguridad para el Hogar",
+        "Sistemas de Monitoreo"
+    ],
+    "spotify": [
+        "Otras"
+    ],
+    "accesorios deportivos": [
+        "Otras"
+    ],
+    "ps5": [
+        "Consolas y Videojuegos",
+        "Consolas"
+    ],
+    "motocicleta": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "licuadora": [
+        "Electrodomésticos",
+        "Pequeños Electrodomésticos",
+        "Para Cocina",
+        "Preparación de Bebidas",
+        "Licuadoras"
+    ],
+    "abanicos": [
+        "Otras"
+    ],
+    "celulae": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "nintendo": [
+        "Consolas y Videojuegos",
+        "Consolas"
+    ],
+    "super smash": [
+        "Consolas y Videojuegos"
+    ],
+    "band": [
+        "Celulares y Teléfonos",
+        "Smartwatches y Accesorios",
+        "Smartwatches"
+    ],
+    "blusas": [
+        "Ropa y Accesorios"
+    ],
+    "microfonos": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Micrófonos y Preamplificadores",
+        "Micrófonos"
+    ],
+    "dualshock": [
+        "Consolas y Videojuegos",
+        "Accesorios para Consolas",
+        "Para PlayStation"
+    ],
+    "arduino uno r3": [
+        "Electrónica, Audio y Video",
+        "Componentes Electrónicos",
+        "Placas de Microcontroladores",
+        "Arduino"
+    ],
+    "redmi 14c": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "switch": [
+        "Otras"
+    ],
+    "funko": [
+        "Juegos y Juguetes",
+        "Muñecos y Muñecas",
+        "Muñecos y Figuras de Acción"
+    ],
+    "teléfono": [
+        "Celulares y Teléfonos",
+        "Telefono"
+    ],
+    "disco duro": [
+        "Computación",
+        "Almacenamiento",
+        "Discos y Accesorios",
+        "Discos Duros y SSDs"
+    ],
+    "teatro en casa": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Home Theaters"
+    ],
+    "aipad": [
+        "Computación",
+        "Tablets y Accesorios",
+        "Tablets"
+    ],
+    "sansung": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "jeans": [
+        "Ropa y Accesorios",
+        "Pantalones"
+    ],
+    "cpu": [
+        "Computación",
+        "PC de Escritorio",
+        "Computadores"
+    ],
+    "zapato": [
+        "Ropa y Accesorios",
+        "Calzado"
+    ],
+    "balon": [
+        "Deportes y Fitness"
+    ],
+    "consolas de videojuegos": [
+        "Consolas y Videojuegos",
+        "Consolas"
+    ],
+    "cuadros": [
+        "Hogar y Muebles",
+        "Adornos y Decoración del Hogar",
+        "Marcos, Letreros y Espejos",
+        "Cuadros Decorativos"
+    ],
+    "lamparas": [
+        "Hogar y Muebles",
+        "Iluminación para el Hogar",
+        "Lámparas"
+    ],
+    "televisión": [
+        "Electrónica, Audio y Video",
+        "Televisores"
+    ],
+    "equipo de sonido": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Equipo Sonido"
     ]
 }
