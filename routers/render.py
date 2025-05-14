@@ -22,9 +22,17 @@ router = APIRouter()
 async def login(request:Request):
     return templates.TemplateResponse("login.html", {"request":request})
 
-@router.get("/registro",response_class=HTMLResponse)
-async def registro(request:Request):
-    return templates.TemplateResponse("registro.html", {"request":request})
+@router.get("/registro", response_class=HTMLResponse)
+async def registro(request: Request, mensaje: str = None):
+    mensajes = {
+        "Correo_existente": "El correo ya está registrado. Intenta con otro o inicia sesión.",
+        "Error_registro": "Error al crear cuenta. Verifica los datos e intenta de nuevo."
+    }
+
+    return templates.TemplateResponse("registro.html", {
+        "request": request,
+        "mensaje": mensajes.get(mensaje)  # Solo pasas el mensaje si es válido
+    })
 
 @router.get("/verificacion",response_class=HTMLResponse)
 async def verificacion(request:Request, correo: str = Query(...)):

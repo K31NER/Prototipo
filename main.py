@@ -52,7 +52,7 @@ async def monitorear(request: Request, call_next):
     # Escribir al CSV en modo append, sin escribir encabezado
     df.to_csv(CSV_PATH, mode='a', header=False, index=False, encoding="utf-8")
 
-    print(f"[{timestamp}] Método: {http_method} | Duración: {duracion_formateada} segundos")
+    #print(f"[{timestamp}] Método: {http_method} | Duración: {duracion_formateada} segundos")
 
     return response
 
