@@ -811,5 +811,140 @@
         "Electrónica, Audio y Video",
         "Audio",
         "Equipo Sonido"
+    ],
+    "vidrio templado": [
+        "Otras"
+    ],
+    "gorra": [
+        "Ropa y Accesorios",
+        "Accesorios de Moda",
+        "Gorros, Sombreros y Boinas"
+    ],
+    "témperas": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Artística y Pintura",
+        "Temperas"
+    ],
+    "tacones": [
+        "Ropa y Accesorios",
+        "Calzado"
+    ],
+    "colonias": [
+        "Belleza y Cuidado Personal",
+        "Perfumes"
+    ],
+    "router": [
+        "Computación",
+        "Conectividad y Redes",
+        "Routers"
+    ],
+    "tocador": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar",
+        "Tocadores"
+    ],
+    "sandalias": [
+        "Ropa y Accesorios",
+        "Calzado",
+        "Sandalias y Chanclas"
+    ],
+    "babero": [
+        "Bebés",
+        "Lactancia y Alimentación",
+        "Baberos"
+    ],
+    "paraguas": [
+        "Ropa y Accesorios",
+        "Accesorios de Moda",
+        "Sombrillas"
+    ],
+    "piano": [
+        "Instrumentos Musicales",
+        "Teclados y Pianos"
+    ],
+    "peinilla": [
+        "Otras"
+    ],
+    "asador": [
+        "Hogar y Muebles",
+        "Jardin y Aire Libre",
+        "Hornos, Parrillas y Accesorios",
+        "Asadores",
+        "A Carbón",
+        "Parrilla Asador"
+    ],
+    "olla de presión": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Cocción y Horneado",
+        "Baterías, Ollas y Sartenes",
+        "Ollas"
+    ],
+    "focos": [
+        "Hogar y Muebles",
+        "Iluminación para el Hogar"
+    ],
+    "alexa": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Asistentes Virtuales"
+    ],
+    "escoba": [
+        "Hogar y Muebles",
+        "Cuidado del Hogar y Lavandería",
+        "Accesorios de Limpieza"
+    ],
+    "cartulina": [
+        "Arte, Papelería y Mercería",
+        "Papelería"
+    ],
+    "manilla": [
+        "Relojes y Joyas"
+    ],
+    "cadena": [
+        "Otras"
+    ],
+    "collar": [
+        "Relojes y Joyas",
+        "Joyería",
+        "Dijes"
+    ],
+    "freefire": [
+        "Otras"
+    ],
+    "tarjetas de regalo": [
+        "Otras"
+    ],
+    "cordones": [
+        "Arte, Papelería y Mercería",
+        "Mercería",
+        "Cordones para Calzado"
+    ],
+    "bolsos": [
+        "Ropa y Accesorios",
+        "Equipaje, Bolsos y Carteras"
+    ],
+    "vestidos de dama": [
+        "Ropa y Accesorios",
+        "Vestidos",
+        "Vestidos Dama"
+    ],
+    "ropa": [
+        "Otras"
+    ],
+    "tecnología": [
+        "Otras"
+    ],
+    "faldas largas": [
+        "Ropa y Accesorios",
+        "Faldas"
+    ],
+    "sueter tommy": [
+        "Ropa y Accesorios"
+    ],
+    "blusa de mujer": [
+        "Ropa y Accesorios",
+        "Blusas"
     ]
 }

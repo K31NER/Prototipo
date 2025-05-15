@@ -74,5 +74,9 @@
     {
         "id": 19,
         "categoria": "Consolas y Videojuegos"
+    },
+    {
+        "id": 20,
+        "categoria": "Instrumentos Musicales"
     }
 ]
