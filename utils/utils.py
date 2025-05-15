@@ -4,7 +4,6 @@ import string
 import httpx
 import bcrypt 
 import joblib
-import pyshorteners
 import pandas as pd
 from db import sesion
 from models import User
@@ -28,9 +27,6 @@ apikey = os.getenv("KEY")
 email = os.getenv("EMAIL")
 password_email = os.getenv("PASSWORD_EMAIL")
 
-# Creamos el objeto Shortener
-s = pyshorteners.Shortener()
-
 # Configuración de FastAPI-Mail
 conf = ConnectionConfig(
     MAIL_USERNAME=email,
@@ -49,14 +45,6 @@ codigos_validados = {}
 
 # ___________________________ Funciones de manejo de datos_________________________
 
-def _shorten_url(url) -> str:
-    """ Acorta la URL usando la API de TinyURL """
-    try:
-        return s.tinyurl.short(url)
-    except Exception as e:
-        # Si la API falla, retornamos la URL original
-        return url
-
 def preparar_datos(data)-> pd.DataFrame:
     """ Prepara los datos para el modelo """
     # Cargamos el modelo
@@ -64,12 +52,6 @@ def preparar_datos(data)-> pd.DataFrame:
 
     # Limpiamos los datos
     df = limpiar_datos(pd.DataFrame(data))
-    
-    
-    # Recortamos las URLs en la columna 'Links' con manejo de excepciones
-    df["Links"] = df["Links"].apply(
-        lambda x: _shorten_url(x) if isinstance(x, str) else x
-    )
     
     # Datos que usará el modelo
     x = df[["Precio", "Puntuacion", "PC", "PPW", "PS"]].values
@@ -82,7 +64,7 @@ def preparar_datos(data)-> pd.DataFrame:
     df["IR"] = (df["IR"] - df["IR"].min()) / (df["IR"].max() - df["IR"].min()) * 100
 
     # Guardar y mostrar resultados
-    top = df.nlargest(10, "IR")
+    top = df.nlargest(7, "IR")#se pone en 10
 
     return top
 
