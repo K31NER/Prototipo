@@ -78,5 +78,13 @@
     {
         "id": 20,
         "categoria": "Instrumentos Musicales"
+    },
+    {
+        "id": 21,
+        "categoria": "Alimentos y Bebidas"
+    },
+    {
+        "id": 22,
+        "categoria": "Accesorios para Vehículos"
     }
 ]
