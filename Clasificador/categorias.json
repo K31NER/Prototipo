@@ -946,5 +946,613 @@
     "blusa de mujer": [
         "Ropa y Accesorios",
         "Blusas"
+    ],
+    "tecno pova 5": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones",
+        "Tecno"
+    ],
+    "sartén de hierro": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Cocción y Horneado",
+        "Baterías, Ollas y Sartenes",
+        "Sartenes"
+    ],
+    "matemáticas": [
+        "Otras"
+    ],
+    "ingeniería de sistemas": [
+        "Otras"
+    ],
+    "arroz": [
+        "Alimentos y Bebidas",
+        "Almacén"
+    ],
+    "limpia contacto": [
+        "Otras"
+    ],
+    "lápices": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Escolar",
+        "Escritura"
+    ],
+    "ssd": [
+        "Computación",
+        "Almacenamiento",
+        "Discos y Accesorios",
+        "Discos Duros y SSDs"
+    ],
+    "moto": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "borradores": [
+        "Arte, Papelería y Mercería",
+        "Papelería"
+    ],
+    "rosa": [
+        "Otras"
+    ],
+    "camisas oversize": [
+        "Ropa y Accesorios"
+    ],
+    "bolsas": [
+        "Otras"
+    ],
+    "coches de bebe": [
+        "Bebés",
+        "Paseo del Bebé",
+        "Coches para Bebés"
+    ],
+    "gato": [
+        "Otras"
+    ],
+    "canulares": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones"
+    ],
+    "guayos de futbol": [
+        "Deportes y Fitness",
+        "Fútbol",
+        "Indumentaria",
+        "Guayos"
+    ],
+    "rosas": [
+        "Hogar y Muebles"
+    ],
+    "protoboard": [
+        "Electrónica, Audio y Video",
+        "Componentes Electrónicos",
+        "Protoboards"
+    ],
+    "paleta de sombras": [
+        "Belleza y Cuidado Personal",
+        "Maquillaje",
+        "Ojos, Pestañas y Cejas",
+        "Sombras de Ojos"
+    ],
+    "plancha babyliss": [
+        "Belleza y Cuidado Personal",
+        "Artefactos para el Cabello",
+        "Planchas de Pelo"
+    ],
+    "gaseosa": [
+        "Alimentos y Bebidas"
+    ],
+    "peluches": [
+        "Juegos y Juguetes"
+    ],
+    "pulseras": [
+        "Relojes y Joyas",
+        "Joyería"
+    ],
+    "abanico": [
+        "Otras"
+    ],
+    "micro bit": [
+        "Electrónica, Audio y Video",
+        "Componentes Electrónicos"
+    ],
+    "motos": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "joyeria": [
+        "Relojes y Joyas",
+        "Joyería"
+    ],
+    "acordeón": [
+        "Instrumentos Musicales",
+        "Instrumentos de Viento",
+        "Acordeones y Concertinas",
+        "Acordeon"
+    ],
+    "mando de ps4": [
+        "Consolas y Videojuegos",
+        "Accesorios para Consolas",
+        "Para PlayStation",
+        "PlayStation 4 - PS4",
+        "Gamepads y Joysticks"
+    ],
+    "computadora": [
+        "Computación"
+    ],
+    "bidón de gasolina": [
+        "Accesorios para Vehículos"
+    ],
+    "resistencia": [
+        "Otras"
+    ],
+    "calculadora": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Comercial y Oficina",
+        "Calculadoras y Agendas",
+        "Calculadoras"
+    ],
+    "pantalóneta de fútbol": [
+        "Otras"
+    ],
+    "botas alternativas": [
+        "Otras"
+    ],
+    "secador": [
+        "Belleza y Cuidado Personal",
+        "Artefactos para el Cabello",
+        "Secadores de Cabello"
+    ],
+    "gpt": [
+        "Computación",
+        "Software",
+        "Softwares de oficinas"
+    ],
+    "camisa del barcelona": [
+        "Deportes y Fitness",
+        "Fútbol",
+        "Indumentaria"
+    ],
+    "universidad": [
+        "Otras"
+    ],
+    "yamaha r15": [
+        "Otras"
+    ],
+    "bebidas alcohólicas": [
+        "Alimentos y Bebidas",
+        "Bebidas"
+    ],
+    "yuca": [
+        "Otras"
+    ],
+    "mrx 125": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "jabon": [
+        "Otras"
+    ],
+    "mueble": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar"
+    ],
+    "anillos": [
+        "Relojes y Joyas",
+        "Joyería"
+    ],
+    "mascarilla": [
+        "Belleza y Cuidado Personal"
+    ],
+    "colores": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Escolar",
+        "Escritura",
+        "Lápices"
+    ],
+    "casco": [
+        "Accesorios para Vehículos",
+        "Acc. para Motos y Cuatrimotos",
+        "Cascos"
+    ],
+    "parche": [
+        "Otras"
+    ],
+    "sable de luz neopixel": [
+        "Otras"
+    ],
+    "star wars": [
+        "Otras"
+    ],
+    "marcadores": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Escolar",
+        "Escritura",
+        "Marcadores y Resaltadores"
+    ],
+    "shampoo": [
+        "Belleza y Cuidado Personal",
+        "Cuidado del Cabello",
+        "Shampoos y Acondicionadores"
+    ],
+    "ram": [
+        "Carros, Motos y Otros",
+        "Carros y Camionetas"
+    ],
+    "rx 7600": [
+        "Computación",
+        "Componentes de PC",
+        "Tarjetas",
+        "Tarjetas de Video"
+    ],
+    "kawasaki": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "horno": [
+        "Electrodomésticos",
+        "Cocción",
+        "Hornos"
+    ],
+    "semillas": [
+        "Hogar y Muebles",
+        "Jardin y Aire Libre",
+        "Jardinería y Accesorios",
+        "Plantas, Siembra y Cultivo"
+    ],
+    "criptomonedas": [
+        "Otras"
+    ],
+    "minecraft": [
+        "Otras"
+    ],
+    "bermuda": [
+        "Ropa y Accesorios",
+        "Bermudas y Pantalonetas"
+    ],
+    "airfrayer": [
+        "Electrodomésticos",
+        "Pequeños Electrodomésticos",
+        "Para Cocina",
+        "Preparación de Alimentos",
+        "Freidoras",
+        "De Aire"
+    ],
+    "protector de pantalla": [
+        "Otras"
+    ],
+    "mate": [
+        "Otras"
+    ],
+    "buso": [
+        "Ropa y Accesorios",
+        "Abrigos",
+        "Buzos"
+    ],
+    "azus": [
+        "Computación",
+        "Portátiles y Accesorios",
+        "Portátiles"
+    ],
+    "sonic": [
+        "Otras"
+    ],
+    "microbit": [
+        "Electrónica, Audio y Video",
+        "Componentes Electrónicos"
+    ],
+    "set de herramientas bosch 108 piezas": [
+        "Otras"
+    ],
+    "vasos": [
+        "Hogar y Muebles",
+        "Cocina"
+    ],
+    "tableta gráfica": [
+        "Computación"
+    ],
+    "copas": [
+        "Otras"
+    ],
+    "bicicleta": [
+        "Deportes y Fitness",
+        "Ciclismo",
+        "Bicicletas"
+    ],
+    "balón": [
+        "Deportes y Fitness"
+    ],
+    "sh figuarts": [
+        "Juegos y Juguetes",
+        "Muñecos y Muñecas",
+        "Muñecos y Figuras de Acción"
+    ],
+    "sacacorchos eléctrico recargable": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Artículos de Vino y Coctelería",
+        "Accesorios para Vino",
+        "Sacacorchos y Destapadores"
+    ],
+    "goku": [
+        "Juegos y Juguetes",
+        "Muñecos y Muñecas",
+        "Muñecos y Figuras de Acción"
+    ],
+    "nkpie 2025": [
+        "Otras"
+    ],
+    "nkd": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "teléfonos": [
+        "Celulares y Teléfonos",
+        "Celulares y Smartphones",
+        "Telefonos"
+    ],
+    "inteligencia artificial": [
+        "Otras"
+    ],
+    "playstation5": [
+        "Consolas y Videojuegos",
+        "Consolas"
+    ],
+    "cama doble": [
+        "Hogar y Muebles",
+        "Cama"
+    ],
+    "renault": [
+        "Carros, Motos y Otros",
+        "Carros y Camionetas"
+    ],
+    "tenis adidas": [
+        "Ropa y Accesorios",
+        "Calzado",
+        "Tenis"
+    ],
+    "aple watch": [
+        "Celulares y Teléfonos",
+        "Smartwatches y Accesorios",
+        "Smartwatches"
+    ],
+    "portavasos": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Vajilla y Artículos de Servir",
+        "Bases y Soportes"
+    ],
+    "pc gamer": [
+        "Computación",
+        "PC de Escritorio",
+        "Computadores",
+        "Pc"
+    ],
+    "bafle": [
+        "Electrónica, Audio y Video",
+        "Audio",
+        "Parlantes",
+        "Bafle Parlante"
+    ],
+    "máquina de motilar": [
+        "Belleza y Cuidado Personal",
+        "Artefactos para el Cabello",
+        "Máquinas para Cortar Cabello",
+        "Maquina de Motilar"
+    ],
+    "espejos": [
+        "Hogar y Muebles"
+    ],
+    "secadora": [
+        "Electrodomésticos"
+    ],
+    "sartenes": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Cocción y Horneado",
+        "Baterías, Ollas y Sartenes",
+        "Ollas"
+    ],
+    "lámpara": [
+        "Hogar y Muebles",
+        "Iluminación para el Hogar",
+        "Lámparas"
+    ],
+    "lavadoras": [
+        "Electrodomésticos",
+        "Lavado",
+        "Lavadoras y Lavasecadoras"
+    ],
+    "gta v": [
+        "Consolas y Videojuegos",
+        "Videojuegos"
+    ],
+    "vajilla": [
+        "Hogar y Muebles",
+        "Cocina",
+        "Vajilla y Artículos de Servir",
+        "Juegos de Vajilla"
+    ],
+    "jarron": [
+        "Hogar y Muebles",
+        "Adornos y Decoración del Hogar"
+    ],
+    "camaron": [
+        "Otras"
+    ],
+    "aspiradora": [
+        "Electrodomésticos",
+        "Pequeños Electrodomésticos",
+        "Para Hogar",
+        "Aspiradoras"
+    ],
+    "televisores ultimo modelo": [
+        "Otras"
+    ],
+    "guarda": [
+        "Otras"
+    ],
+    "caja": [
+        "Otras"
+    ],
+    "cerveza": [
+        "Alimentos y Bebidas",
+        "Bebidas",
+        "Cervezas"
+    ],
+    "pesa": [
+        "Otras"
+    ],
+    "mesas": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar"
+    ],
+    "libretas": [
+        "Arte, Papelería y Mercería",
+        "Papelería"
+    ],
+    "audiculares": [
+        "Otras"
+    ],
+    "closetg": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar",
+        "Muebles de Guardado",
+        "Closets"
+    ],
+    "chanclas": [
+        "Ropa y Accesorios",
+        "Calzado",
+        "Sandalias y Chanclas"
+    ],
+    "dron": [
+        "Electrónica, Audio y Video",
+        "Drones y Accesorios",
+        "Drones"
+    ],
+    "hoja": [
+        "Otras"
+    ],
+    "colonia": [
+        "Belleza y Cuidado Personal",
+        "Perfumes"
+    ],
+    "hotwhell": [
+        "Juegos y Juguetes",
+        "Vehículos de Juguete",
+        "Vehículos a Escala"
+    ],
+    "avanico": [
+        "Otras"
+    ],
+    "béisbol": [
+        "Deportes y Fitness"
+    ],
+    "básquet": [
+        "Otras"
+    ],
+    "carros": [
+        "Carros, Motos y Otros",
+        "Carros y Camionetas"
+    ],
+    "avion": [
+        "Otras"
+    ],
+    "dove": [
+        "Belleza y Cuidado Personal"
+    ],
+    "cantu": [
+        "Belleza y Cuidado Personal",
+        "Cuidado del Cabello"
+    ],
+    "durex": [
+        "Salud y Equipamiento Médico",
+        "Cuidado de la Salud",
+        "Farmacia",
+        "Cuidado Sexual"
+    ],
+    "aguacate": [
+        "Otras"
+    ],
+    "garnier": [
+        "Belleza y Cuidado Personal"
+    ],
+    "adaptador": [
+        "Otras"
+    ],
+    "durez": [
+        "Salud y Equipamiento Médico",
+        "Cuidado de la Salud",
+        "Farmacia",
+        "Cuidado Sexual"
+    ],
+    "bucales protectores": [
+        "Otras"
+    ],
+    "juegoa": [
+        "Otras"
+    ],
+    "belleza": [
+        "Belleza y Cuidado Personal"
+    ],
+    "maquina de correr": [
+        "Deportes y Fitness",
+        "Fitness y Musculación",
+        "Máquinas Cardiovasculares",
+        "Caminadoras"
+    ],
+    "r7": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "mt09": [
+        "Carros, Motos y Otros",
+        "Motos"
+    ],
+    "vaper": [
+        "Otras"
+    ],
+    "comedor": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar",
+        "Juegos y Sets de Muebles",
+        "Juegos de Comedor"
+    ],
+    "lapices": [
+        "Arte, Papelería y Mercería",
+        "Papelería",
+        "Escolar",
+        "Escritura",
+        "Lápices"
+    ],
+    "nvidia": [
+        "Computación",
+        "Componentes de PC",
+        "Tarjetas",
+        "Tarjetas de Video"
+    ],
+    "monopatin electric": [
+        "Juegos y Juguetes",
+        "Vehículos Montables para Niños",
+        "Monopatines"
+    ],
+    "rizador para pelo": [
+        "Belleza y Cuidado Personal",
+        "Artefactos para el Cabello",
+        "Rizadores"
+    ],
+    "peluche freddy": [
+        "Juegos y Juguetes",
+        "Peluches"
+    ],
+    "nochero": [
+        "Hogar y Muebles",
+        "Muebles para el Hogar",
+        "Mesas de Noche"
+    ],
+    "hombres": [
+        "Ropa y Accesorios"
     ]
 }
