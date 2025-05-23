@@ -159,7 +159,8 @@ async def buscar(
 
     # 7. Procesamos los datos scrapeados
     try:
-        productos_filtrados = preparar_datos(datos)
+        modelo = request.app.state.modelo_rf
+        productos_filtrados = preparar_datos(datos,modelo)
         if productos_filtrados.empty:
             raise ValueError("No hay datos válidos tras el preprocesamiento")
     except Exception as e:

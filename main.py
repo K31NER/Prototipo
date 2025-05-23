@@ -1,7 +1,7 @@
 import os
 import time
 import pandas as pd
-from db import crear_table
+from utils.utils import startup_lifespan
 from datetime import datetime
 from routers import usuarios,render
 from fastapi.staticfiles import StaticFiles
@@ -12,7 +12,7 @@ from fastapi import FastAPI,HTTPException, Request
 
 app = FastAPI(
     title="Scrapymarket API",
-    lifespan=crear_table,
+    lifespan= startup_lifespan,
     docs_url=None, redoc_url=None # Deshabilitar documentación automática
 )
 
@@ -21,12 +21,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Ruta del csv
 CSV_PATH = "Metricas.csv"
-
-# Si no existe, crea el archivo con encabezado
-if not os.path.exists(CSV_PATH):
-    df_init = pd.DataFrame(columns=["FechaHora", "Metodo","Endpoints","Status", "DuracionSegundos"])
-    df_init.to_csv(CSV_PATH, index=False, encoding="utf-8")
-
 
 # Middleware para monitorear el trafico
 @app.middleware("http")

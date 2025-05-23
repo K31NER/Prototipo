@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 import os
 import secrets
 import string
@@ -5,15 +6,15 @@ import httpx
 import bcrypt 
 import joblib
 import pandas as pd
-from db import sesion
+from db import sesion, engine
 from models import User
-from sqlmodel import select
+from sqlmodel import SQLModel, select
 from dotenv import load_dotenv
 from limpiar import limpiar_datos
 from models import Email
 from jose import jwt, JWTError
 from datetime import datetime, timedelta,timezone
-from fastapi import HTTPException, status, Request
+from fastapi import FastAPI, HTTPException, status, Request
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 
 load_dotenv()
@@ -43,13 +44,37 @@ conf = ConnectionConfig(
 codigos_recuperacion = {}
 codigos_validados = {}
 
+# Funcion de aranque 
+@asynccontextmanager
+async def startup_lifespan(app: FastAPI):
+    print("🎯 Iniciando ciclo de vida")
+
+    # Crear tablas
+    SQLModel.metadata.create_all(engine)
+    print("✅ Tablas creadas")
+
+    # Crear CSV si no existe
+    CSV_PATH = "Metricas.csv"
+    if not os.path.exists(CSV_PATH):
+        pd.DataFrame(columns=["FechaHora", "Metodo","Endpoints","Status", "DuracionSegundos"]).to_csv(CSV_PATH, index=False)
+        print("📄 CSV creado")
+
+    # Cargar modelo
+    try:
+        print("📦 Cargando modelo...")
+        modelo = joblib.load("modelo_random_forest.pkl")
+        app.state.modelo_rf = modelo
+        print("✅ Modelo cargado correctamente")
+    except FileNotFoundError as e:
+        print(f"❌ Error al cargar el modelo: {e}")
+
+    yield
+
 # ___________________________ Funciones de manejo de datos_________________________
 
-def preparar_datos(data)-> pd.DataFrame:
+def preparar_datos(data,modelo)-> pd.DataFrame:
     """ Prepara los datos para el modelo """
-    # Cargamos el modelo
-    modelo = joblib.load("modelo_random_forest.pkl")
-
+    
     # Limpiamos los datos
     df = limpiar_datos(pd.DataFrame(data))
     
