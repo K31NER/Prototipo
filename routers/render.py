@@ -83,12 +83,17 @@ async def redirect_to_inicio(
     
     if not user_name:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-    
+
     error_escaped = quote(error)
-    return RedirectResponse(
+    rederict_response =  RedirectResponse(
         url=f"/inicio?user_name={user_name}&user_id={user_id}&error={error_escaped}",
         status_code=status.HTTP_302_FOUND
     )
+    # Eliminar la cookie de productos
+    if "productos" in request.cookies:
+        print("Eliminando cookie de productos")
+        rederict_response.delete_cookie("productos")
+    return rederict_response
 
 @router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request,user:str = Depends(get_current_user)):
