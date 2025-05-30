@@ -89,7 +89,7 @@ def preparar_datos(data,modelo)-> pd.DataFrame:
     df["IR"] = (df["IR"] - df["IR"].min()) / (df["IR"].max() - df["IR"].min()) * 100
 
     # Guardar y mostrar resultados
-    top = df.nlargest(7, "IR")#se pone en 10
+    top = df.nlargest(5, "IR")#se pone en 10
 
     return top
 

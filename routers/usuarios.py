@@ -117,7 +117,7 @@ async def buscar(
     user = Depends(get_current_user),
 ):
     # 1. Realizamos el scrapeo
-    busqueda_limpia = producto.lower().strip()
+    busqueda_limpia = producto.strip().lower()
     if not busqueda_limpia:
         return RedirectResponse(
             url="/redirect_to_inicio?error=No se encontraron productos, realice otra búsqueda",

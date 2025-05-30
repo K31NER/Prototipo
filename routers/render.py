@@ -105,8 +105,8 @@ async def dashboard(request: Request,user:str = Depends(get_current_user)):
         
     try:
         productos = json.loads(unquote(productos_cookie))
-        #print(f"Productos en cookie -3 : {productos_cookie}")
-        print(f"Nombre de usuario en cookie -3: {user_name}")
+        #print(f"Productos en cookie  : {productos_cookie}")
+        print(f"Nombre de usuario en cookie : {user_name}")
     except Exception as e:
         print(f"Error al deserializar productos: {e}")
         raise HTTPException(status_code=400, detail="Error al procesar los productos en las cookies")
@@ -248,3 +248,9 @@ async def cambiar_contraseña(request:Request,session: sesion, new_password: str
             "modal_message": f"Error inesperado: {str(e)}",
             "correo": correo
         })
+  
+# Funcion para limpiar la búsqueda guardada en la cookie      
+@router.post("/limpiar_busqueda")
+async def limpiar_busqueda(response: Response):
+    response.delete_cookie("productos")
+    return {"status":"ok"} 
