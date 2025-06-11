@@ -1,20 +1,36 @@
 import os
 import time
 import pandas as pd
-from utils.utils import startup_lifespan
 from datetime import datetime
 from routers import usuarios,render
+from utils.utils import startup_lifespan
 from fastapi.staticfiles import StaticFiles
 from slowapi.errors import RateLimitExceeded
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
+from fastapi_crons import Crons,get_cron_router
 from fastapi import FastAPI,HTTPException, Request
+from comercios.popularidad import obtener_popularidad  
 
 app = FastAPI(
     title="Scrapymarket API",
     lifespan= startup_lifespan,
     docs_url=None, redoc_url=None # Deshabilitar documentación automática
 )
+
+# Definimos el manejador de tareas programadas
+crons = Crons(app)
+
+# Añadimos el router de crons a la aplicación
+app.include_router(get_cron_router(), prefix="/api")
+
+# Creamos una tarea programada que se ejecutarla en las horas definidas
+@crons.cron("0 6,13,18,21 * * *", name="Update Popularidad")
+async def check_popularidad():
+    print("⚡ Actualizando la popularidad de los comercios...")
+    # Obtenemos los datos de popularidad
+    datos_popularidad = obtener_popularidad()
+    return datos_popularidad
 
 templates = Jinja2Templates("templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
